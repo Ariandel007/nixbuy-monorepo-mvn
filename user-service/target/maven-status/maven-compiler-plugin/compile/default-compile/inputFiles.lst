@@ -1,0 +1,16 @@
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\models\RoleApplication.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\controllers\UserController.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\controllers\RestExceptionHandler.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\utils\Queries.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\repositories\IRoleApplicationRepository.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\repositories\IPasswordHistoryRepository.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\services\impl\UserService.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\mappers\UserMapper.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\models\PasswordHistory.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\repositories\IUserApplicationRepository.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\services\IUserService.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\models\UserApplication.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\repositories\custom\ICustomUserApplicationRepository.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\repositories\custom\impl\CustomUserApplicationRepository.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\config\GeneralConfiguration.java
+G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\user-service\src\main\java\com\mvnnixbuyapi\userservice\UserServiceApplication.java

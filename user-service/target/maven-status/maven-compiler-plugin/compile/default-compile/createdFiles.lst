@@ -1,0 +1,17 @@
+com\mvnnixbuyapi\userservice\repositories\custom\ICustomUserApplicationRepository.class
+com\mvnnixbuyapi\userservice\UserServiceApplication.class
+com\mvnnixbuyapi\userservice\controllers\RestExceptionHandler.class
+com\mvnnixbuyapi\userservice\models\PasswordHistory.class
+com\mvnnixbuyapi\userservice\models\RoleApplication.class
+com\mvnnixbuyapi\userservice\services\impl\UserService.class
+com\mvnnixbuyapi\userservice\config\GeneralConfiguration.class
+com\mvnnixbuyapi\userservice\repositories\custom\impl\CustomUserApplicationRepository.class
+com\mvnnixbuyapi\userservice\repositories\IPasswordHistoryRepository.class
+com\mvnnixbuyapi\userservice\utils\Queries.class
+com\mvnnixbuyapi\userservice\controllers\UserController.class
+com\mvnnixbuyapi\userservice\mappers\UserMapperImpl.class
+com\mvnnixbuyapi\userservice\models\UserApplication.class
+com\mvnnixbuyapi\userservice\repositories\IUserApplicationRepository.class
+com\mvnnixbuyapi\userservice\services\IUserService.class
+com\mvnnixbuyapi\userservice\mappers\UserMapper.class
+com\mvnnixbuyapi\userservice\repositories\IRoleApplicationRepository.class
