@@ -18,7 +18,7 @@ public class RoleApplication implements Serializable {
     @Column(length = 255)
     private String name;
 
-    @ManyToMany(mappedBy = "rolApplicationList")
+    @ManyToMany(mappedBy = "roleApplicationList")
     List<UserApplication> userApplicationList;
 
 }

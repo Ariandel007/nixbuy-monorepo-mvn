@@ -2,7 +2,7 @@ package com.mvnnixbuyapi.userservice.controllers;
 
 import com.mvnnixbuyapi.commons.dto.UserRegisterDto;
 import com.mvnnixbuyapi.commons.dto.UserToFindDto;
-import com.mvnnixbuyapi.userservice.services.IUserService;
+import com.mvnnixbuyapi.userservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("users")
 public class UserController {
-    private final IUserService userService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(IUserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 

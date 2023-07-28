@@ -4,21 +4,23 @@ import com.mvnnixbuyapi.commons.dto.UserRegisterDto;
 import com.mvnnixbuyapi.commons.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.mappers.UserMapper;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
-import com.mvnnixbuyapi.userservice.repositories.IUserApplicationRepository;
-import com.mvnnixbuyapi.userservice.services.IUserService;
+import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
+import com.mvnnixbuyapi.userservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
-public class UserService implements IUserService {
+@Service
+public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
-    private final IUserApplicationRepository userApplicationRepository;
+    private final UserApplicationRepository userApplicationRepository;
 
     @Autowired
-    public UserService(
-            IUserApplicationRepository userApplicationRepository,
+    public UserServiceImpl(
+            UserApplicationRepository userApplicationRepository,
             PasswordEncoder passwordEncoder) {
         this.userApplicationRepository = userApplicationRepository;
         this.passwordEncoder = passwordEncoder;

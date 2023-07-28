@@ -4,6 +4,6 @@ import com.mvnnixbuyapi.commons.dto.UserDataWithRolesDto;
 
 import java.util.List;
 
-public interface ICustomUserApplicationRepository {
-    List<UserDataWithRolesDto> findUserDataRoles();
+public interface CustomUserApplicationRepository {
+    List<UserDataWithRolesDto> listUserDataRoles();
 }

@@ -1,21 +1,20 @@
 package com.mvnnixbuyapi.userservice.repositories.custom.impl;
 
 import com.mvnnixbuyapi.commons.dto.UserDataWithRolesDto;
-import com.mvnnixbuyapi.userservice.repositories.custom.ICustomUserApplicationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+// El Impl es importante
 @Repository
-public class CustomUserApplicationRepository implements ICustomUserApplicationRepository {
+public class CustomUserApplicationRepositoryImpl implements com.mvnnixbuyapi.userservice.repositories.custom.CustomUserApplicationRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public List<UserDataWithRolesDto> findUserDataRoles() {
+    public List<UserDataWithRolesDto> listUserDataRoles() {
         StringBuilder jpql = new StringBuilder();
         jpql.append("SELECT new com.mvnnixbuyapi.commons.dto.UserDataWithRolesDto( ");
         jpql.append("u.id, u.username, u.isBlocked, ");
