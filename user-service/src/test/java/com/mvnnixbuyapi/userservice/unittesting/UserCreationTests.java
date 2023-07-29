@@ -3,6 +3,7 @@ package com.mvnnixbuyapi.userservice.unittesting;
 import com.mvnnixbuyapi.userservice.data.DataToTest;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
+import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
 import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
@@ -34,27 +35,13 @@ public class UserCreationTests {
     UserApplicationService userService;
 
     @Test
-    @DisplayName("Test insert empty Username")
+    @DisplayName("Test insert empty username")
     void testBlankUsername() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setUsername(null);
 
-        when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
-        when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
-        when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
-            UserApplication userApplication = invocation.getArgument(0);
-            userApplication.setId(2L);
-            return userApplication;
-        });
-
-        //When
-        Throwable thrown = assertThrows(InvalidUserToRegisterException.class, ()-> {
-            this.userService.registerUser(userRegisterDto);
-        });
-
-        //Then
-        Assertions.assertEquals("Username is required", thrown.getMessage());
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Username is required");
     }
 
     @Test
@@ -64,21 +51,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setPassword(null);
 
-        when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
-        when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
-        when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
-            UserApplication userApplication = invocation.getArgument(0);
-            userApplication.setId(2L);
-            return userApplication;
-        });
-
-        //When
-        Throwable thrown = assertThrows(InvalidUserToRegisterException.class, ()-> {
-            this.userService.registerUser(userRegisterDto);
-        });
-
-        //Then
-        Assertions.assertEquals("Password is required", thrown.getMessage());
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Password is required");
     }
 
     @Test
@@ -88,21 +61,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setEmail(null);
 
-        when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
-        when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
-        when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
-            UserApplication userApplication = invocation.getArgument(0);
-            userApplication.setId(2L);
-            return userApplication;
-        });
-
-        //When
-        Throwable thrown = assertThrows(InvalidUserToRegisterException.class, ()-> {
-            this.userService.registerUser(userRegisterDto);
-        });
-
-        //Then
-        Assertions.assertEquals("Email is required", thrown.getMessage());
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Email is required");
     }
 
     @Test
@@ -112,21 +71,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setFirstname(null);
 
-        when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
-        when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
-        when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
-            UserApplication userApplication = invocation.getArgument(0);
-            userApplication.setId(2L);
-            return userApplication;
-        });
-
-        //When
-        Throwable thrown = assertThrows(InvalidUserToRegisterException.class, ()-> {
-            this.userService.registerUser(userRegisterDto);
-        });
-
-        //Then
-        Assertions.assertEquals("Firstname is required", thrown.getMessage());
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Firstname is required");
     }
 
     @Test
@@ -136,21 +81,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setLastname(null);
 
-        when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
-        when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
-        when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
-            UserApplication userApplication = invocation.getArgument(0);
-            userApplication.setId(2L);
-            return userApplication;
-        });
-
-        //When
-        Throwable thrown = assertThrows(InvalidUserToRegisterException.class, ()-> {
-            this.userService.registerUser(userRegisterDto);
-        });
-
-        //Then
-        Assertions.assertEquals("Lastname is required", thrown.getMessage());
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Lastname is required");
     }
 
     @Test
@@ -160,21 +91,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setCountry(null);
 
-        when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
-        when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
-        when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
-            UserApplication userApplication = invocation.getArgument(0);
-            userApplication.setId(2L);
-            return userApplication;
-        });
-
-        //When
-        Throwable thrown = assertThrows(InvalidUserToRegisterException.class, ()-> {
-            this.userService.registerUser(userRegisterDto);
-        });
-
-        //Then
-        Assertions.assertEquals("Country is required", thrown.getMessage());
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Country is required");
     }
 
     @Test
@@ -184,21 +101,8 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setCity(null);
 
-        when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
-        when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
-        when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
-            UserApplication userApplication = invocation.getArgument(0);
-            userApplication.setId(2L);
-            return userApplication;
-        });
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "City is required");
 
-        //When
-        Throwable thrown = assertThrows(InvalidUserToRegisterException.class, ()-> {
-            this.userService.registerUser(userRegisterDto);
-        });
-
-        //Then
-        Assertions.assertEquals("City is required", thrown.getMessage());
     }
 
     @Test
@@ -208,6 +112,10 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setBirthDateUtc(null);
 
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "birthdate is required");
+    }
+
+    private void commonGeneralInvalidUserToRegisterException(UserRegisterDto userRegisterDto, String errorMessage) {
         when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
         when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
         when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
@@ -222,6 +130,52 @@ public class UserCreationTests {
         });
 
         //Then
-        Assertions.assertEquals("birthdate is required", thrown.getMessage());
+        Assertions.assertEquals(errorMessage, thrown.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Test insert successfully")
+    void testSucessfullInsertion() {
+        //Given
+        UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
+
+        when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
+        when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
+        when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
+            UserApplication userApplication = invocation.getArgument(0);
+            userApplication.setId(2L);
+            return userApplication;
+        });
+
+        //When
+        UserRegisterDto userCreated = this.userService.registerUser(userRegisterDto);
+
+        //Then
+        Assertions.assertEquals("usertest2", userCreated.getUsername());
+    }
+
+    @Test
+    @DisplayName("Test user already exists")
+    void testExistsUsername() {
+        //Given
+        UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
+        userRegisterDto.setUsername("usertest");
+
+        when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
+        when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
+        when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
+            UserApplication userApplication = invocation.getArgument(0);
+            userApplication.setId(2L);
+            return userApplication;
+        });
+
+        //When
+        Throwable thrown = assertThrows(UserAlreadyExistsException.class, ()-> {
+            this.userService.registerUser(userRegisterDto);
+        });
+
+        //Then
+        Assertions.assertEquals("Username already exists", thrown.getMessage());
     }
 }
