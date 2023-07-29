@@ -1,10 +1,14 @@
 package com.mvnnixbuyapi.commons.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserToFindDto {
     private Long id;
     private String username;

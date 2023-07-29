@@ -2,6 +2,8 @@ package com.mvnnixbuyapi.userservice.controllers;
 
 import com.mvnnixbuyapi.commons.exceptions.GeneralBodyExceptionHandler;
 import com.mvnnixbuyapi.commons.exceptions.GeneralException;
+import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
+import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -15,14 +17,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-//    @ExceptionHandler(value= {  })
-//    protected ResponseEntity<Object> handleBadRequest(GeneralException ex, WebRequest request) {
-//        return handleExceptionInternal(
-//                ex,
-//                new GeneralBodyExceptionHandler(ex.getErrorCode(),ex.getMessage(),ex.getLocalizedMessage()),
-//                new HttpHeaders(),
-//                HttpStatus.BAD_REQUEST, request);
-//    }
+    @ExceptionHandler(value= {InvalidUserToRegisterException.class, UserAlreadyExistsException.class})
+    protected ResponseEntity<Object> handleBadRequest(GeneralException ex, WebRequest request) {
+        return handleExceptionInternal(
+                ex,
+                new GeneralBodyExceptionHandler(ex.getErrorCode(),ex.getMessage(),ex.getLocalizedMessage()),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST, request);
+    }
 //
 //    @ExceptionHandler(value= {  })
 //    protected ResponseEntity<Object> handleNotFound(GeneralException ex, WebRequest request) {

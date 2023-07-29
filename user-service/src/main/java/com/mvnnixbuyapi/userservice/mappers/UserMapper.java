@@ -16,6 +16,7 @@ public interface UserMapper {
     @Mapping(target = "authType", ignore = true)
     @Mapping(target = "attemps", ignore = true)
     @Mapping(target = "accountCreationDate", ignore = true)
+    @Mapping(target = "birthDate", ignore = true)
     @Mapping(target = "photoUrl", ignore = true)
     @Mapping(target = "passwordHistoryList", ignore = true)
     @Mapping(target = "roleApplicationList", ignore = true)

@@ -2,7 +2,7 @@ package com.mvnnixbuyapi.commons.exceptions;
 
 public class GeneralException extends RuntimeException {
     private String errorCode;
-    public GeneralException(String message, String errorCode) {
+    public GeneralException(String errorCode, String message) {
         super(message);
         this.errorCode = errorCode;
     }
