@@ -1,9 +1,9 @@
 package com.mvnnixbuyapi.userservice.services;
 
-import com.mvnnixbuyapi.commons.dto.UserRegisterDto;
-import com.mvnnixbuyapi.commons.dto.UserToFindDto;
+import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
+import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 
-public interface UserService {
+public interface UserApplicationService {
     UserRegisterDto registerUser(UserRegisterDto userRegisterDto);
     UserToFindDto findUserBasicInfoById(Long id);
 }

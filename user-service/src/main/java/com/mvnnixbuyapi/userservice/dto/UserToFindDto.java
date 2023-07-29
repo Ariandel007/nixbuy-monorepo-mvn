@@ -1,4 +1,4 @@
-package com.mvnnixbuyapi.commons.dto;
+package com.mvnnixbuyapi.userservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

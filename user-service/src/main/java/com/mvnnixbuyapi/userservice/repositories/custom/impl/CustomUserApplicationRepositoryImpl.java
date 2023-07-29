@@ -1,6 +1,6 @@
 package com.mvnnixbuyapi.userservice.repositories.custom.impl;
 
-import com.mvnnixbuyapi.commons.dto.UserDataWithRolesDto;
+import com.mvnnixbuyapi.userservice.dto.UserDataWithRolesDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -16,7 +16,7 @@ public class CustomUserApplicationRepositoryImpl implements com.mvnnixbuyapi.use
     @Override
     public List<UserDataWithRolesDto> listUserDataRoles() {
         StringBuilder jpql = new StringBuilder();
-        jpql.append("SELECT new com.mvnnixbuyapi.commons.dto.UserDataWithRolesDto( ");
+        jpql.append("SELECT new com.mvnnixbuyapi.userservice.dto.UserDataWithRolesDto( ");
         jpql.append("u.id, u.username, u.isBlocked, ");
         jpql.append("GROUP_CONCAT(DISTINCT r.name SEPARATOR ',') AS roles ");
         jpql.append(") ");

@@ -1,6 +1,6 @@
 package com.mvnnixbuyapi.userservice.mappers;
 
-import com.mvnnixbuyapi.commons.dto.UserRegisterDto;
+import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

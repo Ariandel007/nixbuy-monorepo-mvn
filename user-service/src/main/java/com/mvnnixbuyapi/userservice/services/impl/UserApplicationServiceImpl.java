@@ -1,13 +1,14 @@
 package com.mvnnixbuyapi.userservice.services.impl;
 
-import com.mvnnixbuyapi.commons.dto.UserRegisterDto;
-import com.mvnnixbuyapi.commons.dto.UserToFindDto;
+import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
+import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
 import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
 import com.mvnnixbuyapi.userservice.mappers.UserMapper;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
 import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
-import com.mvnnixbuyapi.userservice.services.UserService;
+import com.mvnnixbuyapi.userservice.services.UserApplicationService;
+import com.mvnnixbuyapi.userservice.utils.UserServiceMessageErrors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,14 @@ import java.time.Instant;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserApplicationServiceImpl implements UserApplicationService {
 
     private final Validator validator;
     private final PasswordEncoder passwordEncoder;
     private final UserApplicationRepository userApplicationRepository;
 
     @Autowired
-    public UserServiceImpl(
+    public UserApplicationServiceImpl(
             UserApplicationRepository userApplicationRepository,
             PasswordEncoder passwordEncoder,
             Validator validator) {
@@ -76,42 +77,42 @@ public class UserServiceImpl implements UserService {
             FieldError usernameError = errors.getFieldError("username");
             if (usernameError != null) {
                 String errorMessage = usernameError.getDefaultMessage();
-                throw new InvalidUserToRegisterException("INVALID_USERNAME", errorMessage);
+                throw new InvalidUserToRegisterException(UserServiceMessageErrors.INVALID_USERNAME_CODE, errorMessage);
             }
             FieldError passwordError = errors.getFieldError("password");
             if (passwordError != null) {
                 String errorMessage = passwordError.getDefaultMessage();
-                throw new InvalidUserToRegisterException("INVALID_PASSWORD", errorMessage);
+                throw new InvalidUserToRegisterException(UserServiceMessageErrors.INVALID_PASSWORD_CODE, errorMessage);
             }
             FieldError emailError = errors.getFieldError("email");
             if (emailError != null) {
                 String errorMessage = emailError.getDefaultMessage();
-                throw new InvalidUserToRegisterException("INVALID_EMAIL", errorMessage);
+                throw new InvalidUserToRegisterException(UserServiceMessageErrors.INVALID_EMAIL_CODE, errorMessage);
             }
             FieldError firstnameError = errors.getFieldError("firstname");
             if (firstnameError != null) {
                 String errorMessage = firstnameError.getDefaultMessage();
-                throw new InvalidUserToRegisterException("INVALID_FIRSTNAME", errorMessage);
+                throw new InvalidUserToRegisterException(UserServiceMessageErrors.INVALID_FIRSTNAME_CODE, errorMessage);
             }
             FieldError lastnameError = errors.getFieldError("lastname");
             if (lastnameError != null) {
                 String errorMessage = lastnameError.getDefaultMessage();
-                throw new InvalidUserToRegisterException("INVALID_LASTNAME", errorMessage);
+                throw new InvalidUserToRegisterException(UserServiceMessageErrors.INVALID_LASTNAME_CODE, errorMessage);
             }
             FieldError countryError = errors.getFieldError("country");
             if (countryError != null) {
                 String errorMessage = countryError.getDefaultMessage();
-                throw new InvalidUserToRegisterException("INVALID_COUNTRY", errorMessage);
+                throw new InvalidUserToRegisterException(UserServiceMessageErrors.INVALID_COUNTRY_CODE, errorMessage);
             }
             FieldError cityError = errors.getFieldError("city");
             if (cityError != null) {
                 String errorMessage = cityError.getDefaultMessage();
-                throw new InvalidUserToRegisterException("INVALID_CITY", errorMessage);
+                throw new InvalidUserToRegisterException(UserServiceMessageErrors.INVALID_CITY_CODE, errorMessage);
             }
             FieldError birthDateUtcError = errors.getFieldError("birthDateUtc");
             if (birthDateUtcError != null) {
                 String errorMessage = birthDateUtcError.getDefaultMessage();
-                throw new InvalidUserToRegisterException("INVALID_BIRTHDATE", errorMessage);
+                throw new InvalidUserToRegisterException(UserServiceMessageErrors.INVALID_BIRTHDATE_CODE, errorMessage);
             }
         }
     }
