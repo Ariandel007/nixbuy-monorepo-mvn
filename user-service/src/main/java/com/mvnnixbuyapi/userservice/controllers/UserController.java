@@ -3,7 +3,6 @@ package com.mvnnixbuyapi.userservice.controllers;
 import com.mvnnixbuyapi.commons.dto.UserRegisterDto;
 import com.mvnnixbuyapi.commons.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.services.UserService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.*;
 
 import java.time.Instant;
-import java.util.Map;
 import java.util.Optional;
-
-import static org.springframework.boot.context.properties.bind.Bindable.mapOf;
 
 @Service
 public class UserServiceImpl implements UserService {
