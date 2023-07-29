@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.userservice.unittesting;
 
+import com.mvnnixbuyapi.commons.exceptions.GeneralException;
 import com.mvnnixbuyapi.userservice.data.DataToTest;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
@@ -7,6 +8,7 @@ import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
 import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
+import com.mvnnixbuyapi.userservice.utils.UserServiceMessageErrors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setUsername(null);
 
-        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Username is required");
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, UserServiceMessageErrors.INVALID_USERNAME_CODE, "Username is required");
     }
 
     @Test
@@ -51,7 +53,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setPassword(null);
 
-        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Password is required");
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, UserServiceMessageErrors.INVALID_PASSWORD_CODE, "Password is required");
     }
 
     @Test
@@ -61,7 +63,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setEmail(null);
 
-        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Email is required");
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, UserServiceMessageErrors.INVALID_EMAIL_CODE, "Email is required");
     }
 
     @Test
@@ -71,7 +73,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setFirstname(null);
 
-        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Firstname is required");
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, UserServiceMessageErrors.INVALID_FIRSTNAME_CODE, "Firstname is required");
     }
 
     @Test
@@ -81,7 +83,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setLastname(null);
 
-        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Lastname is required");
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, UserServiceMessageErrors.INVALID_LASTNAME_CODE, "Lastname is required");
     }
 
     @Test
@@ -91,7 +93,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setCountry(null);
 
-        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "Country is required");
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, UserServiceMessageErrors.INVALID_COUNTRY_CODE,"Country is required");
     }
 
     @Test
@@ -101,7 +103,7 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setCity(null);
 
-        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "City is required");
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, UserServiceMessageErrors.INVALID_CITY_CODE,"City is required");
 
     }
 
@@ -112,10 +114,10 @@ public class UserCreationTests {
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setBirthDateUtc(null);
 
-        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, "birthdate is required");
+        this.commonGeneralInvalidUserToRegisterException(userRegisterDto, UserServiceMessageErrors.INVALID_BIRTHDATE_CODE, "birthdate is required");
     }
 
-    private void commonGeneralInvalidUserToRegisterException(UserRegisterDto userRegisterDto, String errorMessage) {
+    private void commonGeneralInvalidUserToRegisterException(UserRegisterDto userRegisterDto, String errorCode, String errorMessage) {
         when(this.userApplicationRepository.findByUsername(eq("usertest"))).thenReturn(DataToTest.findOptUserApplicationTest());
         when(this.passwordEncoder.encode(anyString())).thenReturn("$2a$10$ruiC/sjn7YAJiPDD/G8VzO1SJLVjFJwRDopz5WljF.q8w.IdGvKQu");
         when(userApplicationRepository.save(any(UserApplication.class))).thenAnswer(invocation -> {
@@ -125,12 +127,13 @@ public class UserCreationTests {
         });
 
         //When
-        Throwable thrown = assertThrows(InvalidUserToRegisterException.class, ()-> {
+        GeneralException exception = assertThrows(InvalidUserToRegisterException.class, ()-> {
             this.userService.registerUser(userRegisterDto);
         });
 
         //Then
-        Assertions.assertEquals(errorMessage, thrown.getMessage());
+        Assertions.assertEquals(errorMessage, exception.getMessage());
+        Assertions.assertEquals(errorCode, exception.getErrorCode());
 
     }
 
