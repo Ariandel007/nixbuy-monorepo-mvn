@@ -34,6 +34,19 @@ public class DataToTest {
         return userRegisterDto;
     }
 
+    public static UserRegisterDto userRegisterDtoSaved() {
+        UserRegisterDto userRegisterDto = new UserRegisterDto();
+        userRegisterDto.setUsername("usertest2");
+        userRegisterDto.setPassword("ejemplo12345@A");
+        userRegisterDto.setEmail("test123@gmail.com");
+        userRegisterDto.setFirstname("Alexander");
+        userRegisterDto.setLastname("Urbina");
+        userRegisterDto.setCountry("Peru");
+        userRegisterDto.setCity("Lima");
+        userRegisterDto.setBirthDateUtc("1999-02-20T00:34:29.235Z");
+        return userRegisterDto;
+    }
+
     public static UserApplication userSavedTest() {
         UserApplication userApplication = new UserApplication();
         userApplication.setId(2L);

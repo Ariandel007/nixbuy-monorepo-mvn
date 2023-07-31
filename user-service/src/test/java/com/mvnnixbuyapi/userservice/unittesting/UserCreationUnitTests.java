@@ -16,15 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.Validator;
-
-import javax.xml.crypto.Data;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class UserCreationTests {
+public class UserCreationUnitTests {
 //    @MockBean
 //    Validator validator;
     @MockBean
@@ -38,7 +35,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Test insert empty username")
-    void testBlankUsername() {
+    void shouldFailForBlankUsername() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setUsername(null);
@@ -48,7 +45,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Test insert empty password")
-    void testBlankPassword() {
+    void shouldFailForBlankPassword() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setPassword(null);
@@ -58,7 +55,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Test insert empty email")
-    void testBlankEmail() {
+    void shouldFailForBlankEmail() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setEmail(null);
@@ -68,7 +65,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Test insert empty firstname")
-    void testBlankFirstname() {
+    void shouldFailForBlankFirstname() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setFirstname(null);
@@ -78,7 +75,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Test insert empty lastname")
-    void testBlankLastname() {
+    void shouldFailForBlankLastname() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setLastname(null);
@@ -88,7 +85,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Test insert empty country")
-    void testBlankCountry() {
+    void shouldFailForBlankCountry() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setCountry(null);
@@ -98,7 +95,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Test insert empty city")
-    void testBlankCity() {
+    void shouldFailForBlankCity() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setCity(null);
@@ -109,7 +106,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Test insert empty birthdate")
-    void testBlankBirthDate() {
+    void shouldFailForBlankBirthDate() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setBirthDateUtc(null);
@@ -139,7 +136,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Test insert successfully")
-    void testSucessfullInsertion() {
+    void shouldSucessfullyInsertUser() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
 
@@ -160,7 +157,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Test user already exists")
-    void testExistsUsername() {
+    void shouldFailForExistsUsername() {
         //Given
         UserRegisterDto userRegisterDto = DataToTest.userRegisterDtoToSaveTest();
         userRegisterDto.setUsername("usertest");

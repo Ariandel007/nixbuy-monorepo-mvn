@@ -57,6 +57,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
         UserApplication userCreated = this.userApplicationRepository.save(userApplication);
         UserRegisterDto userRegisterDtoCreated = UserMapper.INSTANCE.mapUserApplicationToUserRegisterDto(userCreated);
+        userRegisterDtoCreated.setBirthDateUtc(userCreated.getBirthDate().toString());
 
         return userRegisterDtoCreated;
     }
