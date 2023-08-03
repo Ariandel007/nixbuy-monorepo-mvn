@@ -5,6 +5,7 @@ import com.mvnnixbuyapi.userservice.config.SecurityConfiguration;
 import com.mvnnixbuyapi.userservice.controllers.UserController;
 import com.mvnnixbuyapi.userservice.data.DataToTest;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
+import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,8 +51,8 @@ public class UserControllerUnitTests {
         });
 
         // when
-        mvc.perform(post("/api/users/register-user")
-                        .header("X-API-Version","1")
+        mvc.perform(post("/api/users/v1/register-user")
+//                        .header("X-API-Version","1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userRegisterDto)))
                 // Then
@@ -67,5 +68,32 @@ public class UserControllerUnitTests {
                 .andExpect(jsonPath("$.birthDateUtc").value("1999-02-20T00:34:29.235Z"));
 
         verify(userService).registerUser(eq(userRegisterDto));
+    }
+
+    @Test
+    void shouldFindUserById() throws Exception {
+        // Given
+        UserToFindDto userSaved = DataToTest.userToReturn();
+
+        when(this.userService.findUserBasicInfoById(2L)).thenReturn(userSaved);
+
+        // when
+        mvc.perform(get("/api/users/v1/basic-user-info/2")
+//                        .header("X-API-Version","1")
+                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(userRegisterDto))
+        )
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(2L))
+                .andExpect(jsonPath("$.username").value("usertest2"))
+                .andExpect(jsonPath("$.country").value("Peru"))
+                .andExpect(jsonPath("$.city").value("Lima"))
+//                .andExpect(jsonPath("$.birthDate").value(userSaved.getBirthDate()))
+//                .andExpect(jsonPath("$.accountCreationDate").value(userSaved.getAccountCreationDate()))
+                .andExpect(jsonPath("$.photoUrl").value("/"));
+
+        verify(userService).findUserBasicInfoById(2L);
     }
 }

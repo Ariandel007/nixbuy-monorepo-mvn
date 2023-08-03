@@ -1,6 +1,7 @@
 package com.mvnnixbuyapi.userservice.data;
 
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
+import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
 
 import java.time.Instant;
@@ -61,5 +62,17 @@ public class DataToTest {
         Instant today = Instant.now();
         userApplication.setAccountCreationDate(today);
         return userApplication;
+    }
+
+    public static UserToFindDto userToReturn() {
+        UserToFindDto userToFindDto = new UserToFindDto();
+        userToFindDto.setId(2L);
+        userToFindDto.setCity("Lima");
+        userToFindDto.setCountry("Peru");
+        userToFindDto.setUsername("usertest2");
+        userToFindDto.setPhotoUrl("/");
+        userToFindDto.setBirthDate(Instant.parse("1999-02-20T00:34:29.235Z"));
+        userToFindDto.setAccountCreationDate(Instant.parse("2023-07-27T00:00:00.000Z"));
+        return userToFindDto;
     }
 }

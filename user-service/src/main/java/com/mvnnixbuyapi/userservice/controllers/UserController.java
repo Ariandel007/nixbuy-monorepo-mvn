@@ -17,13 +17,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/register-user", headers = "X-API-Version=1")
+    @PostMapping(value = "/v1/register-user")
     ResponseEntity<UserRegisterDto> registerUserV1(@RequestBody UserRegisterDto userRegisterDto) {
         return ResponseEntity.ok().body(this.userService.registerUser(userRegisterDto));
     }
 
-    @GetMapping(value = "/basic-user-info/{userId}", headers = "X-API-Version=1")
-    ResponseEntity<UserToFindDto> findUserBasicInfoById(@PathVariable Long userId) {
+    @GetMapping(value = "/v1/basic-user-info/{userId}")
+    ResponseEntity<UserToFindDto> findUserBasicInfoByIdV1(@PathVariable Long userId) {
         return ResponseEntity.ok().body(this.userService.findUserBasicInfoById(userId));
     }
 
