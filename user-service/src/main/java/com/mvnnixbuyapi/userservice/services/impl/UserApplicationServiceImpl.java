@@ -5,6 +5,8 @@ import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
 import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
 import com.mvnnixbuyapi.userservice.mappers.UserMapper;
+import com.mvnnixbuyapi.userservice.models.PasswordHistory;
+import com.mvnnixbuyapi.userservice.models.RoleApplication;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
 import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
@@ -16,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,6 +58,12 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
         Instant today = Instant.now();
         userApplication.setAccountCreationDate(today);
+
+        //Roles
+        List<RoleApplication> roleList = new ArrayList<>();
+        RoleApplication roleApplication = new RoleApplication(1L,"ROLE_USER");
+        roleList.add(roleApplication);
+        userApplication.setRoleApplicationList(roleList);
 
         UserApplication userCreated = this.userApplicationRepository.save(userApplication);
         UserRegisterDto userRegisterDtoCreated = UserMapper.INSTANCE.mapUserApplicationToUserRegisterDto(userCreated);

@@ -2,6 +2,7 @@ package com.mvnnixbuyapi.userservice.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -9,6 +10,7 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "password_history")
+@NoArgsConstructor
 public class PasswordHistory implements Serializable {
     private static final long serialVersionUID = 1003000000L;
 

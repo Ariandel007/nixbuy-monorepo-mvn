@@ -52,3 +52,10 @@ ALTER TABLE public.users_roles_applications ADD CONSTRAINT fkan82xl2556smf03iano
 ALTER TABLE public.users_roles_applications ADD CONSTRAINT fkfvs9tqm7srhpxbocm59ybe8bi FOREIGN KEY (user_app_id) REFERENCES public.user_applications(id);
 
 
+INSERT INTO public.roles_applications
+(id, "name")
+VALUES(1, 'ROLE_USER');
+
+INSERT INTO public.roles_applications
+(id, "name")
+VALUES(2, 'ROLE_ADMIN');

@@ -8,6 +8,7 @@ import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
 import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
+import com.mvnnixbuyapi.userservice.services.impl.UserApplicationServiceImpl;
 import com.mvnnixbuyapi.userservice.utils.UserServiceMessageErrors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -16,11 +17,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@SpringBootTest(classes = {
+        PasswordEncoder.class,
+        UserApplicationRepository.class,
+        UserApplicationService.class,
+        UserApplicationServiceImpl.class,
+        LocalValidatorFactoryBean.class
+})
 public class UserCreationUnitTests {
 //    @MockBean
 //    Validator validator;
@@ -28,7 +37,6 @@ public class UserCreationUnitTests {
     PasswordEncoder passwordEncoder;
     @MockBean
     UserApplicationRepository userApplicationRepository;
-
 
     @Autowired
     UserApplicationService userService;
