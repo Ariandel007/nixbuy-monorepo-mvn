@@ -68,7 +68,8 @@ public class UserRepositoryIntegrationTests {
         Optional<UserApplication> userApplicationOptional = this.userApplicationRepository.findByUsername("ejemplo_usuario1");
         assertTrue(userApplicationOptional.isPresent());
         assertEquals(1L, userApplicationOptional.get().getId());
-
+        assertEquals(0, userApplicationOptional.get().getAttemps());
+        assertEquals("email_registered", userApplicationOptional.get().getAuthType());
     }
 
 
