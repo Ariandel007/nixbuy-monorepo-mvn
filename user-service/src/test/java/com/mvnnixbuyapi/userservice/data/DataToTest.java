@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.userservice.data;
 
+import com.mvnnixbuyapi.userservice.dto.UserPasswordToUpdateDto;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
@@ -74,5 +75,11 @@ public class DataToTest {
         userToFindDto.setBirthDate(Instant.parse("1999-02-20T00:34:29.235Z"));
         userToFindDto.setAccountCreationDate(Instant.parse("2023-07-27T00:00:00.000Z"));
         return userToFindDto;
+    }
+
+    public static UserPasswordToUpdateDto passwordToUpdateDto() {
+        UserPasswordToUpdateDto userPasswordToUpdateDto = new UserPasswordToUpdateDto();
+        userPasswordToUpdateDto.setPassword("PruebaPassNueva1234@");
+        return userPasswordToUpdateDto;
     }
 }
