@@ -2,10 +2,13 @@ package com.mvnnixbuyapi.userservice.controllers;
 
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
+import com.mvnnixbuyapi.userservice.dto.UserToUpdateDto;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/users")
@@ -25,6 +28,20 @@ public class UserController {
     @GetMapping(value = "/v1/basic-user-info/{userId}")
     ResponseEntity<UserToFindDto> findUserBasicInfoByIdV1(@PathVariable Long userId) {
         return ResponseEntity.ok().body(this.userService.findUserBasicInfoById(userId));
+    }
+
+    @PatchMapping(value = "/v1/update-user-info/{userId}")
+    ResponseEntity<UserToUpdateDto> updateUserV1(@PathVariable Long userId,
+                                                 @RequestBody UserToUpdateDto userToUpdateDto) {
+        return null;
+    }
+
+    @PatchMapping(value = "/v1/updatePhotoUrl/{userId}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<UserToUpdateDto> updatePhotoV1(@PathVariable Long userId,
+                                                  @RequestPart(value = "file") MultipartFile file) {
+        return null;
     }
 
 }
