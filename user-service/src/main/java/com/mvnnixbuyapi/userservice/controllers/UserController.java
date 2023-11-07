@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.userservice.controllers;
 
+import com.mvnnixbuyapi.userservice.dto.UserPasswordToUpdateDto;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.dto.UserToUpdateDto;
@@ -36,7 +37,7 @@ public class UserController {
         return null;
     }
 
-    @PatchMapping(value = "/v1/updatePhotoUrl/{userId}",
+    @PatchMapping(value = "/v1/update-photo-url/{userId}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<UserToUpdateDto> updatePhotoV1(@PathVariable Long userId,
@@ -44,4 +45,9 @@ public class UserController {
         return null;
     }
 
+    @PatchMapping(value = "/v1/update-user-password/{userId}")
+    ResponseEntity<UserRegisterDto> updateUserPasswordV1(@PathVariable Long userId,
+                                                 @RequestBody UserPasswordToUpdateDto userToUpdateDto) {
+        return null;
+    }
 }
