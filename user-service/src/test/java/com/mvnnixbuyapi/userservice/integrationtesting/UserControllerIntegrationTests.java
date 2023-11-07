@@ -2,9 +2,6 @@ package com.mvnnixbuyapi.userservice.integrationtesting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mvnnixbuyapi.userservice.data.DataToTest;
-import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
-import com.mvnnixbuyapi.userservice.models.UserApplication;
-import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
 import com.mvnnixbuyapi.userservice.utils.UserServiceMessageErrors;
 import org.hamcrest.core.IsNull;
@@ -19,9 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import javax.xml.crypto.Data;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -106,5 +100,83 @@ public class UserControllerIntegrationTests {
                 .andExpect(jsonPath("$.message").value(UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND_MSG))
         ;
     }
+
+    @Test
+    void shouldFailWhenUpdatingPasswordEmptyPasswordV1() throws Exception {
+        mvc.perform(patch("/api/users/v1/update-user-password/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(DataToTest.emptyPasswordToUpdateDto()))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value(UserServiceMessageErrors.INVALID_PATTERN_OF_PASSWORD))
+        ;
+    }
+
+    @Test
+    void shouldFailWhenUpdatingPasswordWithoutUpperCasesV1() throws Exception {
+        mvc.perform(patch("/api/users/v1/update-user-password/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(DataToTest.passwordWithoutUpperCasesToUpdateDto()))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value(UserServiceMessageErrors.INVALID_PATTERN_OF_PASSWORD))
+        ;
+
+    }
+
+    @Test
+    void shouldFailWhenUpdatingPasswordWithoutLowerCasesV1() throws Exception {
+        mvc.perform(patch("/api/users/v1/update-user-password/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(DataToTest.passwordWithoutLowerCasesToUpdateDto()))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value(UserServiceMessageErrors.INVALID_PATTERN_OF_PASSWORD))
+        ;
+
+    }
+
+    @Test
+    void shouldFailWhenUpdatingPasswordWithoutNumberV1() throws Exception {
+        mvc.perform(patch("/api/users/v1/update-user-password/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(DataToTest.passwordWithoutNumberToUpdateDto()))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value(UserServiceMessageErrors.INVALID_PATTERN_OF_PASSWORD))
+        ;
+
+    }
+
+    @Test
+    void shouldFailWhenUpdatingPasswordWithoutSpecialCharactersV1() throws Exception {
+        mvc.perform(patch("/api/users/v1/update-user-password/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(DataToTest.passwordWithoutSpecialCharactersToUpdateDto()))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value(UserServiceMessageErrors.INVALID_PATTERN_OF_PASSWORD))
+        ;
+
+    }
+
+    @Test
+    void shouldFailWhenUpdatingPasswordWithLessThanTwelveCharactersV1() throws Exception {
+        mvc.perform(patch("/api/users/v1/update-user-password/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(DataToTest.passwordWithLessThanTwelveCharactersToUpdateDto()))
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value(UserServiceMessageErrors.INVALID_PATTERN_OF_PASSWORD))
+        ;
+
+    }
+
 
 }

@@ -31,4 +31,8 @@ public class UserServiceMessageErrors {
     public static String USER_ALREADY_EXISTS_MSG = "Username already exists";
 
 
+    public static String INVALID_PATTERN_OF_PASSWORD = "INVALID_PATTERN_OF_PASSWORD";
+    public static String INVALID_PATTERN_OF_PASSWORD_MSG = "Should contain atleast 1 uppercase, 1 lowercase, 1 digit and 1 special char and between 12 and 128 characters";
+
+
 }

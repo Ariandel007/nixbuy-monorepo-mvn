@@ -4,9 +4,7 @@ import com.mvnnixbuyapi.userservice.dto.UserDataToPasswordUpdatedDto;
 import com.mvnnixbuyapi.userservice.dto.UserPasswordToUpdateDto;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
-import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
-import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
-import com.mvnnixbuyapi.userservice.exceptions.UserToUpdateNotFoundException;
+import com.mvnnixbuyapi.userservice.exceptions.*;
 import com.mvnnixbuyapi.userservice.mappers.UserMapper;
 import com.mvnnixbuyapi.userservice.models.PasswordHistory;
 import com.mvnnixbuyapi.userservice.models.RoleApplication;
@@ -137,6 +135,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     public UserDataToPasswordUpdatedDto updateUserPassword(Long userId, UserPasswordToUpdateDto userToUpdateDto) {
         Optional<UserApplication> userApplicationOptional = this.userApplicationRepository.findById(userId);
         if(userApplicationOptional.isPresent()) {
+            this.validatePasswordToUpdate(userToUpdateDto);
             UserApplication userApplication = userApplicationOptional.get();
             userApplication.setPassword(this.passwordEncoder.encode(userToUpdateDto.getPassword()));
             userApplication.setAttemps((short) 0);
@@ -149,5 +148,20 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         }
         throw new UserToUpdateNotFoundException(UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND,
                 UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND_MSG);
+    }
+
+    private void validatePasswordToUpdate(UserPasswordToUpdateDto userToUpdateDto) {
+        // Create a BindingResult to capture validation errors
+        BindingResult errors = new BeanPropertyBindingResult(userToUpdateDto, "userToUpdateDto");
+        // Perform validation
+        validator.validate(userToUpdateDto, errors);
+
+        if (errors.hasErrors()) {
+            FieldError passwordError = errors.getFieldError("password");
+            if (passwordError != null) {
+                String errorMessage = passwordError.getDefaultMessage();
+                throw new InvalidPatternOfPasswordException(UserServiceMessageErrors.INVALID_PATTERN_OF_PASSWORD, errorMessage);
+            }
+        }
     }
 }

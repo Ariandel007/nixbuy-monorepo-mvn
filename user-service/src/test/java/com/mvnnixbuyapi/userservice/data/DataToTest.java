@@ -82,4 +82,40 @@ public class DataToTest {
         userPasswordToUpdateDto.setPassword("PruebaPassNueva1234@");
         return userPasswordToUpdateDto;
     }
+
+    public static UserPasswordToUpdateDto emptyPasswordToUpdateDto() {
+        UserPasswordToUpdateDto userPasswordToUpdateDto = new UserPasswordToUpdateDto();
+        userPasswordToUpdateDto.setPassword("");
+        return userPasswordToUpdateDto;
+    }
+
+    public static UserPasswordToUpdateDto passwordWithoutUpperCasesToUpdateDto() {
+        UserPasswordToUpdateDto userPasswordToUpdateDto = new UserPasswordToUpdateDto();
+        userPasswordToUpdateDto.setPassword("pruebanueva1234@");
+        return userPasswordToUpdateDto;
+    }
+
+    public static UserPasswordToUpdateDto passwordWithoutLowerCasesToUpdateDto() {
+        UserPasswordToUpdateDto userPasswordToUpdateDto = new UserPasswordToUpdateDto();
+        userPasswordToUpdateDto.setPassword("PRUEBANUEVA1234@");
+        return userPasswordToUpdateDto;
+    }
+
+    public static UserPasswordToUpdateDto passwordWithoutNumberToUpdateDto() {
+        UserPasswordToUpdateDto userPasswordToUpdateDto = new UserPasswordToUpdateDto();
+        userPasswordToUpdateDto.setPassword("PPRUEBANUEVA@");
+        return userPasswordToUpdateDto;
+    }
+
+    public static UserPasswordToUpdateDto passwordWithoutSpecialCharactersToUpdateDto() {
+        UserPasswordToUpdateDto userPasswordToUpdateDto = new UserPasswordToUpdateDto();
+        userPasswordToUpdateDto.setPassword("pruebanueva12345");
+        return userPasswordToUpdateDto;
+    }
+
+    public static UserPasswordToUpdateDto passwordWithLessThanTwelveCharactersToUpdateDto() {
+        UserPasswordToUpdateDto userPasswordToUpdateDto = new UserPasswordToUpdateDto();
+        userPasswordToUpdateDto.setPassword("PruebPaN12@");
+        return userPasswordToUpdateDto;
+    }
 }
