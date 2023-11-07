@@ -24,5 +24,11 @@ public class UserServiceMessageErrors {
 
     public static String INVALID_BIRTHDATE_CODE = "INVALID_BIRTHDATE";
 
+    public static String USER_TO_UPDATE_NOT_FOUND = "USER_TO_UPDATE_NOT_FOUND";
+    public static String USER_TO_UPDATE_NOT_FOUND_MSG = "The user wanted to update was not found";
+
+    public static String USER_ALREADY_EXISTS = "USER_ALREADY_EXISTS";
+    public static String USER_ALREADY_EXISTS_MSG = "Username already exists";
+
 
 }

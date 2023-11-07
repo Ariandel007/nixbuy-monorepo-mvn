@@ -4,6 +4,7 @@ import com.mvnnixbuyapi.commons.exceptions.GeneralBodyExceptionHandler;
 import com.mvnnixbuyapi.commons.exceptions.GeneralException;
 import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
 import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
+import com.mvnnixbuyapi.userservice.exceptions.UserToUpdateNotFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -25,13 +26,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(),
                 HttpStatus.BAD_REQUEST, request);
     }
-//
-//    @ExceptionHandler(value= {  })
-//    protected ResponseEntity<Object> handleNotFound(GeneralException ex, WebRequest request) {
-//        return handleExceptionInternal(
-//                ex,
-//                new GeneralBodyExceptionHandler(ex.getErrorCode(),ex.getMessage(),ex.getLocalizedMessage()),
-//                new HttpHeaders(),
-//                HttpStatus.NOT_FOUND, request);
-//    }
+
+    @ExceptionHandler(value= {UserToUpdateNotFoundException.class})
+    protected ResponseEntity<Object> handleNotFound(GeneralException ex, WebRequest request) {
+        return handleExceptionInternal(
+                ex,
+                new GeneralBodyExceptionHandler(ex.getErrorCode(),ex.getMessage(),ex.getLocalizedMessage()),
+                new HttpHeaders(),
+                HttpStatus.NOT_FOUND, request);
+    }
 }

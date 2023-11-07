@@ -1,9 +1,12 @@
 package com.mvnnixbuyapi.userservice.services.impl;
 
+import com.mvnnixbuyapi.userservice.dto.UserDataToPasswordUpdatedDto;
+import com.mvnnixbuyapi.userservice.dto.UserPasswordToUpdateDto;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
 import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
+import com.mvnnixbuyapi.userservice.exceptions.UserToUpdateNotFoundException;
 import com.mvnnixbuyapi.userservice.mappers.UserMapper;
 import com.mvnnixbuyapi.userservice.models.PasswordHistory;
 import com.mvnnixbuyapi.userservice.models.RoleApplication;
@@ -46,7 +49,8 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
         Optional<UserApplication> optUserInBd = this.userApplicationRepository.findByUsername(userRegisterDto.getUsername());
         if(optUserInBd.isPresent()) {
-            throw new UserAlreadyExistsException("USER_ALREADY_EXISTS", "Username already exists");
+            throw new UserAlreadyExistsException(UserServiceMessageErrors.USER_ALREADY_EXISTS,
+                    UserServiceMessageErrors.USER_ALREADY_EXISTS_MSG);
         }
 
         UserApplication userApplication = UserMapper.INSTANCE.mapUserRegisterDtoToUserApplication(userRegisterDto);
@@ -126,5 +130,24 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                 throw new InvalidUserToRegisterException(UserServiceMessageErrors.INVALID_BIRTHDATE_CODE, errorMessage);
             }
         }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public UserDataToPasswordUpdatedDto updateUserPassword(Long userId, UserPasswordToUpdateDto userToUpdateDto) {
+        Optional<UserApplication> userApplicationOptional = this.userApplicationRepository.findById(userId);
+        if(userApplicationOptional.isPresent()) {
+            UserApplication userApplication = userApplicationOptional.get();
+            userApplication.setPassword(this.passwordEncoder.encode(userToUpdateDto.getPassword()));
+            userApplication.setAttemps((short) 0);
+            this.userApplicationRepository.save(userApplication);
+
+            UserDataToPasswordUpdatedDto userDataToPasswordUpdatedDto = new UserDataToPasswordUpdatedDto();
+            userDataToPasswordUpdatedDto.setId(userApplication.getId());
+            userDataToPasswordUpdatedDto.setUsername(userApplication.getUsername());
+            return userDataToPasswordUpdatedDto;
+        }
+        throw new UserToUpdateNotFoundException(UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND,
+                UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND_MSG);
     }
 }

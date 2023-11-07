@@ -6,8 +6,11 @@ import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
 import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
+import com.mvnnixbuyapi.userservice.utils.UserServiceMessageErrors;
+import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -29,12 +32,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @Testcontainers
+@AutoConfigureMockMvc
 public class UserControllerIntegrationTests {
     @Autowired
     private MockMvc mvc;
     @Autowired
     private UserApplicationService userService;
 
+    @Autowired
     ObjectMapper objectMapper;
 
     @Container
@@ -63,27 +68,43 @@ public class UserControllerIntegrationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.username").value("usertest2"))
-                .andExpect(jsonPath("$.country").value("Peru"))
-                .andExpect(jsonPath("$.city").value("Lima"))
+                .andExpect(jsonPath("$.username").value("ejemplo_usuario1"))
+                .andExpect(jsonPath("$.country").value("Ejemplolandia"))
+                .andExpect(jsonPath("$.city").value("Ciudad Ejemplo"))
 //                .andExpect(jsonPath("$.birthDate").value(userSaved.getBirthDate()))
 //                .andExpect(jsonPath("$.accountCreationDate").value(userSaved.getAccountCreationDate()))
-                .andExpect(jsonPath("$.photoUrl").value("/"));
+                .andExpect(jsonPath("$.photoUrl").value(IsNull.nullValue()));
 
     }
 
+    @Test
     void shouldUpdateUserPasswordV1() throws Exception {
         // Given
-        mvc.perform(patch("/api/users//v1/update-user-password/1")
+        mvc.perform(patch("/api/users/v1/update-user-password/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(DataToTest.passwordToUpdateDto()))
                 )
                 // Then
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value("1L"))
+                .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.username").value("ejemplo_usuario1"))
                 ;
+    }
+
+    @Test
+    void shoulNotFoundUserToUpdatePasswordV1() throws Exception {
+        // Given
+        mvc.perform(patch("/api/users/v1/update-user-password/9999999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(DataToTest.passwordToUpdateDto()))
+                )
+                // Then
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value(UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND))
+                .andExpect(jsonPath("$.message").value(UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND_MSG))
+        ;
     }
 
 }

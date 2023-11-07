@@ -46,6 +46,6 @@ public class UserController {
     ResponseEntity<UserDataToPasswordUpdatedDto> updateUserPasswordV1(
             @PathVariable Long userId,
             @RequestBody UserPasswordToUpdateDto userToUpdateDto) {
-        return null;
+        return ResponseEntity.ok().body(this.userService.updateUserPassword(userId, userToUpdateDto));
     }
 }
