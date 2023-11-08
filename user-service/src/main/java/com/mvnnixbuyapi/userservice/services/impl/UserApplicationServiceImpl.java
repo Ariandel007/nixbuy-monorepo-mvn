@@ -1,9 +1,7 @@
 package com.mvnnixbuyapi.userservice.services.impl;
 
-import com.mvnnixbuyapi.userservice.dto.UserDataToPasswordUpdatedDto;
-import com.mvnnixbuyapi.userservice.dto.UserPasswordToUpdateDto;
-import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
-import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
+import com.mvnnixbuyapi.userservice.components.TokenProvider;
+import com.mvnnixbuyapi.userservice.dto.*;
 import com.mvnnixbuyapi.userservice.exceptions.*;
 import com.mvnnixbuyapi.userservice.mappers.UserMapper;
 import com.mvnnixbuyapi.userservice.models.PasswordHistory;
@@ -30,14 +28,18 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     private final PasswordEncoder passwordEncoder;
     private final UserApplicationRepository userApplicationRepository;
 
+    private final TokenProvider tokenProvider;
+
     @Autowired
     public UserApplicationServiceImpl(
             UserApplicationRepository userApplicationRepository,
             PasswordEncoder passwordEncoder,
-            Validator validator) {
+            Validator validator,
+            TokenProvider tokenProvider) {
         this.userApplicationRepository = userApplicationRepository;
         this.passwordEncoder = passwordEncoder;
         this.validator = validator;
+        this.tokenProvider = tokenProvider;
     };
 
     @Override
@@ -148,6 +150,28 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         }
         throw new UserToUpdateNotFoundException(UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND,
                 UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND_MSG);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public AuthTokenDto generateToken(LoginUserDto loginUser) {
+        Optional<UserApplication> userApplicationOptional =
+                this.userApplicationRepository.findByUsername(loginUser.getUsername());
+
+        if(userApplicationOptional.isPresent()) {
+            UserApplication userApplication = userApplicationOptional.get();
+            userApplication.setAttemps((short) (userApplication.getAttemps() + 1));
+            if(this.passwordEncoder.matches(loginUser.getPassword(), userApplication.getPassword()) ) {
+                userApplication.setAttemps((short) 0);
+                String token = this.tokenProvider.generateToken(userApplication);
+                this.userApplicationRepository.save(userApplication);
+                return new AuthTokenDto(token);
+            } else {
+                return null;
+            }
+        }
+
+        return null;
     }
 
     private void validatePasswordToUpdate(UserPasswordToUpdateDto userToUpdateDto) {

@@ -1,13 +1,13 @@
 package com.mvnnixbuyapi.userservice.services;
 
-import com.mvnnixbuyapi.userservice.dto.UserDataToPasswordUpdatedDto;
-import com.mvnnixbuyapi.userservice.dto.UserPasswordToUpdateDto;
-import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
-import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
+import com.mvnnixbuyapi.userservice.dto.*;
 
 public interface UserApplicationService {
     UserRegisterDto registerUser(UserRegisterDto userRegisterDto);
     UserToFindDto findUserBasicInfoById(Long id);
     UserDataToPasswordUpdatedDto updateUserPassword(Long userId, UserPasswordToUpdateDto userToUpdateDto);
+
+    AuthTokenDto generateToken(LoginUserDto loginUser);
+
 
 }
