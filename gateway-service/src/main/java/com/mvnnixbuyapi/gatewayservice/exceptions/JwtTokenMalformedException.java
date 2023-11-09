@@ -1,6 +1,7 @@
 package com.mvnnixbuyapi.gatewayservice.exceptions;
 
-import com.mvnnixbuyapi.gatewayservice.commons.exceptions.GeneralException;
+
+import com.mvnnixbuyapi.commons.exceptions.GeneralException;
 
 public class JwtTokenMalformedException extends GeneralException {
 

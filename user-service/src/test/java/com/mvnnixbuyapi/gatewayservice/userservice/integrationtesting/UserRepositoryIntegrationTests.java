@@ -1,7 +1,7 @@
-package com.mvnnixbuyapi.gatewayservice.userservice.integrationtesting;
+package com.mvnnixbuyapi.userservice.integrationtesting;
 
-import com.mvnnixbuyapi.gatewayservice.userservice.models.UserApplication;
-import com.mvnnixbuyapi.gatewayservice.userservice.repositories.UserApplicationRepository;
+import com.mvnnixbuyapi.userservice.models.UserApplication;
+import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

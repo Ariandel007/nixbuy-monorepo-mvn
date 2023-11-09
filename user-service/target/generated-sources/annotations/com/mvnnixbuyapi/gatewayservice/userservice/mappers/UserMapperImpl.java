@@ -1,14 +1,13 @@
-package com.mvnnixbuyapi.gatewayservice.userservice.mappers;
+package com.mvnnixbuyapi.userservice.mappers;
 
-import com.mvnnixbuyapi.gatewayservice.userservice.dto.UserRegisterDto;
-import com.mvnnixbuyapi.gatewayservice.userservice.models.UserApplication;
-
+import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
+import com.mvnnixbuyapi.userservice.models.UserApplication;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-08T15:24:03-0500",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.6 (Eclipse Adoptium)"
+    date = "2023-11-08T19:44:12-0500",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.35.0.v20230814-2020, environment: Java 17.0.8.1 (Eclipse Adoptium)"
 )
 public class UserMapperImpl implements UserMapper {
 
@@ -20,13 +19,13 @@ public class UserMapperImpl implements UserMapper {
 
         UserApplication userApplication = new UserApplication();
 
-        userApplication.setUsername( dto.getUsername() );
-        userApplication.setPassword( dto.getPassword() );
+        userApplication.setCity( dto.getCity() );
+        userApplication.setCountry( dto.getCountry() );
         userApplication.setEmail( dto.getEmail() );
         userApplication.setFirstname( dto.getFirstname() );
         userApplication.setLastname( dto.getLastname() );
-        userApplication.setCountry( dto.getCountry() );
-        userApplication.setCity( dto.getCity() );
+        userApplication.setPassword( dto.getPassword() );
+        userApplication.setUsername( dto.getUsername() );
 
         return userApplication;
     }
@@ -39,13 +38,13 @@ public class UserMapperImpl implements UserMapper {
 
         UserRegisterDto userRegisterDto = new UserRegisterDto();
 
-        userRegisterDto.setUsername( dto.getUsername() );
-        userRegisterDto.setPassword( dto.getPassword() );
+        userRegisterDto.setCity( dto.getCity() );
+        userRegisterDto.setCountry( dto.getCountry() );
         userRegisterDto.setEmail( dto.getEmail() );
         userRegisterDto.setFirstname( dto.getFirstname() );
         userRegisterDto.setLastname( dto.getLastname() );
-        userRegisterDto.setCountry( dto.getCountry() );
-        userRegisterDto.setCity( dto.getCity() );
+        userRegisterDto.setPassword( dto.getPassword() );
+        userRegisterDto.setUsername( dto.getUsername() );
 
         return userRegisterDto;
     }

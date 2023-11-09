@@ -1,9 +1,9 @@
-package com.mvnnixbuyapi.gatewayservice.userservice.data;
+package com.mvnnixbuyapi.userservice.data;
 
-import com.mvnnixbuyapi.gatewayservice.userservice.dto.UserPasswordToUpdateDto;
-import com.mvnnixbuyapi.gatewayservice.userservice.dto.UserRegisterDto;
-import com.mvnnixbuyapi.gatewayservice.userservice.models.UserApplication;
-import com.mvnnixbuyapi.gatewayservice.userservice.dto.UserToFindDto;
+import com.mvnnixbuyapi.userservice.dto.UserPasswordToUpdateDto;
+import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
+import com.mvnnixbuyapi.userservice.models.UserApplication;
+import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 
 import java.time.Instant;
 import java.util.Optional;

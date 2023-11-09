@@ -1,15 +1,15 @@
-package com.mvnnixbuyapi.gatewayservice.userservice.unittesting;
+package com.mvnnixbuyapi.userservice.unittesting;
 
-import com.mvnnixbuyapi.gatewayservice.commons.exceptions.GeneralException;
-import com.mvnnixbuyapi.gatewayservice.userservice.data.DataToTest;
-import com.mvnnixbuyapi.gatewayservice.userservice.dto.UserRegisterDto;
-import com.mvnnixbuyapi.gatewayservice.userservice.models.UserApplication;
-import com.mvnnixbuyapi.gatewayservice.userservice.services.UserApplicationService;
-import com.mvnnixbuyapi.gatewayservice.userservice.services.impl.UserApplicationServiceImpl;
-import com.mvnnixbuyapi.gatewayservice.userservice.exceptions.InvalidUserToRegisterException;
-import com.mvnnixbuyapi.gatewayservice.userservice.exceptions.UserAlreadyExistsException;
-import com.mvnnixbuyapi.gatewayservice.userservice.repositories.UserApplicationRepository;
-import com.mvnnixbuyapi.gatewayservice.userservice.utils.UserServiceMessageErrors;
+import com.mvnnixbuyapi.commons.exceptions.GeneralException;
+import com.mvnnixbuyapi.userservice.data.DataToTest;
+import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
+import com.mvnnixbuyapi.userservice.models.UserApplication;
+import com.mvnnixbuyapi.userservice.services.UserApplicationService;
+import com.mvnnixbuyapi.userservice.services.impl.UserApplicationServiceImpl;
+import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
+import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
+import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
+import com.mvnnixbuyapi.userservice.utils.UserServiceMessageErrors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

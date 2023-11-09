@@ -1,9 +1,9 @@
-package com.mvnnixbuyapi.gatewayservice.userservice.integrationtesting;
+package com.mvnnixbuyapi.userservice.integrationtesting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mvnnixbuyapi.gatewayservice.userservice.services.UserApplicationService;
-import com.mvnnixbuyapi.gatewayservice.userservice.data.DataToTest;
-import com.mvnnixbuyapi.gatewayservice.userservice.utils.UserServiceMessageErrors;
+import com.mvnnixbuyapi.userservice.services.UserApplicationService;
+import com.mvnnixbuyapi.userservice.data.DataToTest;
+import com.mvnnixbuyapi.userservice.utils.UserServiceMessageErrors;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
