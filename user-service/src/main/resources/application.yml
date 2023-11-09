@@ -29,11 +29,8 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type: TRACE
 eureka:
-  instance:
-#    prefer-ip-address: true
-    hostname: localhost
   client:
-    serviceUrl:
-      register-with-eureka: true
-      fetch-registry: true
-      default-zone: http://localhost:8761/eureka/
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: http://localhost:3800/eureka
