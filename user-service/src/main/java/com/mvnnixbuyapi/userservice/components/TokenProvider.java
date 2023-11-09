@@ -55,9 +55,8 @@ public class TokenProvider implements Serializable {
 
     public String generateToken(UserApplication userApplication) {
 
-        String authorities = userApplication.getRoleApplicationList().stream()
-                .map(RoleApplication::getName)
-                .collect(Collectors.joining(","));
+        List<String> authorities = userApplication.getRoleApplicationList().stream().map(RoleApplication::getName).toList();
+
         SecretKey secretKey = this.getSecretKey();
         return Jwts.builder()
                 .subject(userApplication.getUsername())

@@ -12,7 +12,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>commons</module>
-        <module>gateway-service</module>
         <module>user-service</module>
         <module>eurekaserver-service</module>
     </modules>
