@@ -208,4 +208,22 @@ public class UserApplicationServiceImpl implements UserApplicationService {
             }
         }
     }
+
+    @Override
+    @Transactional(readOnly = false)
+    public UserToUpdateDto updateUserBasicInformation(Long userId, UserToUpdateDto userToUpdateDto) {
+        Optional<UserApplication> userApplicationOptional = this.userApplicationRepository.findById(userId);
+        if(userApplicationOptional.isPresent()) {
+            // Get User
+            UserApplication userApplication = userApplicationOptional.get();
+            UserApplication userApplicationUpdated = UserMapper.INSTANCE
+                    .mapUserToUpdateDtoToUserApplication(userToUpdateDto, userApplication);
+            UserApplication userUpdated = this.userApplicationRepository.save(userApplicationUpdated);
+            UserToUpdateDto userToReturn = UserMapper.INSTANCE.mapUserApplicationToUserToUpdateDto(userUpdated);
+            return userToReturn;
+        }
+        throw new UserToUpdateNotFoundException(UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND,
+                UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND_MSG);
+
+    }
 }

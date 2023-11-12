@@ -1,9 +1,11 @@
 package com.mvnnixbuyapi.userservice.mappers;
 
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
+import com.mvnnixbuyapi.userservice.dto.UserToUpdateDto;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
@@ -23,5 +25,16 @@ public interface UserMapper {
     UserApplication mapUserRegisterDtoToUserApplication(UserRegisterDto dto);
 
     UserRegisterDto mapUserApplicationToUserRegisterDto(UserApplication dto);
+
+    // Mapeo de atributos comunes
+    @Mapping(source = "userToUpdateDto.country", target = "country")
+    @Mapping(source = "userToUpdateDto.city", target = "city")
+    @Mapping(source = "userToUpdateDto.birthDate", target = "birthDate")
+    @Mapping(source = "userToUpdateDto.accountCreationDate", target = "accountCreationDate")
+    @Mapping(source = "userToUpdateDto.firstname", target = "firstname")
+    @Mapping(source = "userToUpdateDto.lastname", target = "lastname")
+    UserApplication mapUserToUpdateDtoToUserApplication(UserToUpdateDto userToUpdateDto, @MappingTarget UserApplication userApplication);
+
+    UserToUpdateDto mapUserApplicationToUserToUpdateDto(UserApplication userApplication);
 
 }

@@ -32,7 +32,7 @@ public class UserController {
     @PatchMapping(value = "/v1/update-user-info/{userId}")
     ResponseEntity<UserToUpdateDto> updateUserV1(@PathVariable Long userId,
                                                  @RequestBody UserToUpdateDto userToUpdateDto) {
-        return null;
+        return ResponseEntity.ok().body(this.userService.updateUserBasicInformation(userId, userToUpdateDto));
     }
 
     @PatchMapping(value = "/v1/update-photo-url/{userId}",

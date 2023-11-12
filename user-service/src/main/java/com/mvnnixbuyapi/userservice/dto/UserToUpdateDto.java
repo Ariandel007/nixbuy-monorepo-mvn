@@ -10,7 +10,6 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserToUpdateDto {
-    private Long id;
     private String country;
     private String city;
     private Instant birthDate;
