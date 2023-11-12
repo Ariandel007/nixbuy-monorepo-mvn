@@ -1,11 +1,11 @@
 package com.mvnnixbuyapi.userservice.unittesting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mvnnixbuyapi.userservice.config.SecurityConfiguration;
 import com.mvnnixbuyapi.userservice.data.DataToTest;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.dto.UserToFindDto;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
-import com.mvnnixbuyapi.userservice.config.SecurityConfiguration;
 import com.mvnnixbuyapi.userservice.controllers.UserController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
