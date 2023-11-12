@@ -5,6 +5,8 @@ import com.mvnnixbuyapi.userservice.exceptions.InvalidPatternOfPasswordException
 import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
 import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
 import com.mvnnixbuyapi.userservice.exceptions.UserToUpdateNotFoundException;
+import com.mvnnixbuyapi.userservice.models.PasswordHistory;
+import com.mvnnixbuyapi.userservice.repositories.PasswordHistoryRepository;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
 import com.mvnnixbuyapi.userservice.components.TokenProvider;
 import com.mvnnixbuyapi.userservice.dto.*;
@@ -32,6 +34,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     private final PasswordEncoder passwordEncoder;
     private final UserApplicationRepository userApplicationRepository;
 
+    private final PasswordHistoryRepository passwordHistoryRepository;
     private final TokenProvider tokenProvider;
 
     @Autowired
@@ -39,11 +42,13 @@ public class UserApplicationServiceImpl implements UserApplicationService {
             UserApplicationRepository userApplicationRepository,
             PasswordEncoder passwordEncoder,
             Validator validator,
-            TokenProvider tokenProvider) {
+            TokenProvider tokenProvider,
+            PasswordHistoryRepository passwordHistoryRepository) {
         this.userApplicationRepository = userApplicationRepository;
         this.passwordEncoder = passwordEncoder;
         this.validator = validator;
         this.tokenProvider = tokenProvider;
+        this.passwordHistoryRepository = passwordHistoryRepository;
     };
 
     @Override
@@ -142,7 +147,18 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         Optional<UserApplication> userApplicationOptional = this.userApplicationRepository.findById(userId);
         if(userApplicationOptional.isPresent()) {
             this.validatePasswordToUpdate(userToUpdateDto);
+            // Get User
             UserApplication userApplication = userApplicationOptional.get();
+
+            // INSERT OLD PASSWORD
+            PasswordHistory passwordHistory = new PasswordHistory();
+            passwordHistory.setPasswordStored(userApplication.getPassword());
+            passwordHistory.setIdUserApp(userApplication.getId());
+            Instant today = Instant.now();
+            passwordHistory.setCreationDate(today);
+            this.passwordHistoryRepository.save(passwordHistory);
+
+            // UPDATE PASSWORD
             userApplication.setPassword(this.passwordEncoder.encode(userToUpdateDto.getPassword()));
             userApplication.setAttemps((short) 0);
             this.userApplicationRepository.save(userApplication);
