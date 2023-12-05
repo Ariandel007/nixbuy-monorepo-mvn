@@ -7,6 +7,7 @@ import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
 import com.mvnnixbuyapi.userservice.exceptions.UserToUpdateNotFoundException;
 import com.mvnnixbuyapi.userservice.models.PasswordHistory;
 import com.mvnnixbuyapi.userservice.repositories.PasswordHistoryRepository;
+import com.mvnnixbuyapi.userservice.services.UploadToCloudService;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
 import com.mvnnixbuyapi.userservice.components.TokenProvider;
 import com.mvnnixbuyapi.userservice.dto.*;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -37,18 +39,22 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     private final PasswordHistoryRepository passwordHistoryRepository;
     private final TokenProvider tokenProvider;
 
+    private final UploadToCloudService uploadToCloudService;
+
     @Autowired
     public UserApplicationServiceImpl(
             UserApplicationRepository userApplicationRepository,
             PasswordEncoder passwordEncoder,
             Validator validator,
             TokenProvider tokenProvider,
-            PasswordHistoryRepository passwordHistoryRepository) {
+            PasswordHistoryRepository passwordHistoryRepository,
+            UploadToCloudService uploadToCloudService) {
         this.userApplicationRepository = userApplicationRepository;
         this.passwordEncoder = passwordEncoder;
         this.validator = validator;
         this.tokenProvider = tokenProvider;
         this.passwordHistoryRepository = passwordHistoryRepository;
+        this.uploadToCloudService = uploadToCloudService;
     };
 
     @Override
@@ -191,6 +197,21 @@ public class UserApplicationServiceImpl implements UserApplicationService {
             }
         }
 
+        return null;
+    }
+
+    @Override
+    public UserPhotoUpdated uploadPhoto(Long userId, MultipartFile filePhoto) {
+        String urlUserLogo = "/assets/default_user_login.png";
+        if(filePhoto != null) {
+            urlUserLogo = this.uploadToCloudService.uploadFileToCloudinary(filePhoto);
+        }
+        if(this.userApplicationRepository.findById(userId).isPresent()) {
+            UserApplication userApplication = this.userApplicationRepository.findById(userId).get();
+            userApplication.setPhotoUrl(urlUserLogo);
+            UserApplication userApplicationCreated = this.userApplicationRepository.save(userApplication);
+            return UserMapper.INSTANCE.mapUserApplicationToUserPhotoUpdated(userApplicationCreated);
+        }
         return null;
     }
 

@@ -7,8 +7,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-12T17:34:47-0500",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.6 (Eclipse Adoptium)"
+    date = "2023-11-30T20:01:15-0500",
+    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231030-1524, environment: Java 17.0.9 (Eclipse Adoptium)"
 )
 public class UserMapperImpl implements UserMapper {
 
@@ -20,13 +20,13 @@ public class UserMapperImpl implements UserMapper {
 
         UserApplication userApplication = new UserApplication();
 
-        userApplication.setUsername( dto.getUsername() );
-        userApplication.setPassword( dto.getPassword() );
+        userApplication.setCity( dto.getCity() );
+        userApplication.setCountry( dto.getCountry() );
         userApplication.setEmail( dto.getEmail() );
         userApplication.setFirstname( dto.getFirstname() );
         userApplication.setLastname( dto.getLastname() );
-        userApplication.setCountry( dto.getCountry() );
-        userApplication.setCity( dto.getCity() );
+        userApplication.setPassword( dto.getPassword() );
+        userApplication.setUsername( dto.getUsername() );
 
         return userApplication;
     }
@@ -39,13 +39,13 @@ public class UserMapperImpl implements UserMapper {
 
         UserRegisterDto userRegisterDto = new UserRegisterDto();
 
-        userRegisterDto.setUsername( dto.getUsername() );
-        userRegisterDto.setPassword( dto.getPassword() );
+        userRegisterDto.setCity( dto.getCity() );
+        userRegisterDto.setCountry( dto.getCountry() );
         userRegisterDto.setEmail( dto.getEmail() );
         userRegisterDto.setFirstname( dto.getFirstname() );
         userRegisterDto.setLastname( dto.getLastname() );
-        userRegisterDto.setCountry( dto.getCountry() );
-        userRegisterDto.setCity( dto.getCity() );
+        userRegisterDto.setPassword( dto.getPassword() );
+        userRegisterDto.setUsername( dto.getUsername() );
 
         return userRegisterDto;
     }
@@ -64,5 +64,23 @@ public class UserMapperImpl implements UserMapper {
         userApplication.setLastname( userToUpdateDto.getLastname() );
 
         return userApplication;
+    }
+
+    @Override
+    public UserToUpdateDto mapUserApplicationToUserToUpdateDto(UserApplication userApplication) {
+        if ( userApplication == null ) {
+            return null;
+        }
+
+        UserToUpdateDto userToUpdateDto = new UserToUpdateDto();
+
+        userToUpdateDto.setAccountCreationDate( userApplication.getAccountCreationDate() );
+        userToUpdateDto.setBirthDate( userApplication.getBirthDate() );
+        userToUpdateDto.setCity( userApplication.getCity() );
+        userToUpdateDto.setCountry( userApplication.getCountry() );
+        userToUpdateDto.setFirstname( userApplication.getFirstname() );
+        userToUpdateDto.setLastname( userApplication.getLastname() );
+
+        return userToUpdateDto;
     }
 }

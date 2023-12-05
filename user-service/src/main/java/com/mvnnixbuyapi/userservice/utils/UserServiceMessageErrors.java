@@ -34,5 +34,11 @@ public class UserServiceMessageErrors {
     public static String INVALID_PATTERN_OF_PASSWORD = "INVALID_PATTERN_OF_PASSWORD";
     public static String INVALID_PATTERN_OF_PASSWORD_MSG = "Should contain atleast 1 uppercase, 1 lowercase, 1 digit and 1 special char and between 12 and 128 characters";
 
+ public static String ERROR_FILE_UPLOAD_CODE = "ERROR_FILE_UPLOAD";
+ public static String ERROR_FILE_UPLOAD_MSG = "Hubo un error al subir un archivo";
+
+ public static String ERROR_FILE_CONVERTER_CODE = "ERROR_FILE_CONVERTER";
+ public static String ERROR_FILE_CONVERTER_MSG = "Hubo un error al convertir un archivo";
+
 
 }

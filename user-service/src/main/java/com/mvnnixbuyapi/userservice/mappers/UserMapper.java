@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.userservice.mappers;
 
+import com.mvnnixbuyapi.userservice.dto.UserPhotoUpdated;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.dto.UserToUpdateDto;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
@@ -26,7 +27,7 @@ public interface UserMapper {
 
     UserRegisterDto mapUserApplicationToUserRegisterDto(UserApplication dto);
 
-    // Mapeo de atributos comunes
+    // Mapeo de atributos comunes, es como un merge del contenido del source al target :D
     @Mapping(source = "userToUpdateDto.country", target = "country")
     @Mapping(source = "userToUpdateDto.city", target = "city")
     @Mapping(source = "userToUpdateDto.birthDate", target = "birthDate")
@@ -36,5 +37,8 @@ public interface UserMapper {
     UserApplication mapUserToUpdateDtoToUserApplication(UserToUpdateDto userToUpdateDto, @MappingTarget UserApplication userApplication);
 
     UserToUpdateDto mapUserApplicationToUserToUpdateDto(UserApplication userApplication);
+
+
+    UserPhotoUpdated mapUserApplicationToUserPhotoUpdated(UserApplication userApplication);
 
 }
