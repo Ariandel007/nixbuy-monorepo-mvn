@@ -25,6 +25,9 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         try {
             return this.cloudinaryConfig.uploader().upload(fileToUpload, ObjectUtils.emptyMap());
         } catch (Exception e) {
+            if(fileToUpload != null) {
+                fileToUpload.delete();
+            }
             throw new ErrorUploadToCloudinary(UserServiceMessageErrors.ERROR_FILE_UPLOAD_CODE, UserServiceMessageErrors.ERROR_FILE_UPLOAD_MSG);
         }
     }

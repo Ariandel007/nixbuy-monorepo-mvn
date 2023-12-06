@@ -10,12 +10,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -177,6 +187,47 @@ public class UserControllerIntegrationTests {
         ;
 
     }
+
+    @Test
+    void shouldUpdatePhotoUrlForUser() throws Exception {
+        Path path = Paths.get("src/test/resources/testImages/testFile1.jpg");
+        byte[] fileContent = Files.readAllBytes(path);
+
+        // Crea un archivo de ejemplo
+        MockMultipartFile file = new MockMultipartFile(
+                "userPhotoFile", "test.jpg", MediaType.IMAGE_JPEG_VALUE, fileContent
+        );
+
+        MockMultipartHttpServletRequestBuilder builder =
+                MockMvcRequestBuilders.multipart("/api/users/v1/update-photo-url/1");
+        // Por defecto solo me permite POST, de este modo me permitira PATCH
+        builder.with(new RequestPostProcessor() {
+            @Override
+            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
+                request.setMethod("PATCH");
+                return request;
+            }
+        });
+
+        // Realiza la solicitud PATCH
+        mvc.perform(builder
+//                MockMvcRequestBuilders
+//                        .multipart("/api/users/v1/update-photo-url/1")
+                        .file(file)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                // Verifica el estado de la respuesta y el contenido JSON
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.username").value("ejemplo_usuario1"))
+                .andExpect(jsonPath("$.email").value("ejemplo@correo.com"))
+                .andExpect(jsonPath("$.country").value("Ejemplolandia"))
+                .andExpect(jsonPath("$.city").value("Ciudad Ejemplo"))
+                .andExpect(jsonPath("$.photoUrl").isNotEmpty()); // Asegura que la URL de la foto no esté vacía
+    }
+
 
 
 }

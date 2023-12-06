@@ -59,3 +59,7 @@ VALUES(1, 'ROLE_USER');
 INSERT INTO public.roles_applications
 (id, "name")
 VALUES(2, 'ROLE_ADMIN');
+
+INSERT INTO public.user_applications
+(account_creation_date, attemps, auth_type, birth_date, is_blocked, city, country, is_deleted, email, firstname, lastname, "password", photo_url, username)
+VALUES('2023-08-03 23:41:53.475', 0, 'email_registered', '1999-02-20 09:48:00.000', false, 'Ciudad Ejemplo', 'Ejemplolandia', false, 'ejemplo@correo.com', 'Ejemplo', 'Usuario', '$2a$10$UlQqJqg4PVb6deWkoyNBVOdKJO7WmBS7WTOLyEYLKSMFkDwIfRTF2', NULL, 'ejemplo_usuario2');

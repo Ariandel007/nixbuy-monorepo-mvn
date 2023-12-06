@@ -23,7 +23,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                     UserAlreadyExistsException.class,
                     EmptyPasswordException.class,
                     InvalidPatternOfPasswordException.class,
-                    InvalidRangeOfPasswordException.class
+                    InvalidRangeOfPasswordException.class,
+                    ErrorUploadToCloudinary.class
             })
     protected ResponseEntity<Object> handleBadRequest(GeneralException ex, WebRequest request) {
         return handleExceptionInternal(
@@ -40,5 +41,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 new GeneralBodyExceptionHandler(ex.getErrorCode(),ex.getMessage(),ex.getLocalizedMessage()),
                 new HttpHeaders(),
                 HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value= {ErrorConvertMultiPart.class})
+    protected ResponseEntity<Object> handleInternalServerError(GeneralException ex, WebRequest request) {
+        return handleExceptionInternal(
+                ex,
+                new GeneralBodyExceptionHandler(ex.getErrorCode(),ex.getMessage(),ex.getLocalizedMessage()),
+                new HttpHeaders(),
+                HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }
