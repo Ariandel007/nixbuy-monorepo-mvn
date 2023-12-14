@@ -42,6 +42,7 @@ public class SpringSecurityConfig {
                                 "/api/user-service-nixbuy/users/v1/update-photo-url/{userId}",
                                 "/api/user-service-nixbuy/users/v1/update-user-password/{userId}"
                         ).access(this::currentUserIdMatchesPath)
+                        .pathMatchers(HttpMethod.GET,"/api/user-service-nixbuy/users/v1/find-users-list/**").hasAnyRole("ROLE_ADMIN")
                         .pathMatchers("/api/user-service-nixbuy/users/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
                         .anyExchange()
                         .authenticated()
