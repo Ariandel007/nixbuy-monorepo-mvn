@@ -66,7 +66,8 @@ public class UserApplication implements Serializable {
     @JoinTable(
             name = "users_roles_applications",
             joinColumns = @JoinColumn(name = "user_app_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_app_id"))
+            inverseJoinColumns = @JoinColumn(name = "role_app_id")
+    )
     List<RoleApplication> roleApplicationList;
 
 }

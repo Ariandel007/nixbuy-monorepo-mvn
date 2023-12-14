@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class UserDataWithRolesDto {
     private Long id;
     private String username;
-    private boolean isBlocked;
+    private boolean blocked;
     private String roles;
 }

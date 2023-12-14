@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -47,5 +49,10 @@ public class UserController {
             @PathVariable Long userId,
             @RequestBody UserPasswordToUpdateDto userToUpdateDto) {
         return ResponseEntity.ok().body(this.userService.updateUserPassword(userId, userToUpdateDto));
+    }
+
+    @GetMapping(value = "/v1/find-users-list/{cursorId}")
+    ResponseEntity<List<UserDataWithRolesDto>> findUsersList(@PathVariable Long cursorId) {
+        return ResponseEntity.ok().body(this.userService.listUserDataWithRolesDtos(cursorId));
     }
 }

@@ -4,6 +4,8 @@ import com.mvnnixbuyapi.userservice.dto.*;
 import com.mvnnixbuyapi.userservice.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface UserApplicationService {
     UserRegisterDto registerUser(UserRegisterDto userRegisterDto);
     UserToFindDto findUserBasicInfoById(Long id);
@@ -14,4 +16,5 @@ public interface UserApplicationService {
 
     UserPhotoUpdated uploadPhoto(Long userId, MultipartFile filePhoto);
 
+    List<UserDataWithRolesDto> listUserDataWithRolesDtos(Long cursorId);
 }

@@ -5,5 +5,5 @@ import com.mvnnixbuyapi.userservice.dto.UserDataWithRolesDto;
 import java.util.List;
 
 public interface CustomUserApplicationRepository {
-    List<UserDataWithRolesDto> listUserDataRoles();
+    List<UserDataWithRolesDto> listUserDataRoles(Long cursor);
 }

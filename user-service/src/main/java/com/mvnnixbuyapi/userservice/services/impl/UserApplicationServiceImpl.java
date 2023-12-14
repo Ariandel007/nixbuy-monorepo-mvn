@@ -27,7 +27,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserApplicationServiceImpl implements UserApplicationService {
@@ -201,6 +203,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public UserPhotoUpdated uploadPhoto(Long userId, MultipartFile filePhoto) {
         String urlUserLogo = "/assets/default_user_login.png";
         if(filePhoto != null) {
@@ -246,5 +249,32 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         throw new UserToUpdateNotFoundException(UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND,
                 UserServiceMessageErrors.USER_TO_UPDATE_NOT_FOUND_MSG);
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserDataWithRolesDto> listUserDataWithRolesDtos(Long cursorId){
+        List<UserDataWithRolesDto> userDataWithRolesDtos = this.userApplicationRepository.listUserDataRoles(cursorId);
+        Map<String, List<UserDataWithRolesDto>> groupedData = userDataWithRolesDtos.stream()
+                .collect(Collectors.groupingBy(
+                        userData -> userData.getId() + userData.getUsername() + userData.isBlocked()
+                ));
+        List<UserDataWithRolesDto> result = groupedData.values().stream()
+                .map(group -> {
+                    UserDataWithRolesDto combinedUserData = group.get(0); // Tomar el primer UserData del grupo como base
+
+                    // Combinar roles si hay más de un elemento en el grupo
+                    if (group.size() > 1) {
+                        String combinedRoles = group.stream()
+                                .map(UserDataWithRolesDto::getRoles)
+                                .collect(Collectors.joining(", "));
+                        combinedUserData.setRoles(combinedRoles);
+                    }
+
+                    return combinedUserData;
+                })
+                .collect(Collectors.toList());
+
+        return result;
     }
 }
