@@ -35,12 +35,18 @@ public class SpringSecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(authorize -> authorize
+                        .pathMatchers("/actuator/health").permitAll()
                         .pathMatchers("/actuator/info").permitAll()
+                        .pathMatchers("/actuator/prometheus").permitAll()
+                        .pathMatchers("/actuator/metrics").permitAll()
                         .pathMatchers(HttpMethod.POST, "/api/user-service-nixbuy/security/**").permitAll()
                         .pathMatchers(HttpMethod.PATCH,
                                 "/api/user-service-nixbuy/users/v1/update-user-info/{userId}",
                                 "/api/user-service-nixbuy/users/v1/update-photo-url/{userId}",
                                 "/api/user-service-nixbuy/users/v1/update-user-password/{userId}"
+                        ).access(this::currentUserIdMatchesPath)
+                        .pathMatchers(HttpMethod.GET,
+                                "/api/user-service-nixbuy/users/v1/basic-user-info/{userId}"
                         ).access(this::currentUserIdMatchesPath)
                         .pathMatchers(HttpMethod.GET,"/api/user-service-nixbuy/users/v1/find-users-list/**").hasAnyRole("ROLE_ADMIN")
                         .pathMatchers("/api/user-service-nixbuy/users/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")

@@ -17,6 +17,8 @@ import com.mvnnixbuyapi.userservice.models.RoleApplication;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
 import com.mvnnixbuyapi.userservice.repositories.UserApplicationRepository;
 import com.mvnnixbuyapi.userservice.utils.UserServiceMessageErrors;
+import io.micrometer.tracing.annotation.NewSpan;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserApplicationServiceImpl implements UserApplicationService {
 
     private final Validator validator;
@@ -61,6 +64,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     @Override
     @Transactional(readOnly = false)
+    @NewSpan(value = "user-service-registerUser-method-span")
     public UserRegisterDto registerUser(UserRegisterDto userRegisterDto) {
        this.validateUserToRegister(userRegisterDto);
 
@@ -95,6 +99,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     @Override
     @Transactional(readOnly = true)
+    @NewSpan(value = "user-service-findUserBasicInfoById-method-span")
     public UserToFindDto findUserBasicInfoById(Long id) {
         return this.userApplicationRepository.findUserToFindDto(id);
     }
@@ -151,6 +156,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     @Override
     @Transactional(readOnly = false)
+    @NewSpan(value = "user-service-updateUserPassword-method-span")
     public UserDataToPasswordUpdatedDto updateUserPassword(Long userId, UserPasswordToUpdateDto userToUpdateDto) {
         Optional<UserApplication> userApplicationOptional = this.userApplicationRepository.findById(userId);
         if(userApplicationOptional.isPresent()) {
@@ -182,6 +188,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     @Override
     @Transactional(readOnly = false)
+    @NewSpan(value = "user-service-generateToken-method-span")
     public AuthTokenDto generateToken(LoginUserDto loginUser) {
         Optional<UserApplication> userApplicationOptional =
                 this.userApplicationRepository.findByUsername(loginUser.getUsername());
@@ -204,6 +211,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     @Override
     @Transactional(readOnly = false)
+    @NewSpan(value = "user-service-uploadPhoto-method-span")
     public UserPhotoUpdated uploadPhoto(Long userId, MultipartFile filePhoto) {
         String urlUserLogo = "/assets/default_user_login.png";
         if(filePhoto != null) {
@@ -235,6 +243,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     @Override
     @Transactional(readOnly = false)
+    @NewSpan(value = "user-service-updateUserBasicInformation-method-span")
     public UserToUpdateDto updateUserBasicInformation(Long userId, UserToUpdateDto userToUpdateDto) {
         Optional<UserApplication> userApplicationOptional = this.userApplicationRepository.findById(userId);
         if(userApplicationOptional.isPresent()) {
@@ -253,6 +262,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     @Override
     @Transactional(readOnly = true)
+    @NewSpan(value = "user-service-listUserDataWithRolesDtos-method-span")
     public List<UserDataWithRolesDto> listUserDataWithRolesDtos(Long cursorId){
         List<UserDataWithRolesDto> userDataWithRolesDtos = this.userApplicationRepository.listUserDataRoles(cursorId);
         Map<String, List<UserDataWithRolesDto>> groupedData = userDataWithRolesDtos.stream()

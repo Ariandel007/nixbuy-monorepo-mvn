@@ -8,8 +8,8 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-09T19:39:08-0500",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.36.0.v20231114-0937, environment: Java 17.0.9 (Eclipse Adoptium)"
+    date = "2023-12-18T01:05:45-0500",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.6 (Eclipse Adoptium)"
 )
 public class UserMapperImpl implements UserMapper {
 
@@ -21,13 +21,13 @@ public class UserMapperImpl implements UserMapper {
 
         UserApplication userApplication = new UserApplication();
 
-        userApplication.setCity( dto.getCity() );
-        userApplication.setCountry( dto.getCountry() );
+        userApplication.setUsername( dto.getUsername() );
+        userApplication.setPassword( dto.getPassword() );
         userApplication.setEmail( dto.getEmail() );
         userApplication.setFirstname( dto.getFirstname() );
         userApplication.setLastname( dto.getLastname() );
-        userApplication.setPassword( dto.getPassword() );
-        userApplication.setUsername( dto.getUsername() );
+        userApplication.setCountry( dto.getCountry() );
+        userApplication.setCity( dto.getCity() );
 
         return userApplication;
     }
@@ -40,13 +40,13 @@ public class UserMapperImpl implements UserMapper {
 
         UserRegisterDto userRegisterDto = new UserRegisterDto();
 
-        userRegisterDto.setCity( dto.getCity() );
-        userRegisterDto.setCountry( dto.getCountry() );
+        userRegisterDto.setUsername( dto.getUsername() );
+        userRegisterDto.setPassword( dto.getPassword() );
         userRegisterDto.setEmail( dto.getEmail() );
         userRegisterDto.setFirstname( dto.getFirstname() );
         userRegisterDto.setLastname( dto.getLastname() );
-        userRegisterDto.setPassword( dto.getPassword() );
-        userRegisterDto.setUsername( dto.getUsername() );
+        userRegisterDto.setCountry( dto.getCountry() );
+        userRegisterDto.setCity( dto.getCity() );
 
         return userRegisterDto;
     }
@@ -75,10 +75,10 @@ public class UserMapperImpl implements UserMapper {
 
         UserToUpdateDto userToUpdateDto = new UserToUpdateDto();
 
-        userToUpdateDto.setAccountCreationDate( userApplication.getAccountCreationDate() );
-        userToUpdateDto.setBirthDate( userApplication.getBirthDate() );
-        userToUpdateDto.setCity( userApplication.getCity() );
         userToUpdateDto.setCountry( userApplication.getCountry() );
+        userToUpdateDto.setCity( userApplication.getCity() );
+        userToUpdateDto.setBirthDate( userApplication.getBirthDate() );
+        userToUpdateDto.setAccountCreationDate( userApplication.getAccountCreationDate() );
         userToUpdateDto.setFirstname( userApplication.getFirstname() );
         userToUpdateDto.setLastname( userApplication.getLastname() );
 
@@ -93,16 +93,16 @@ public class UserMapperImpl implements UserMapper {
 
         UserPhotoUpdated userPhotoUpdated = new UserPhotoUpdated();
 
-        userPhotoUpdated.setAccountCreationDate( userApplication.getAccountCreationDate() );
-        userPhotoUpdated.setBirthDate( userApplication.getBirthDate() );
-        userPhotoUpdated.setCity( userApplication.getCity() );
-        userPhotoUpdated.setCountry( userApplication.getCountry() );
+        userPhotoUpdated.setId( userApplication.getId() );
+        userPhotoUpdated.setUsername( userApplication.getUsername() );
         userPhotoUpdated.setEmail( userApplication.getEmail() );
         userPhotoUpdated.setFirstname( userApplication.getFirstname() );
-        userPhotoUpdated.setId( userApplication.getId() );
         userPhotoUpdated.setLastname( userApplication.getLastname() );
+        userPhotoUpdated.setCountry( userApplication.getCountry() );
+        userPhotoUpdated.setCity( userApplication.getCity() );
+        userPhotoUpdated.setBirthDate( userApplication.getBirthDate() );
+        userPhotoUpdated.setAccountCreationDate( userApplication.getAccountCreationDate() );
         userPhotoUpdated.setPhotoUrl( userApplication.getPhotoUrl() );
-        userPhotoUpdated.setUsername( userApplication.getUsername() );
 
         return userPhotoUpdated;
     }
