@@ -3,27 +3,35 @@ package com.mvnnixbuyapi.infratests.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mvnnixbuyapi.product.command.ProductCreateHandler;
 import com.mvnnixbuyapi.product.model.dto.command.ProductCreateCommand;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-@AutoConfigureMockMvc
 public class ProductCommandControllerIntegrationTesting {
-    @Autowired
-    private MockMvc mvc;
+    @LocalServerPort
+    private Integer port;
+
     @Autowired
     ObjectMapper objectMapper;
     private final ProductCreateHandler productCreateHandler;
@@ -42,29 +50,37 @@ public class ProductCommandControllerIntegrationTesting {
         postgreSQLContainer.start();
     }
 
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry dynamicPropertyRegistry) {
+        dynamicPropertyRegistry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        dynamicPropertyRegistry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        dynamicPropertyRegistry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+    }
+
     @Test
-    public void testCreateProductEndpoint() throws Exception {
+    public void shouldCreateProductEndpointRestAssured() {
+        // Definir la URL base para las solicitudes
+        RestAssured.baseURI = "http://localhost:" + this.port; // Reemplaza con la URL de tu servidor
+
         // Crear un objeto de ejemplo para enviar en la solicitud
         ProductCreateCommand productCreateCommand = new ProductCreateCommand(
-                "Prueba 1",
-                "Descripcion Prueba 1"
+                "Prueba 2",
+                "Descripcion Prueba 2"
         );
 
-        // Convertir el objeto a formato JSON
-        String requestBody = objectMapper.writeValueAsString(productCreateCommand);
-
-        // Simular la solicitud POST a /v1/create-product
-        mvc.perform(
-                post("/api/command-product-endpoint/v1/create-product")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody)
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code").value("SUCCESSFUL"))
-                .andExpect(jsonPath("$.message").value("SUCCESSFUL"))
-                .andExpect(jsonPath("$.data.id").exists()) // Verificar si existe el campo 'id' en la respuesta
-                .andExpect(jsonPath("$.data.name").value("Prueba 1"))
-                .andExpect(jsonPath("$.data.description").value("Descripcion Prueba 1"));
+        // Realizar la solicitud POST a /api/command-product-endpoint/v1/create-product
+        given()
+                .contentType(ContentType.JSON)
+                .body(productCreateCommand)
+                .when()
+                .post("/api/command-product-endpoint/v1/create-product")
+                .then()
+                .statusCode(200)
+                .body("code", equalTo("SUCCESSFUL"))
+                .body("message", equalTo("SUCCESSFUL"))
+                .body("data.id", notNullValue()) // Verificar si existe el campo 'id' en la respuesta
+                .body("data.name", equalTo("Prueba 2"))
+                .body("data.description", equalTo("Descripcion Prueba 2"));
     }
 
 }
