@@ -1,6 +1,13 @@
 HELP.md
 .gradle
 build/
+target/
+api-gateway-service/target/
+commons/target/
+eurekaserver-service/target/
+payment-service/target/
+products-service/target/
+user-service/target/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
