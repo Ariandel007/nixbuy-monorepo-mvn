@@ -5,12 +5,19 @@ import com.mvnnixbuyapi.commons.monads.ResultMonad;
 import com.mvnnixbuyapi.product.command.ProductCreateHandler;
 import com.mvnnixbuyapi.product.model.dto.ProductDto;
 import com.mvnnixbuyapi.product.model.dto.command.ProductCreateCommand;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/command-product-endpoint")
@@ -24,8 +31,21 @@ public class ProductCommandController {
 
     @PostMapping("/v1/create-product")
     public ResponseEntity<GenericResponseForBody<ProductDto>> createProduct(
-            @RequestBody ProductCreateCommand productCreateCommand
+            @RequestBody @Valid ProductCreateCommand productCreateCommand,
+            BindingResult bindingResult
     ){
+        if(bindingResult.hasErrors()) {
+            String errors = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.joining(";"));
+            return ResponseEntity.badRequest().body(
+                    new GenericResponseForBody<>(
+                            errors,
+                            errors
+                    )
+            );
+        }
+
         ResultMonad<ProductDto> productDtoResult = this.productCreateHandler.execute(productCreateCommand);
 
         if(productDtoResult.isError()){

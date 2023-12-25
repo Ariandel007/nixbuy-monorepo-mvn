@@ -1,19 +1,18 @@
 package com.mvnnixbuyapi.infratests.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mvnnixbuyapi.product.command.ProductCreateHandler;
 import com.mvnnixbuyapi.product.model.dto.command.ProductCreateCommand;
+import com.mvnnixbuyapi.product.port.repository.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -34,11 +33,11 @@ public class ProductCommandControllerIntegrationTesting {
 
     @Autowired
     ObjectMapper objectMapper;
-    private final ProductCreateHandler productCreateHandler;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public ProductCommandControllerIntegrationTesting(ProductCreateHandler productCreateHandler){
-        this.productCreateHandler = productCreateHandler;
+    public ProductCommandControllerIntegrationTesting(ProductRepository productRepository){
+        this.productRepository = productRepository;
     }
 
     @Container
@@ -56,11 +55,14 @@ public class ProductCommandControllerIntegrationTesting {
         dynamicPropertyRegistry.add("spring.datasource.username", postgreSQLContainer::getUsername);
         dynamicPropertyRegistry.add("spring.datasource.password", postgreSQLContainer::getPassword);
     }
+    @BeforeEach
+    void setUp() {
+        // Definir la URL base para las solicitudes
+        RestAssured.baseURI = "http://localhost:" + this.port;
+    }
 
     @Test
-    public void shouldCreateProductEndpointRestAssured() {
-        // Definir la URL base para las solicitudes
-        RestAssured.baseURI = "http://localhost:" + this.port; // Reemplaza con la URL de tu servidor
+    public void shouldCreateProductEndpointRestAssuredV1() {
 
         // Crear un objeto de ejemplo para enviar en la solicitud
         ProductCreateCommand productCreateCommand = new ProductCreateCommand(
@@ -81,6 +83,72 @@ public class ProductCommandControllerIntegrationTesting {
                 .body("data.id", notNullValue()) // Verificar si existe el campo 'id' en la respuesta
                 .body("data.name", equalTo("Prueba 2"))
                 .body("data.description", equalTo("Descripcion Prueba 2"));
+    }
+
+    @Test
+    public void shouldNotCreateProductWithAndEmptyNameV1() {
+
+        // Crear un objeto de ejemplo para enviar en la solicitud
+        ProductCreateCommand productCreateCommand = new ProductCreateCommand(
+                "",
+                "Descripcion Prueba 2"
+        );
+
+        // Realizar la solicitud POST a /api/command-product-endpoint/v1/create-product
+        given()
+                .contentType(ContentType.JSON)
+                .body(productCreateCommand)
+                .when()
+                .post("/api/command-product-endpoint/v1/create-product")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("code", equalTo("EMPTY_NAME_PRODUCT_ERROR"))
+                .body("message", equalTo("EMPTY_NAME_PRODUCT_ERROR"))
+        ;
+    }
+
+    @Test
+    public void shouldNotCreateProductWithAndEmptyDescriptionV1() {
+
+        // Crear un objeto de ejemplo para enviar en la solicitud
+        ProductCreateCommand productCreateCommand = new ProductCreateCommand(
+                "Prueba 2",
+                ""
+        );
+
+        // Realizar la solicitud POST a /api/command-product-endpoint/v1/create-product
+        given()
+                .contentType(ContentType.JSON)
+                .body(productCreateCommand)
+                .when()
+                .post("/api/command-product-endpoint/v1/create-product")
+                .then()
+                .statusCode(400)
+                .body("code", equalTo("EMPTY_DESCRIPTION_PRODUCT_ERROR"))
+                .body("message", equalTo("EMPTY_DESCRIPTION_PRODUCT_ERROR"))
+        ;
+    }
+
+    @Test
+    public void shouldNotCreateProductWithAndEmptyDescriptionAndEmptyNameV1() {
+
+        // Crear un objeto de ejemplo para enviar en la solicitud
+        ProductCreateCommand productCreateCommand = new ProductCreateCommand(
+                "",
+                ""
+        );
+
+        // Realizar la solicitud POST a /api/command-product-endpoint/v1/create-product
+        given()
+                .contentType(ContentType.JSON)
+                .body(productCreateCommand)
+                .when()
+                .post("/api/command-product-endpoint/v1/create-product")
+                .then()
+                .statusCode(400)
+                .body("code", equalTo("EMPTY_NAME_PRODUCT_ERROR;EMPTY_DESCRIPTION_PRODUCT_ERROR"))
+                .body("message", equalTo("EMPTY_NAME_PRODUCT_ERROR;EMPTY_DESCRIPTION_PRODUCT_ERROR"))
+        ;
     }
 
 }

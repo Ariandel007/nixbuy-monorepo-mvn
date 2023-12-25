@@ -37,8 +37,8 @@ public class Product{
 
 
     public Product requestToCreate(ProductCreateCommand productCreateCommand){
-        this.name = new ProductName(productCreateCommand.name());
-        this.description = new ProductDescription(productCreateCommand.description());
+        this.name = new ProductName(productCreateCommand.getName());
+        this.description = new ProductDescription(productCreateCommand.getDescription());
         this.urlImage = new ProductUrlImage("/default_product.png");
         this.creationDate = new ProductCreationDate(Instant.now());
         this.updateDate = new ProductUpdateDate(Instant.now());
