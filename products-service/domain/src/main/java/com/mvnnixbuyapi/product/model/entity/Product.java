@@ -39,9 +39,34 @@ public class Product{
     public Product requestToCreate(ProductCreateCommand productCreateCommand){
         this.name = new ProductName(productCreateCommand.name());
         this.description = new ProductDescription(productCreateCommand.description());
+        this.urlImage = new ProductUrlImage("/default_product.png");
         this.creationDate = new ProductCreationDate(Instant.now());
         this.updateDate = new ProductUpdateDate(Instant.now());
         return this;
+    }
+
+    public Long getId() {
+        return id.id();
+    }
+
+    public String getName() {
+        return name.name();
+    }
+
+    public String getDescription() {
+        return description.description();
+    }
+
+    public String getUrlImage() {
+        return urlImage.urlImage();
+    }
+
+    public Instant getCreationDate() {
+        return creationDate.creationDate();
+    }
+
+    public Instant getUpdateDate() {
+        return updateDate.updateDate();
     }
 
 }

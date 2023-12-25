@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.product.command;
 
+import com.mvnnixbuyapi.commons.monads.ResultMonad;
 import com.mvnnixbuyapi.product.mapper.ProductDtoMapper;
 import com.mvnnixbuyapi.product.model.dto.ProductDto;
 import com.mvnnixbuyapi.product.model.dto.command.ProductCreateCommand;
@@ -19,8 +20,9 @@ public class ProductCreateHandler {
         this.productDtoMapper = productDtoMapper;
     }
 
-    public ProductDto execute(ProductCreateCommand productCreateCommand) {
-        return this.productDtoMapper.toDto(this.productCreateService.execute(productCreateCommand));
+    public ResultMonad<ProductDto> execute(ProductCreateCommand productCreateCommand) {
+        ProductDto productDtoCreated = this.productDtoMapper.toDto(this.productCreateService.execute(productCreateCommand));
+        return ResultMonad.ok(productDtoCreated);
     }
 
 
