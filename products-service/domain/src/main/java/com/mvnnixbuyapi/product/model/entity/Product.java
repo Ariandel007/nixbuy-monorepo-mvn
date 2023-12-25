@@ -46,6 +46,8 @@ public class Product{
     }
 
     public Long getId() {
+        if(id == null)
+            return null;
         return id.id();
     }
 

@@ -5,6 +5,7 @@ import com.mvnnixbuyapi.commons.monads.ResultMonad;
 import com.mvnnixbuyapi.product.command.ProductCreateHandler;
 import com.mvnnixbuyapi.product.model.dto.ProductDto;
 import com.mvnnixbuyapi.product.model.dto.command.ProductCreateCommand;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductCommandController {
     private final ProductCreateHandler productCreateHandler;
 
+    @Autowired
     public ProductCommandController(ProductCreateHandler productCreateHandler) {
         this.productCreateHandler = productCreateHandler;
     }
@@ -36,8 +38,8 @@ public class ProductCommandController {
         } else {
             return ResponseEntity.ok().body(
                     new GenericResponseForBody<>(
-                            productDtoResult.getError(),
-                            productDtoResult.getError(),
+                            "SUCCESSFUL",
+                            "SUCCESSFUL",
                             productDtoResult.getValue()
                     )
 

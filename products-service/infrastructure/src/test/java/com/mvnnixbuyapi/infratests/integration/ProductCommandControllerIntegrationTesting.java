@@ -55,7 +55,7 @@ public class ProductCommandControllerIntegrationTesting {
 
         // Simular la solicitud POST a /v1/create-product
         mvc.perform(
-                post("/v1/create-product")
+                post("/api/command-product-endpoint/v1/create-product")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody)
                 )

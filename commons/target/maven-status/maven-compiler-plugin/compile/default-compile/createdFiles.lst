@@ -1,5 +1,5 @@
 com\mvnnixbuyapi\commons\exceptions\GeneralException.class
+com\mvnnixbuyapi\commons\dtos\response\GenericResponse.class
+com\mvnnixbuyapi\commons\monads\ResultMonad.class
 com\mvnnixbuyapi\commons\exceptions\GeneralBodyExceptionHandler.class
-com\mvnnixbuyapi\commons\dto\UserDataWithRolesDto.class
-com\mvnnixbuyapi\commons\dto\UserRegisterDto.class
-com\mvnnixbuyapi\commons\dto\UserToFindDto.class
+com\mvnnixbuyapi\commons\dtos\response\GenericResponseForBody.class

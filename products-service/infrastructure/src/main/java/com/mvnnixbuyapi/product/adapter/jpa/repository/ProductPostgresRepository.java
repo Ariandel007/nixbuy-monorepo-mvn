@@ -4,12 +4,16 @@ import com.mvnnixbuyapi.product.adapter.jpa.ProductSpringJpaAdapterRepository;
 import com.mvnnixbuyapi.product.adapter.mapper.ProductDboMapper;
 import com.mvnnixbuyapi.product.model.entity.Product;
 import com.mvnnixbuyapi.product.port.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class ProductPostgresRepository implements ProductRepository {
 
     private final ProductSpringJpaAdapterRepository productSpringJpaAdapterRepository;
     private final ProductDboMapper productDboMapper;
 
+    @Autowired
     public ProductPostgresRepository(
             ProductSpringJpaAdapterRepository productSpringJpaAdapterRepository,
             ProductDboMapper productDboMapper

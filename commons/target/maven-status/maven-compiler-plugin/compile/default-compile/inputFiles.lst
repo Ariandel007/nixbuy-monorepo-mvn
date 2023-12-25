@@ -1,5 +1,5 @@
-G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\commons\src\main\java\com\mvnnixbuyapi\commons\dto\UserToFindDto.java
-G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\commons\src\main\java\com\mvnnixbuyapi\commons\dto\UserRegisterDto.java
-G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\commons\src\main\java\com\mvnnixbuyapi\commons\exceptions\GeneralException.java
-G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\commons\src\main\java\com\mvnnixbuyapi\commons\exceptions\GeneralBodyExceptionHandler.java
-G:\JavaProjects\nixbuy\sources\mvn-nixbuy-api\commons\src\main\java\com\mvnnixbuyapi\commons\dto\UserDataWithRolesDto.java
+G:\JavaProjects\nixbuy\sources\nixbuy-monorepo-mvn\commons\src\main\java\com\mvnnixbuyapi\commons\exceptions\GeneralException.java
+G:\JavaProjects\nixbuy\sources\nixbuy-monorepo-mvn\commons\src\main\java\com\mvnnixbuyapi\commons\exceptions\GeneralBodyExceptionHandler.java
+G:\JavaProjects\nixbuy\sources\nixbuy-monorepo-mvn\commons\src\main\java\com\mvnnixbuyapi\commons\monads\ResultMonad.java
+G:\JavaProjects\nixbuy\sources\nixbuy-monorepo-mvn\commons\src\main\java\com\mvnnixbuyapi\commons\dtos\response\GenericResponse.java
+G:\JavaProjects\nixbuy\sources\nixbuy-monorepo-mvn\commons\src\main\java\com\mvnnixbuyapi\commons\dtos\response\GenericResponseForBody.java

@@ -1,0 +1,16 @@
+com\mvnnixbuyapi\product\service\ProductDeleteService.class
+com\mvnnixbuyapi\product\service\ProductCreateService.class
+com\mvnnixbuyapi\product\model\entity\valueobjects\ProductUpdateDate.class
+com\mvnnixbuyapi\product\service\ProductEditService.class
+com\mvnnixbuyapi\product\model\dto\ProductDto.class
+com\mvnnixbuyapi\product\port\repository\ProductRepository.class
+com\mvnnixbuyapi\product\service\ProductEditMainImageService.class
+com\mvnnixbuyapi\product\model\entity\valueobjects\ProductUrlImage.class
+com\mvnnixbuyapi\product\model\entity\valueobjects\ProductCreationDate.class
+com\mvnnixbuyapi\product\model\entity\valueobjects\ProductId.class
+com\mvnnixbuyapi\product\model\entity\valueobjects\ProductName.class
+com\mvnnixbuyapi\product\port\dao\ProductDao.class
+com\mvnnixbuyapi\product\model\dto\command\ProductCreateCommand.class
+com\mvnnixbuyapi\product\model\dto\command\ProductEditCommand.class
+com\mvnnixbuyapi\product\model\entity\valueobjects\ProductDescription.class
+com\mvnnixbuyapi\product\model\entity\Product.class
