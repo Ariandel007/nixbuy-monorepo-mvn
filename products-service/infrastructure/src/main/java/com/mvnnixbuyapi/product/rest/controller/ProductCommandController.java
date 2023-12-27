@@ -35,12 +35,11 @@ public class ProductCommandController {
             BindingResult bindingResult
     ){
         if(bindingResult.hasErrors()) {
-            String errors = bindingResult.getAllErrors().stream()
+            List<String> errors = bindingResult.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.joining(";"));
+                    .collect(Collectors.toList());
             return ResponseEntity.badRequest().body(
                     new GenericResponseForBody<>(
-                            errors,
                             errors
                     )
             );
@@ -51,15 +50,13 @@ public class ProductCommandController {
         if(productDtoResult.isError()){
             return ResponseEntity.badRequest().body(
                     new GenericResponseForBody<>(
-                            productDtoResult.getError(),
-                            productDtoResult.getError()
+                            List.of(productDtoResult.getError())
                     )
             );
         } else {
             return ResponseEntity.ok().body(
                     new GenericResponseForBody<>(
-                            "SUCCESSFUL",
-                            "SUCCESSFUL",
+                            List.of("SUCCESSFUL"),
                             productDtoResult.getValue()
                     )
 

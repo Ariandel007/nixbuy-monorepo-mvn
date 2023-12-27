@@ -6,6 +6,7 @@ import com.mvnnixbuyapi.product.port.repository.ProductRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,11 +20,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
@@ -62,6 +59,7 @@ public class ProductCommandControllerIntegrationTesting {
     }
 
     @Test
+    @DisplayName("Should Create Product - V1")
     public void shouldCreateProductEndpointRestAssuredV1() {
 
         // Crear un objeto de ejemplo para enviar en la solicitud
@@ -78,15 +76,15 @@ public class ProductCommandControllerIntegrationTesting {
                 .post("/api/command-product-endpoint/v1/create-product")
                 .then()
                 .statusCode(200)
-                .body("code", equalTo("SUCCESSFUL"))
-                .body("message", equalTo("SUCCESSFUL"))
+                .body("code", hasItems("SUCCESSFUL"))
                 .body("data.id", notNullValue()) // Verificar si existe el campo 'id' en la respuesta
                 .body("data.name", equalTo("Prueba 2"))
                 .body("data.description", equalTo("Descripcion Prueba 2"));
     }
 
     @Test
-    public void shouldNotCreateProductWithAndEmptyNameV1() {
+    @DisplayName("Should not create Product with an empty name - V1")
+    public void shouldNotCreateProductWithAnEmptyNameV1() {
 
         // Crear un objeto de ejemplo para enviar en la solicitud
         ProductCreateCommand productCreateCommand = new ProductCreateCommand(
@@ -102,13 +100,13 @@ public class ProductCommandControllerIntegrationTesting {
                 .post("/api/command-product-endpoint/v1/create-product")
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .body("code", equalTo("EMPTY_NAME_PRODUCT_ERROR"))
-                .body("message", equalTo("EMPTY_NAME_PRODUCT_ERROR"))
+                .body("code", hasItems("EMPTY_NAME_PRODUCT_ERROR"))
         ;
     }
 
     @Test
-    public void shouldNotCreateProductWithAndEmptyDescriptionV1() {
+    @DisplayName("Should not create Product with an empty description - V1")
+    public void shouldNotCreateProductWithAnEmptyDescriptionV1() {
 
         // Crear un objeto de ejemplo para enviar en la solicitud
         ProductCreateCommand productCreateCommand = new ProductCreateCommand(
@@ -124,13 +122,13 @@ public class ProductCommandControllerIntegrationTesting {
                 .post("/api/command-product-endpoint/v1/create-product")
                 .then()
                 .statusCode(400)
-                .body("code", equalTo("EMPTY_DESCRIPTION_PRODUCT_ERROR"))
-                .body("message", equalTo("EMPTY_DESCRIPTION_PRODUCT_ERROR"))
+                .body("code", hasItems("EMPTY_DESCRIPTION_PRODUCT_ERROR"))
         ;
     }
 
     @Test
-    public void shouldNotCreateProductWithAndEmptyDescriptionAndEmptyNameV1() {
+    @DisplayName("Should not create Product with an empty description and name - V1")
+    public void shouldNotCreateProductWithAnEmptyDescriptionAndEmptyNameV1() {
 
         // Crear un objeto de ejemplo para enviar en la solicitud
         ProductCreateCommand productCreateCommand = new ProductCreateCommand(
@@ -146,8 +144,7 @@ public class ProductCommandControllerIntegrationTesting {
                 .post("/api/command-product-endpoint/v1/create-product")
                 .then()
                 .statusCode(400)
-                .body("code", equalTo("EMPTY_NAME_PRODUCT_ERROR;EMPTY_DESCRIPTION_PRODUCT_ERROR"))
-                .body("message", equalTo("EMPTY_NAME_PRODUCT_ERROR;EMPTY_DESCRIPTION_PRODUCT_ERROR"))
+                .body("code", hasItems("EMPTY_NAME_PRODUCT_ERROR","EMPTY_DESCRIPTION_PRODUCT_ERROR"))
         ;
     }
 

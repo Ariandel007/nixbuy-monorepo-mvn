@@ -3,16 +3,18 @@ package com.mvnnixbuyapi.commons.dtos.response;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 public class GenericResponseForBody<T> extends GenericResponse {
     private T data;
-    public GenericResponseForBody(String code, String message) {
-        super(code, message);
+    public GenericResponseForBody(List<String> code) {
+        super(code);
     }
 
-    public GenericResponseForBody(String code, String message, T data) {
-        super(code, message);
+    public GenericResponseForBody(List<String> code, T data) {
+        super(code);
         this.data = data;
     }
 
