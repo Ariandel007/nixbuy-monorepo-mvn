@@ -20,7 +20,8 @@ public class ProductCreateHandler {
     }
 
     public ResultMonad<ProductDto> execute(ProductCreateCommand productCreateCommand) {
-        ProductDto productDtoCreated = ProductDtoMapper.INSTANCE.toDto(this.productCreateService.execute(productCreateCommand));
+        ProductDto productDtoCreated =
+                ProductDtoMapper.INSTANCE.toDto(this.productCreateService.execute(productCreateCommand));
         return ResultMonad.ok(productDtoCreated);
     }
 

@@ -4,17 +4,18 @@ import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.monads.ResultMonad;
 import com.mvnnixbuyapi.product.command.ProductCreateHandler;
 import com.mvnnixbuyapi.product.model.dto.ProductDto;
+import com.mvnnixbuyapi.product.model.dto.ProductToEditDto;
 import com.mvnnixbuyapi.product.model.dto.command.ProductCreateCommand;
+import com.mvnnixbuyapi.product.model.dto.command.ProductEditCommand;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class ProductCommandController {
     }
 
     @PostMapping("/v1/create-product")
-    public ResponseEntity<GenericResponseForBody<ProductDto>> createProduct(
+    public ResponseEntity<GenericResponseForBody<ProductDto>> createProductV1(
             @RequestBody @Valid ProductCreateCommand productCreateCommand,
             BindingResult bindingResult
     ){
@@ -62,6 +63,30 @@ public class ProductCommandController {
 
             );
         }
+    }
+
+    @PatchMapping(value = "/v1/update-main-photo/{productId}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<GenericResponseForBody<ProductToEditDto>> editProductV1(
+            @PathVariable Long productId,
+            @RequestPart(value = "mainPhotoOfProductFile") MultipartFile mainPhotoOfProductFile,
+            @RequestPart(value = "productName") String productName,
+            @RequestPart(value = "productDescription") String productDescription,
+            @RequestPart(value = "urlImage") String urlImage,
+            @RequestPart(value = "isPhotoUploaded") Boolean isPhotoUploaded
+
+    ) {
+        var productEditCommand = ProductEditCommand.builder()
+                .id(productId)
+                .name(productName)
+                .description(productDescription)
+                .urlImage(urlImage)
+                .isPhotoUploaded(isPhotoUploaded)
+                .build();
+
+        return null;
     }
 
 }

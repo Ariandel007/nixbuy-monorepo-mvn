@@ -11,13 +11,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -145,6 +154,75 @@ public class ProductCommandControllerIntegrationTesting {
                 .then()
                 .statusCode(400)
                 .body("code", hasItems("EMPTY_NAME_PRODUCT_ERROR","EMPTY_DESCRIPTION_PRODUCT_ERROR"))
+        ;
+    }
+
+    File getFile(String fileName) throws IOException {
+        return new ClassPathResource(fileName).getFile();
+    }
+
+    String getFileContent(String fileName) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(getFile(fileName).getPath())));
+    }
+
+    @Test
+    @DisplayName("Should Edit Product when photo is being updated - V1")
+    public void shouldEditProductEndpointWhenPhotoIsBeingUpdatedRestAssuredV1() throws Exception {
+        // Supongamos que tienes los datos necesarios para la edición del producto
+        Long productId = 1L;
+        String productName = "Nuevo Nombre";
+        String productDescription = "Nueva descripción";
+        String urlImage = "http://ejemplo.com/imagen.jpg";
+        Boolean isPhotoUploaded = true;
+
+        // Realizar la solicitud PATCH a /v1/update-main-photo/{productId}
+        given()
+                .contentType("multipart/form-data")
+                .multiPart("mainPhotoOfProductFile", getFile("testImages/testFileProduct1.png")) // Adjuntar el archivo de imagen como MultipartFile
+                .multiPart("productName", productName)
+                .multiPart("productDescription", productDescription)
+                .multiPart("urlImage", urlImage)
+                .multiPart("isPhotoUploaded", isPhotoUploaded)
+                .when()
+                .patch("/v1/update-main-photo/{productId}", productId)
+                .then()
+                .statusCode(200)
+                .body("code", hasItems("SUCCESSFUL"))
+                .body("data.id", equalTo(productId)) // Verificar si existe el campo 'id' en la respuesta
+                .body("data.name", equalTo(productName))
+                .body("data.description", equalTo(productDescription))
+                .body("data.urlImage", not(urlImage))
+
+                ;
+    }
+
+    @DisplayName("Should Edit Product when photo is not being updated - V1")
+    public void shouldEditProductEndpointWhenPhotoIsNotBeingUpdatedRestAssuredV1() throws Exception {
+        // Supongamos que tienes los datos necesarios para la edición del producto
+        Long productId = 1L;
+        String productName = "Nuevo Nombre";
+        String productDescription = "Nueva descripción";
+        String urlImage = "http://ejemplo.com/imagen.jpg";
+        Boolean isPhotoUploaded = true;
+
+        // Realizar la solicitud PATCH a /v1/update-main-photo/{productId}
+        given()
+                .contentType("multipart/form-data")
+                .multiPart("mainPhotoOfProductFile", getFile("testImages/testFileProduct1.png")) // Adjuntar el archivo de imagen como MultipartFile
+                .multiPart("productName", productName)
+                .multiPart("productDescription", productDescription)
+                .multiPart("urlImage", urlImage)
+                .multiPart("isPhotoUploaded", isPhotoUploaded)
+                .when()
+                .patch("/v1/update-main-photo/{productId}", productId)
+                .then()
+                .statusCode(200)
+                .body("code", hasItems("SUCCESSFUL"))
+                .body("data.id", equalTo(productId)) // Verificar si existe el campo 'id' en la respuesta
+                .body("data.name", equalTo(productName))
+                .body("data.description", equalTo(productDescription))
+                .body("data.urlImage", equalTo(urlImage))
+
         ;
     }
 

@@ -27,4 +27,11 @@ public class ProductPostgresRepository implements ProductRepository {
         var productCreated = this.productSpringJpaAdapterRepository.save(productEntity);
         return this.productDboMapper.entityToProduct(productCreated);
     }
+
+    @Override
+    public Product edit(Product product) {
+        var productEntity = this.productDboMapper.domainToEntity(product);
+        var productUpdated= this.productSpringJpaAdapterRepository.save(productEntity);
+        return this.productDboMapper.entityToProduct(productUpdated);
+    }
 }
