@@ -4,27 +4,43 @@ import com.mvnnixbuyapi.commons.monads.ResultMonad;
 import com.mvnnixbuyapi.product.mapper.ProductDtoMapper;
 import com.mvnnixbuyapi.product.model.dto.ProductToEditDto;
 import com.mvnnixbuyapi.product.model.dto.command.ProductEditCommand;
+import com.mvnnixbuyapi.product.model.entity.Product;
 import com.mvnnixbuyapi.product.service.ProductEditService;
+import com.mvnnixbuyapi.product.service.ProductUpdatePhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductEditHandler {
     private final ProductEditService productEditService;
+    private final ProductUpdatePhotoService productUpdatePhotoService;
 
     @Autowired
-    public ProductEditHandler(ProductEditService productEditService) {
+    public ProductEditHandler(
+            ProductEditService productEditService,
+            ProductUpdatePhotoService productUpdatePhotoService
+    ) {
         this.productEditService = productEditService;
+        this.productUpdatePhotoService = productUpdatePhotoService;
     }
 
     public ResultMonad<ProductToEditDto> execute(ProductEditCommand productEditCommand) {
         if(productEditCommand.getIsPhotoUploaded()){
-            // subir foto a un proveedor externo y setear Link
+            if(productEditCommand.getMainPhotoOfProductFile() == null) {
+                return ResultMonad.error("NULL_MULTIPART_PHOTO_PRODUCT_ERROR");
+            }
+            // Subir foto a un proveedor externo y setear Link
+            String urlImage = this.productUpdatePhotoService.execute(productEditCommand);
+            productEditCommand.setUrlImage(urlImage);
         }
-        ProductToEditDto productToEditDto =
-                ProductDtoMapper.INSTANCE.toProductEditDto(this.productEditService.execute(productEditCommand));
 
-        return ResultMonad.ok(productToEditDto);
+        ResultMonad<Product> productResultMonad = this.productEditService.execute(productEditCommand);
+
+        if(productResultMonad.isError()){
+            return ResultMonad.error(productResultMonad.getError());
+        }
+
+        return ResultMonad.ok(ProductDtoMapper.INSTANCE.toProductEditDto(productResultMonad.getValue()));
     }
 
 }

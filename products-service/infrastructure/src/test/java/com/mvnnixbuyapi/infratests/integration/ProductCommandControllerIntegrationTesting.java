@@ -169,11 +169,11 @@ public class ProductCommandControllerIntegrationTesting {
     @DisplayName("Should Edit Product when photo is being updated - V1")
     public void shouldEditProductEndpointWhenPhotoIsBeingUpdatedRestAssuredV1() throws Exception {
         // Supongamos que tienes los datos necesarios para la edición del producto
-        Long productId = 1L;
+        int productId = 1;
         String productName = "Nuevo Nombre";
-        String productDescription = "Nueva descripción";
+        String productDescription = "Nueva descripcion";
         String urlImage = "http://ejemplo.com/imagen.jpg";
-        Boolean isPhotoUploaded = true;
+        String isPhotoUploaded = "true";
 
         // Realizar la solicitud PATCH a /v1/update-main-photo/{productId}
         given()
@@ -184,7 +184,7 @@ public class ProductCommandControllerIntegrationTesting {
                 .multiPart("urlImage", urlImage)
                 .multiPart("isPhotoUploaded", isPhotoUploaded)
                 .when()
-                .patch("/v1/update-main-photo/{productId}", productId)
+                .patch("/api/command-product-endpoint/v1/update-main-photo/{productId}", productId)
                 .then()
                 .statusCode(200)
                 .body("code", hasItems("SUCCESSFUL"))
@@ -196,14 +196,15 @@ public class ProductCommandControllerIntegrationTesting {
                 ;
     }
 
+    @Test
     @DisplayName("Should Edit Product when photo is not being updated - V1")
     public void shouldEditProductEndpointWhenPhotoIsNotBeingUpdatedRestAssuredV1() throws Exception {
         // Supongamos que tienes los datos necesarios para la edición del producto
-        Long productId = 1L;
+        int productId = 1;
         String productName = "Nuevo Nombre";
-        String productDescription = "Nueva descripción";
-        String urlImage = "http://ejemplo.com/imagen.jpg";
-        Boolean isPhotoUploaded = true;
+        String productDescription = "Nueva descripcion";
+        String urlImage = "https://ejemplo.com/imagen.jpg";
+        String isPhotoUploaded = "false";
 
         // Realizar la solicitud PATCH a /v1/update-main-photo/{productId}
         given()
@@ -214,7 +215,7 @@ public class ProductCommandControllerIntegrationTesting {
                 .multiPart("urlImage", urlImage)
                 .multiPart("isPhotoUploaded", isPhotoUploaded)
                 .when()
-                .patch("/v1/update-main-photo/{productId}", productId)
+                .patch("/api/command-product-endpoint/v1/update-main-photo/{productId}", productId)
                 .then()
                 .statusCode(200)
                 .body("code", hasItems("SUCCESSFUL"))

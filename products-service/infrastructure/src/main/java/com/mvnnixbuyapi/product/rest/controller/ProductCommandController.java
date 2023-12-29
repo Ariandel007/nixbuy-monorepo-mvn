@@ -3,6 +3,7 @@ package com.mvnnixbuyapi.product.rest.controller;
 import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.monads.ResultMonad;
 import com.mvnnixbuyapi.product.command.ProductCreateHandler;
+import com.mvnnixbuyapi.product.command.ProductEditHandler;
 import com.mvnnixbuyapi.product.model.dto.ProductDto;
 import com.mvnnixbuyapi.product.model.dto.ProductToEditDto;
 import com.mvnnixbuyapi.product.model.dto.command.ProductCreateCommand;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +26,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/command-product-endpoint")
 public class ProductCommandController {
     private final ProductCreateHandler productCreateHandler;
+    private final ProductEditHandler productEditHandler;
+
 
     @Autowired
-    public ProductCommandController(ProductCreateHandler productCreateHandler) {
+    public ProductCommandController(
+            ProductCreateHandler productCreateHandler,
+            ProductEditHandler productEditHandler
+    ) {
         this.productCreateHandler = productCreateHandler;
+        this.productEditHandler = productEditHandler;
     }
 
     @PostMapping("/v1/create-product")
@@ -75,7 +83,7 @@ public class ProductCommandController {
             @RequestPart(value = "productName") String productName,
             @RequestPart(value = "productDescription") String productDescription,
             @RequestPart(value = "urlImage") String urlImage,
-            @RequestPart(value = "isPhotoUploaded") Boolean isPhotoUploaded
+            @RequestPart(value = "isPhotoUploaded") String isPhotoUploaded
 
     ) {
         var productEditCommand = ProductEditCommand.builder()
@@ -83,10 +91,39 @@ public class ProductCommandController {
                 .name(productName)
                 .description(productDescription)
                 .urlImage(urlImage)
-                .isPhotoUploaded(isPhotoUploaded)
+                .isPhotoUploaded(isPhotoUploaded == null ? null:isPhotoUploaded.equals("true"))
+                .mainPhotoOfProductFile(mainPhotoOfProductFile)
                 .build();
+        BindingResult bindingResult = new BeanPropertyBindingResult(productEditCommand, "productEditCommand");
 
-        return null;
+        if(bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(
+                    new GenericResponseForBody<>(
+                            errors
+                    )
+            );
+        }
+
+        ResultMonad<ProductToEditDto> productToEditDtoResultMonad = this.productEditHandler.execute(productEditCommand);
+
+        if(productToEditDtoResultMonad.isError()){
+            return ResponseEntity.badRequest().body(
+                    new GenericResponseForBody<>(
+                            List.of(productToEditDtoResultMonad.getError())
+                    )
+            );
+        } else {
+            return ResponseEntity.ok().body(
+                    new GenericResponseForBody<>(
+                            List.of("SUCCESSFUL"),
+                            productToEditDtoResultMonad.getValue()
+                    )
+
+            );
+        }
     }
 
 }

@@ -1,11 +1,13 @@
 package com.mvnnixbuyapi.product.service;
 
+import com.mvnnixbuyapi.commons.monads.ResultMonad;
 import com.mvnnixbuyapi.product.model.dto.command.ProductCreateCommand;
 import com.mvnnixbuyapi.product.model.dto.command.ProductEditCommand;
 import com.mvnnixbuyapi.product.model.entity.Product;
 import com.mvnnixbuyapi.product.port.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ProductEditService {
@@ -16,9 +18,13 @@ public class ProductEditService {
         this.productRepository = productRepository;
     }
 
-    public Product execute(ProductEditCommand productEditCommand) {
+    public ResultMonad<Product> execute(ProductEditCommand productEditCommand) {
         var productToEdit = new Product().requestToEdit(productEditCommand);
-        return this.productRepository.edit(productToEdit);
+        var productInBD = this.productRepository.find(productToEdit);
+        if(productInBD == null) {
+            return ResultMonad.error("ERROR_PRODUCT_TO_EDIT_NOT_FOUNDED");
+        }
+        return ResultMonad.ok(this.productRepository.edit(productToEdit));
     }
 
 }

@@ -7,6 +7,10 @@ public class GeneralException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
+    public GeneralException(String errorCode) {
+        this.errorCode = errorCode;
+    }
+
     @Override
     public synchronized Throwable fillInStackTrace() {
         return this;

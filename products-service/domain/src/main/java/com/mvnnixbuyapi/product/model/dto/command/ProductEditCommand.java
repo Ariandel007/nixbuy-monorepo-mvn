@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor
@@ -15,4 +16,5 @@ public class ProductEditCommand {
     private String description;
     private String urlImage;
     private Boolean isPhotoUploaded;
+    MultipartFile mainPhotoOfProductFile;
 }
