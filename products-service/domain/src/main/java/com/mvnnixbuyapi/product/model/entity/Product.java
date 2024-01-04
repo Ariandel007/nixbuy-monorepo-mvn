@@ -6,6 +6,7 @@ import com.mvnnixbuyapi.product.model.entity.valueobjects.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
@@ -17,6 +18,7 @@ public class Product{
     private ProductUrlImage urlImage;
     private ProductCreationDate creationDate;
     private ProductUpdateDate updateDate;
+    private ProductPrice price;
 
 
     public Product(
@@ -25,7 +27,8 @@ public class Product{
             String description,
             String urlImage,
             Instant creationDate,
-            Instant updateDate
+            Instant updateDate,
+            BigDecimal price
     ){
         this.id = new ProductId(id);
         this.name = new ProductName(name);
@@ -33,6 +36,7 @@ public class Product{
         this.urlImage = new ProductUrlImage(urlImage);
         this.creationDate = new ProductCreationDate(creationDate);
         this.updateDate = new ProductUpdateDate(updateDate);
+        this.price = new ProductPrice(price);
     }
 
 
@@ -41,6 +45,7 @@ public class Product{
         this.name = new ProductName(productCreateCommand.getName());
         this.description = new ProductDescription(productCreateCommand.getDescription());
         this.urlImage = new ProductUrlImage("/default_product.png");
+        this.price = new ProductPrice(productCreateCommand.getPrice());
         this.creationDate = new ProductCreationDate(Instant.now());
         this.updateDate = new ProductUpdateDate(Instant.now());
         return this;
@@ -51,6 +56,7 @@ public class Product{
         this.name = new ProductName(productEditCommand.getName());
         this.description = new ProductDescription(productEditCommand.getDescription());
         this.urlImage = new ProductUrlImage(productEditCommand.getUrlImage());
+        this.price = new ProductPrice(productEditCommand.getPrice());
         this.creationDate = new ProductCreationDate(Instant.now());
         this.updateDate = new ProductUpdateDate(Instant.now());
         return this;
@@ -80,6 +86,9 @@ public class Product{
 
     public Instant getUpdateDate() {
         return updateDate.updateDate();
+    }
+    public BigDecimal getPrice(){
+        return this.price.price();
     }
 
 }

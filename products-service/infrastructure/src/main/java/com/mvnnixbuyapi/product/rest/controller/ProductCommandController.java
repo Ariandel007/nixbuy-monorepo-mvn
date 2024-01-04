@@ -19,6 +19,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,7 +84,9 @@ public class ProductCommandController {
             @RequestPart(value = "productName") String productName,
             @RequestPart(value = "productDescription") String productDescription,
             @RequestPart(value = "urlImage") String urlImage,
-            @RequestPart(value = "isPhotoUploaded") String isPhotoUploaded
+            @RequestPart(value = "isPhotoUploaded") String isPhotoUploaded,
+            @RequestPart(value = "price") String price
+
 
     ) {
         var productEditCommand = ProductEditCommand.builder()
@@ -93,6 +96,7 @@ public class ProductCommandController {
                 .urlImage(urlImage)
                 .isPhotoUploaded(isPhotoUploaded == null ? null:isPhotoUploaded.equals("true"))
                 .mainPhotoOfProductFile(mainPhotoOfProductFile)
+                .price(new BigDecimal(price))
                 .build();
         BindingResult bindingResult = new BeanPropertyBindingResult(productEditCommand, "productEditCommand");
 

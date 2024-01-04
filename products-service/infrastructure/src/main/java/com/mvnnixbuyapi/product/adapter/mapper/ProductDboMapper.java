@@ -19,6 +19,7 @@ public class ProductDboMapper {
                 .name(productDomain.getName())
                 .description(productDomain.getDescription())
                 .urlImage(productDomain.getUrlImage())
+                .price(productDomain.getPrice())
                 .creationDate(productDomain.getCreationDate())
                 .updateDate(productDomain.getUpdateDate())
                 .build();
@@ -34,7 +35,8 @@ public class ProductDboMapper {
                 productEntity.getDescription(),
                 productEntity.getUrlImage(),
                 productEntity.getCreationDate(),
-                productEntity.getUpdateDate()
+                productEntity.getUpdateDate(),
+                productEntity.getPrice()
         );
     }
 }

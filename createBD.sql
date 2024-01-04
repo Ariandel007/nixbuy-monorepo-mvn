@@ -63,3 +63,67 @@ VALUES(2, 'ROLE_ADMIN');
 INSERT INTO public.user_applications
 (account_creation_date, attemps, auth_type, birth_date, is_blocked, city, country, is_deleted, email, firstname, lastname, "password", photo_url, username)
 VALUES('2023-08-03 23:41:53.475', 0, 'email_registered', '1999-02-20 09:48:00.000', false, 'Ciudad Ejemplo', 'Ejemplolandia', false, 'ejemplo@correo.com', 'Ejemplo', 'Usuario', '$2a$10$UlQqJqg4PVb6deWkoyNBVOdKJO7WmBS7WTOLyEYLKSMFkDwIfRTF2', NULL, 'ejemplo_usuario2');
+
+
+------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------BD PRODUCS--------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+CREATE DATABASE nixbuy_products;
+
+CREATE TABLE IF NOT EXISTS public.products
+(
+    id bigserial NOT NULL,
+    creation_date timestamp(6) with time zone,
+    description character varying(255) COLLATE pg_catalog."default",
+    price numeric(38,2),
+    name character varying(255) COLLATE pg_catalog."default",
+    update_date timestamp(6) with time zone,
+    url_image character varying(255) COLLATE pg_catalog."default",
+    CONSTRAINT products_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS public.key_products
+(
+    key_id bigint NOT NULL DEFAULT nextval('key_products_key_id_seq'::regclass),
+    key_code character varying(255) COLLATE pg_catalog."default",
+    active_date timestamp(6) with time zone,
+    create_date timestamp(6) with time zone,
+    inactive_date timestamp(6) with time zone,
+    plattform_id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    sold_date timestamp(6) with time zone,
+    status character varying(10) COLLATE pg_catalog."default",
+    CONSTRAINT key_products_pkey PRIMARY KEY (key_id),
+    CONSTRAINT UX_KEYCODE UNIQUE (key_code),
+    CONSTRAINT FK_KEYPRODUCTS_PRODUCT FOREIGN KEY (product_id)
+        REFERENCES public.products (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT FK_KEYPRODUCTS_PLATTFORM FOREIGN KEY (plattform_id)
+        REFERENCES public.platforms (key_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+CREATE TABLE IF NOT EXISTS public.platforms
+(
+    key_id bigint NOT NULL,
+    name character varying(255) COLLATE pg_catalog."default",
+    CONSTRAINT platforms_pkey PRIMARY KEY (key_id)
+)
+
+INSERT INTO platforms(
+	key_id, name)
+	VALUES (1, 'Steam');
+
+INSERT INTO platforms(
+	key_id, name)
+	VALUES (2, 'EA Apps');
+
+INSERT INTO platforms(
+	key_id, name)
+	VALUES (3, 'Ubisoft Connect');
+
+INSERT INTO platforms(
+	key_id, name)
+	VALUES (4, 'Epic Games Store');

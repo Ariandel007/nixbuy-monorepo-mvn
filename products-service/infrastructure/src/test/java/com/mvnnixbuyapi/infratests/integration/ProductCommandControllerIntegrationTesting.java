@@ -22,6 +22,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -71,7 +72,8 @@ public class ProductCommandControllerIntegrationTesting {
         // Crear un objeto de ejemplo para enviar en la solicitud
         ProductCreateCommand productCreateCommand = new ProductCreateCommand(
                 "Prueba 2",
-                "Descripcion Prueba 2"
+                "Descripcion Prueba 2",
+                new BigDecimal("30.0")
         );
 
         // Realizar la solicitud POST a /api/command-product-endpoint/v1/create-product
@@ -85,7 +87,9 @@ public class ProductCommandControllerIntegrationTesting {
                 .body("code", hasItems("SUCCESSFUL"))
                 .body("data.id", notNullValue()) // Verificar si existe el campo 'id' en la respuesta
                 .body("data.name", equalTo("Prueba 2"))
-                .body("data.description", equalTo("Descripcion Prueba 2"));
+                .body("data.description", equalTo("Descripcion Prueba 2"))
+                .body("data.price", equalTo(30.0F))
+        ;
     }
 
     @Test
@@ -95,7 +99,8 @@ public class ProductCommandControllerIntegrationTesting {
         // Crear un objeto de ejemplo para enviar en la solicitud
         ProductCreateCommand productCreateCommand = new ProductCreateCommand(
                 "",
-                "Descripcion Prueba 2"
+                "Descripcion Prueba 2",
+                new BigDecimal("30.0")
         );
 
         // Realizar la solicitud POST a /api/command-product-endpoint/v1/create-product
@@ -117,7 +122,8 @@ public class ProductCommandControllerIntegrationTesting {
         // Crear un objeto de ejemplo para enviar en la solicitud
         ProductCreateCommand productCreateCommand = new ProductCreateCommand(
                 "Prueba 2",
-                ""
+                "",
+                new BigDecimal("30.0")
         );
 
         // Realizar la solicitud POST a /api/command-product-endpoint/v1/create-product
@@ -139,7 +145,8 @@ public class ProductCommandControllerIntegrationTesting {
         // Crear un objeto de ejemplo para enviar en la solicitud
         ProductCreateCommand productCreateCommand = new ProductCreateCommand(
                 "",
-                ""
+                "",
+                new BigDecimal("30.0")
         );
 
         // Realizar la solicitud POST a /api/command-product-endpoint/v1/create-product
@@ -171,6 +178,7 @@ public class ProductCommandControllerIntegrationTesting {
         String productDescription = "Nueva descripcion";
         String urlImage = "http://ejemplo.com/imagen.jpg";
         String isPhotoUploaded = "true";
+        String price = "50.0";
 
         // Realizar la solicitud PATCH a /v1/update-main-photo/{productId}
         given()
@@ -180,6 +188,7 @@ public class ProductCommandControllerIntegrationTesting {
                 .multiPart("productDescription", productDescription)
                 .multiPart("urlImage", urlImage)
                 .multiPart("isPhotoUploaded", isPhotoUploaded)
+                .multiPart("price", price)
                 .when()
                 .patch("/api/command-product-endpoint/v1/update-main-photo/{productId}", productId)
                 .then()
@@ -189,7 +198,7 @@ public class ProductCommandControllerIntegrationTesting {
                 .body("data.name", equalTo(productName))
                 .body("data.description", equalTo(productDescription))
                 .body("data.urlImage", not(urlImage))
-
+                .body("data.price", not(50.0))
                 ;
     }
 
@@ -202,6 +211,7 @@ public class ProductCommandControllerIntegrationTesting {
         String productDescription = "Nueva descripcion";
         String urlImage = "https://ejemplo.com/imagen.jpg";
         String isPhotoUploaded = "false";
+        String price = "55.0";
 
         // Realizar la solicitud PATCH a /v1/update-main-photo/{productId}
         given()
@@ -211,6 +221,7 @@ public class ProductCommandControllerIntegrationTesting {
                 .multiPart("productDescription", productDescription)
                 .multiPart("urlImage", urlImage)
                 .multiPart("isPhotoUploaded", isPhotoUploaded)
+                .multiPart("price", price)
                 .when()
                 .patch("/api/command-product-endpoint/v1/update-main-photo/{productId}", productId)
                 .then()
@@ -220,7 +231,7 @@ public class ProductCommandControllerIntegrationTesting {
                 .body("data.name", equalTo(productName))
                 .body("data.description", equalTo(productDescription))
                 .body("data.urlImage", equalTo(urlImage))
-
+                .body("data.price", not(55.0))
         ;
     }
 

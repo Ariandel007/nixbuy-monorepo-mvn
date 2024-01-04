@@ -1,5 +1,7 @@
 package com.mvnnixbuyapi.keyProduct.adapters.entity;
 
+import com.mvnnixbuyapi.platforms.adapters.entity.PlatformEntity;
+import com.mvnnixbuyapi.product.adapter.entity.ProductEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,13 +19,14 @@ import java.time.Instant;
 @Data
 @Builder
 public class KeyProductEntity implements Serializable {
+    private static final long serialVersionUID = 1003100000L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "key_id")
     private Long id;
     @Column(name = "key_code", unique=true)
     private String KeyCode;
-    private BigDecimal price;
     @Column(name = "status", length = 10)
     private String status;
     @Column(name = "create_date")
@@ -34,5 +37,19 @@ public class KeyProductEntity implements Serializable {
     private Instant inactiveDate;
     @Column(name = "sold_date")
     private Instant soldDate;
+
+    // FKS:
+    @Column(name = "plattform_id", nullable = false)
+    private Long plattformId;
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
+
+    // Relations:
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plattform_id", insertable=false, updatable=false)//insertable=false, updatable=false porque idUserApp esta siendo usado como el FK
+    private PlatformEntity platformEntityRelated;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", insertable=false, updatable=false)//insertable=false, updatable=false porque idUserApp esta siendo usado como el FK
+    private ProductEntity productEntityRelated;
 
 }
