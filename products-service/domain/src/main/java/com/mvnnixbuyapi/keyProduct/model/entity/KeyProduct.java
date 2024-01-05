@@ -1,6 +1,7 @@
 package com.mvnnixbuyapi.keyProduct.model.entity;
 
 import com.mvnnixbuyapi.keyProduct.model.dto.command.KeyCreateCommand;
+import com.mvnnixbuyapi.keyProduct.model.entity.enumfiles.KeyStatusEnum;
 import com.mvnnixbuyapi.keyProduct.model.entity.valueobjects.*;
 import com.mvnnixbuyapi.platform.model.entity.Platform;
 import com.mvnnixbuyapi.product.model.entity.Product;
@@ -68,7 +69,58 @@ public class KeyProduct {
     public KeyProduct requestToCreate(KeyCreateCommand keyCreateCommand) {
         this.keyCode = new KeyCode(keyCreateCommand.getKeyCode());
         this.status = new KeyStatus(keyCreateCommand.getStatus());
+        this.createDate = new KeyCreateDate(Instant.now());
+        if (this.status.status().equals(KeyStatusEnum.ACTIVE.toString())) {
+            this.activeDate = new KeyActiveDate(Instant.now());
+        } else {
+            this.inactiveDate = new KeyInactiveDate(Instant.now());
+        }
+        this.product = new KeyProductProduct(new Product(
+                keyCreateCommand.getIdProduct(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        ));
         return this;
     }
 
+
+    public Long getId() {
+        return id.keyId();
+    }
+
+    public String getKeyCode() {
+        return keyCode.keyCode();
+    }
+
+    public String getStatus() {
+        return status.status();
+    }
+
+    public Instant getCreateDate() {
+        return createDate.createDate();
+    }
+
+    public Instant getActiveDate() {
+        return activeDate.activeDate();
+    }
+
+    public Instant getInactiveDate() {
+        return inactiveDate.inactiveDate();
+    }
+
+    public Instant getSoldDate() {
+        return soldDate.soldDate();
+    }
+
+    public Product getProduct() {
+        return product.product();
+    }
+
+    public Platform getPlatform() {
+        return platform.platform();
+    }
 }

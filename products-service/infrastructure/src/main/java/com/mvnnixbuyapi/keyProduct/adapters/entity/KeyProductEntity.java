@@ -26,7 +26,7 @@ public class KeyProductEntity implements Serializable {
     @Column(name = "key_id")
     private Long id;
     @Column(name = "key_code", unique=true)
-    private String KeyCode;
+    private String keyCode;
     @Column(name = "status", length = 10)
     private String status;
     @Column(name = "create_date")

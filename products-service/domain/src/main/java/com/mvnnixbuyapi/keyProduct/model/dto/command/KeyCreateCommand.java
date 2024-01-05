@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,5 +14,9 @@ public class KeyCreateCommand {
     String keyCode;
     @NotBlank(message = "EMPTY_KEY_STATUS_ERROR")
     String status;
+
+    @NotBlank(message = "EMPTY_ID_PRODUCT_ERROR")
+    @NotNull(message = "NULL_ID_PRODUCT_ERROR")
+    Long idProduct;
 
 }

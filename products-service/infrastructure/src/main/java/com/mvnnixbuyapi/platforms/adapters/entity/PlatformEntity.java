@@ -24,6 +24,7 @@ public class PlatformEntity implements Serializable {
     private Long id;
     @Column(name = "name", length = 255)
     private String name;
+    // Relations:
     @OneToMany(mappedBy = "platformEntityRelated", fetch = FetchType.LAZY)
     private List<KeyProductEntity> keyProductEntityList;
 }
