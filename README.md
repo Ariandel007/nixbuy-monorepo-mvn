@@ -23,13 +23,15 @@ Este es un proyecto con la única intención de hacer un mono repositorio de mic
 
 ## Tech
 Se esta usando lo siguiente:
-- [Maven]
-- [Spring Boot]
-- [Spring JPA]
-- [Resilence4j]
-- [Zipkin]
-- [Debezium]
-- [PostgreSQL]
+- Maven
+- Spring Boot
+- Spring JPA
+- Resilence4j
+- Zipkin
+- Debezium
+- PostgreSQL
+- Spring Cloud Gateway
+- Apache Kafka
 - Rest Assured
 - Junit
 - TestContainers
