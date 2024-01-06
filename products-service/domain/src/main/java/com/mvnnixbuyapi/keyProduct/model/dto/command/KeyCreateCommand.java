@@ -19,4 +19,8 @@ public class KeyCreateCommand {
     @NotNull(message = "NULL_ID_PRODUCT_ERROR")
     Long idProduct;
 
+    @NotBlank(message = "EMPTY_ID_PLATFORM_ERROR")
+    @NotNull(message = "NULL_ID_PLATFORM_ERROR")
+    Long idPlatform;
+
 }

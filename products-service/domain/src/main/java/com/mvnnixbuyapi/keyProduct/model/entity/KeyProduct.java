@@ -46,7 +46,6 @@ public class KeyProduct {
     public KeyProduct(
             Long id,
             String keyCode,
-            BigDecimal price,
             String status,
             Instant createDate,
             Instant activeDate,
@@ -82,6 +81,10 @@ public class KeyProduct {
                 null,
                 null,
                 null,
+                null
+        ));
+        this.platform = new KeyProductPlatform(new Platform(
+                keyCreateCommand.getIdPlatform(),
                 null
         ));
         return this;
