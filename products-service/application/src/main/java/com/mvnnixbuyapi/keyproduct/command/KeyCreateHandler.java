@@ -4,9 +4,7 @@ import com.mvnnixbuyapi.commons.monads.ResultMonad;
 import com.mvnnixbuyapi.keyProduct.model.dto.KeyToCreateDto;
 import com.mvnnixbuyapi.keyProduct.model.dto.command.KeyCreateCommand;
 import com.mvnnixbuyapi.keyProduct.service.KeyCreateService;
-import com.mvnnixbuyapi.product.mapper.ProductDtoMapper;
-import com.mvnnixbuyapi.product.model.dto.ProductDto;
-import com.mvnnixbuyapi.product.model.dto.command.ProductCreateCommand;
+import com.mvnnixbuyapi.keyproduct.mapper.KeyDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +20,7 @@ public class KeyCreateHandler {
     }
 
     public ResultMonad<KeyToCreateDto> execute(KeyCreateCommand keyCreateCommand) {
-        return null;
+        KeyToCreateDto keyDtoCreated = KeyDtoMapper.INSTANCE.toDtoCreate(keyCreateService.execute(keyCreateCommand));
+        return ResultMonad.ok(keyDtoCreated);
     }
 }

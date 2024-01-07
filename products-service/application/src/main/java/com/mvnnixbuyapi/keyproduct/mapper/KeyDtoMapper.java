@@ -14,6 +14,6 @@ public interface KeyDtoMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "price", target = "price")
-    KeyToCreateDto toDto(KeyProduct domain);
+    KeyToCreateDto toDtoCreate(KeyProduct domain);
 
 }
