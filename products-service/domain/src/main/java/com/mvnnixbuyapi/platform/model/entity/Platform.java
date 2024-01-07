@@ -17,4 +17,10 @@ public class Platform {
         this.id = new PlatformId(id);
         this.name = new PlatformName(name);
     }
+
+    public Long getId() {
+        if(id == null)
+            return null;
+        return id.id();
+    }
 }

@@ -2,6 +2,7 @@ package com.mvnnixbuyapi.product.rest.controller;
 
 import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.monads.ResultMonad;
+import com.mvnnixbuyapi.commons.utils.ResponseUtils;
 import com.mvnnixbuyapi.product.command.ProductCreateHandler;
 import com.mvnnixbuyapi.product.command.ProductEditHandler;
 import com.mvnnixbuyapi.product.model.dto.ProductDto;
@@ -45,32 +46,22 @@ public class ProductCommandController {
             BindingResult bindingResult
     ){
         if(bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(
-                    new GenericResponseForBody<>(
-                            errors
-                    )
-            );
+            return ResponseUtils.buildBadRequestResponse(bindingResult);
         }
 
         ResultMonad<ProductDto> productDtoResult = this.productCreateHandler.execute(productCreateCommand);
 
         if(productDtoResult.isError()){
-            return ResponseEntity.badRequest().body(
-                    new GenericResponseForBody<>(
-                            List.of(productDtoResult.getError())
-                    )
-            );
+            return ResponseUtils.buildBadRequestResponse(productDtoResult.getError());
         } else {
-            return ResponseEntity.ok().body(
-                    new GenericResponseForBody<>(
-                            List.of("SUCCESSFUL"),
-                            productDtoResult.getValue()
-                    )
-
-            );
+            return ResponseUtils.buildSuccessResponse(productDtoResult.getValue());
+//            return ResponseEntity.ok().body(
+//                    new GenericResponseForBody<>(
+//                            List.of("SUCCESSFUL"),
+//                            productDtoResult.getValue()
+//                    )
+//
+//            );
         }
     }
 
@@ -101,32 +92,15 @@ public class ProductCommandController {
         BindingResult bindingResult = new BeanPropertyBindingResult(productEditCommand, "productEditCommand");
 
         if(bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            return ResponseEntity.badRequest().body(
-                    new GenericResponseForBody<>(
-                            errors
-                    )
-            );
+            return ResponseUtils.buildBadRequestResponse(bindingResult);
         }
 
         ResultMonad<ProductToEditDto> productToEditDtoResultMonad = this.productEditHandler.execute(productEditCommand);
 
         if(productToEditDtoResultMonad.isError()){
-            return ResponseEntity.badRequest().body(
-                    new GenericResponseForBody<>(
-                            List.of(productToEditDtoResultMonad.getError())
-                    )
-            );
+            return ResponseUtils.buildBadRequestResponse(productToEditDtoResultMonad.getError());
         } else {
-            return ResponseEntity.ok().body(
-                    new GenericResponseForBody<>(
-                            List.of("SUCCESSFUL"),
-                            productToEditDtoResultMonad.getValue()
-                    )
-
-            );
+            return ResponseUtils.buildSuccessResponse(productToEditDtoResultMonad.getValue());
         }
     }
 

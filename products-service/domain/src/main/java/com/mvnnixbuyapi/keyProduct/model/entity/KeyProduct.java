@@ -27,7 +27,6 @@ public class KeyProduct {
     public KeyProduct(
             Long id,
             String keyCode,
-            BigDecimal price,
             String status,
             Instant createDate,
             Instant activeDate,
@@ -92,6 +91,8 @@ public class KeyProduct {
 
 
     public Long getId() {
+        if(id == null)
+            return null;
         return id.keyId();
     }
 
@@ -108,14 +109,20 @@ public class KeyProduct {
     }
 
     public Instant getActiveDate() {
+        if(activeDate == null)
+            return null;
         return activeDate.activeDate();
     }
 
     public Instant getInactiveDate() {
+        if(inactiveDate == null)
+            return null;
         return inactiveDate.inactiveDate();
     }
 
     public Instant getSoldDate() {
+        if(soldDate == null)
+            return null;
         return soldDate.soldDate();
     }
 

@@ -11,9 +11,10 @@ public interface KeyDtoMapper {
     KeyDtoMapper INSTANCE = Mappers.getMapper(KeyDtoMapper.class);
 
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "description", target = "description")
-    @Mapping(source = "price", target = "price")
+    @Mapping(source = "keyCode", target = "keyCode")
+    @Mapping(source = "status", target = "status")
+    @Mapping(source = "product.id", target = "productId")
+    @Mapping(source = "platform.id", target = "platformId")
     KeyToCreateDto toDtoCreate(KeyProduct domain);
 
 }

@@ -26,8 +26,8 @@ public class KeyDboMapper {
                 .activeDate(keyProduct.getActiveDate())
                 .inactiveDate(keyProduct.getInactiveDate())
                 .soldDate(keyProduct.getSoldDate())
-                .plattformId(keyProduct.getPlatform().getId().id())
-                .productId(keyProduct.getPlatform().getId().id())
+                .plattformId(keyProduct.getPlatform().getId())
+                .productId(keyProduct.getProduct().getId())
                 .build();
     }
     public KeyProduct entityToDomain(KeyProductEntity keyProductEntity) {

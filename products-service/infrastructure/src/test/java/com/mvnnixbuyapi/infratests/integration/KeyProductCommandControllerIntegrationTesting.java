@@ -2,6 +2,7 @@ package com.mvnnixbuyapi.infratests.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mvnnixbuyapi.keyProduct.model.dto.KeyToCreateDto;
+import com.mvnnixbuyapi.keyProduct.model.dto.command.KeyCreateCommand;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,27 +52,120 @@ public class KeyProductCommandControllerIntegrationTesting {
 
     @Test
     @DisplayName("Should Create Key - V1")
-    public void shouldCreateKeyEndpointRestAssuredV1() {
+    public void shouldCreateKeyEndpointV1() {
         // Crear un objeto de ejemplo para enviar en la solicitud
-        KeyToCreateDto keyToCreate = new KeyToCreateDto();
+        KeyCreateCommand keyToCreate = new KeyCreateCommand();
         keyToCreate.setKeyCode("exampleKey");
         keyToCreate.setStatus("active");
-        keyToCreate.setProductId(123L);
+        keyToCreate.setIdProduct(1L);
+        keyToCreate.setIdPlatform(1L);
 
         // Realizar la solicitud POST a /api/create-key-v1
         given()
                 .contentType(ContentType.JSON)
                 .body(keyToCreate)
                 .when()
-                .post("/api/create-key-v1")
+                .post("/api/command-key-endpoint/v1/create-key")
                 .then()
                 .statusCode(200) // Reemplaza con el código de estado esperado
                 .body("code", hasItems("SUCCESSFUL"))
                 .body("data.id", notNullValue()) // Verificar si existe el campo 'id' en la respuesta
                 .body("data.keyCode", equalTo("exampleKey"))
                 .body("data.status", equalTo("active"))
-                .body("data.productId", equalTo(123))
+                .body("data.productId", equalTo(1))
         ;
+    }
+
+    @Test
+    @DisplayName("Should not create Key when code is null - V1")
+    public void shouldNotCreateKeyEndpointWhenKeyCodeIsNullV1() {
+        // Crear un objeto de ejemplo para enviar en la solicitud
+        KeyCreateCommand keyToCreate = new KeyCreateCommand();
+        keyToCreate.setKeyCode(null);
+        keyToCreate.setStatus("active");
+        keyToCreate.setIdProduct(1L);
+        keyToCreate.setIdPlatform(1L);
+
+        // Realizar la solicitud POST a /api/create-key-v1
+        given()
+                .contentType(ContentType.JSON)
+                .body(keyToCreate)
+                .when()
+                .post("/api/command-key-endpoint/v1/create-key")
+                .then()
+                .statusCode(400) // Reemplaza con el código de estado esperado
+                .body("code", hasItems("EMPTY_KEY_CODE_ERROR"))
+        ;
+
+    }
+
+    @Test
+    @DisplayName("Should not create Key when status is null - V1")
+    public void shouldNotCreateKeyEndpointWhenStatusIsNullV1() {
+        // Crear un objeto de ejemplo para enviar en la solicitud
+        KeyCreateCommand keyToCreate = new KeyCreateCommand();
+        keyToCreate.setKeyCode("exampleKey2");
+        keyToCreate.setStatus(null);
+        keyToCreate.setIdProduct(1L);
+        keyToCreate.setIdPlatform(1L);
+
+        // Realizar la solicitud POST a /api/create-key-v1
+        given()
+                .contentType(ContentType.JSON)
+                .body(keyToCreate)
+                .when()
+                .post("/api/command-key-endpoint/v1/create-key")
+                .then()
+                .statusCode(400) // Reemplaza con el código de estado esperado
+                .body("code", hasItems("EMPTY_KEY_STATUS_ERROR"))
+        ;
+
+    }
+
+    @Test
+    @DisplayName("Should not create Key when idProduct is null - V1")
+    public void shouldNotCreateKeyEndpointWhenIdProductIsNullV1() {
+        // Crear un objeto de ejemplo para enviar en la solicitud
+        KeyCreateCommand keyToCreate = new KeyCreateCommand();
+        keyToCreate.setKeyCode("exampleKey2");
+        keyToCreate.setStatus("active");
+        keyToCreate.setIdProduct(null);
+        keyToCreate.setIdPlatform(1L);
+
+        // Realizar la solicitud POST a /api/create-key-v1
+        given()
+                .contentType(ContentType.JSON)
+                .body(keyToCreate)
+                .when()
+                .post("/api/command-key-endpoint/v1/create-key")
+                .then()
+                .statusCode(400) // Reemplaza con el código de estado esperado
+                .body("code", hasItems("NULL_ID_PRODUCT_ERROR"))
+        ;
+
+    }
+
+    @Test
+    @DisplayName("Should not create Key when idPlatform is null - V1")
+    public void shouldNotCreateKeyEndpointWhenIdPlatformIsNullV1() {
+        // Crear un objeto de ejemplo para enviar en la solicitud
+        KeyCreateCommand keyToCreate = new KeyCreateCommand();
+        keyToCreate.setKeyCode("exampleKey2");
+        keyToCreate.setStatus("active");
+        keyToCreate.setIdProduct(1L);
+        keyToCreate.setIdPlatform(null);
+
+        // Realizar la solicitud POST a /api/create-key-v1
+        given()
+                .contentType(ContentType.JSON)
+                .body(keyToCreate)
+                .when()
+                .post("/api/command-key-endpoint/v1/create-key")
+                .then()
+                .statusCode(400) // Reemplaza con el código de estado esperado
+                .body("code", hasItems("NULL_ID_PLATFORM_ERROR"))
+        ;
+
     }
 
 }

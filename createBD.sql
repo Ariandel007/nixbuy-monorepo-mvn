@@ -82,9 +82,16 @@ CREATE TABLE IF NOT EXISTS public.products
     CONSTRAINT products_pkey PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS public.platforms
+(
+    key_id bigint NOT NULL,
+    name character varying(255) COLLATE pg_catalog."default",
+    CONSTRAINT platforms_pkey PRIMARY KEY (key_id)
+);
+
 CREATE TABLE IF NOT EXISTS public.key_products
 (
-    key_id bigint NOT NULL DEFAULT nextval('key_products_key_id_seq'::regclass),
+    key_id bigserial NOT NULL,
     key_code character varying(255) COLLATE pg_catalog."default",
     active_date timestamp(6) with time zone,
     create_date timestamp(6) with time zone,
@@ -103,14 +110,7 @@ CREATE TABLE IF NOT EXISTS public.key_products
         REFERENCES public.platforms (key_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-)
-
-CREATE TABLE IF NOT EXISTS public.platforms
-(
-    key_id bigint NOT NULL,
-    name character varying(255) COLLATE pg_catalog."default",
-    CONSTRAINT platforms_pkey PRIMARY KEY (key_id)
-)
+);
 
 INSERT INTO platforms(
 	key_id, name)
