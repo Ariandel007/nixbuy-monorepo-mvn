@@ -1,7 +1,6 @@
 package com.mvnnixbuyapi.infratests.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mvnnixbuyapi.keyProduct.model.dto.KeyToCreateDto;
 import com.mvnnixbuyapi.keyProduct.model.dto.command.KeyCreateCommand;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
