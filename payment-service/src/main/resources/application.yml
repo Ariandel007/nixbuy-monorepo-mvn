@@ -1,0 +1,3 @@
+server:
+  port: 3804
+CLIENT_URL: http://localhost:4200
