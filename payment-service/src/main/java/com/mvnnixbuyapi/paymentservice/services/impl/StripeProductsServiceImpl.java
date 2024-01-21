@@ -22,14 +22,14 @@ public class StripeProductsServiceImpl implements StripeProductsService {
 
     @Override
     public List<Product> getProductsById(List<Long> ids) {
-        ResponseEntity<List<GenericResponseForBody<ProductDto>>> listResponseEntity = this.productsFeign.listResponseEntityProductDto(ids);
-        List<GenericResponseForBody<ProductDto>> productResponse = listResponseEntity.getBody();
+        ResponseEntity<GenericResponseForBody<List<ProductDto>>> listResponseEntity = this.productsFeign.listResponseEntityProductDto(ids);
+        GenericResponseForBody<List<ProductDto>> productResponse = listResponseEntity.getBody();
 
-        List<Product> productList = productResponse.stream().map(productResponseItem -> UtilStripeApp.createProduct(
-                productResponseItem.getData().getName(),
-                productResponseItem.getData().getId(),
+        List<Product> productList = productResponse.getData().stream().map(productResponseItem -> UtilStripeApp.createProduct(
+                productResponseItem.getName(),
+                productResponseItem.getId(),
                 "USD",
-                productResponseItem.getData().getPrice()
+                productResponseItem.getPrice()
                 )
         ).toList();
 
