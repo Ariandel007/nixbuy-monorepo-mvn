@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/query-product-endpoint")
@@ -25,13 +26,12 @@ public class ProductQueryController {
 
     @GetMapping(value = "/v1/get-products-to-buy")
     public ResponseEntity<GenericResponseForBody<List<ProductDto>>> listResponseEntityProductDtoToBuy(
-            @RequestParam("ids") List<Long> ids
+            @RequestParam("productIds") List<Long> productIds, @RequestParam("idPlatform") Long idPlatform
     ) {
-        if(ids.size() > 20) {
+        if(productIds.size() > 20) {
             return ResponseUtils.buildBadRequestResponse("TOO_LONG_LIST_ERROR");
         }
-
-        List<ProductDto> productDtoList = this.productListByIdHandler.execute(ids);
+        List<ProductDto> productDtoList = this.productListByIdHandler.execute(productIds, idPlatform);
         return ResponseUtils.buildSuccessResponse(productDtoList);
     }
 

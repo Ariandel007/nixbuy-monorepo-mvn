@@ -13,7 +13,7 @@ import java.util.List;
 public interface ProductsFeign {
     @GetMapping(value = "/api/query-product-endpoint/v1/get-products-to-buy", produces = "application/json")
     ResponseEntity<GenericResponseForBody<List<ProductDto>>> listResponseEntityProductDto(
-            @RequestParam("ids") List<Long> ids
+            @RequestParam("productIds") List<Long> ids, @RequestParam("idPlatform") Long idPlatform
     );
 
 }

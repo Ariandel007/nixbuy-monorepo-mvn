@@ -21,8 +21,9 @@ public class StripeProductsServiceImpl implements StripeProductsService {
     }
 
     @Override
-    public List<Product> getProductsById(List<Long> ids) {
-        ResponseEntity<GenericResponseForBody<List<ProductDto>>> listResponseEntity = this.productsFeign.listResponseEntityProductDto(ids);
+    public List<Product> getProductsById(List<Long> ids, Long idPlatform) {
+        ResponseEntity<GenericResponseForBody<List<ProductDto>>> listResponseEntity =
+                this.productsFeign.listResponseEntityProductDto(ids, idPlatform);
         GenericResponseForBody<List<ProductDto>> productResponse = listResponseEntity.getBody();
 
         List<Product> productList = productResponse.getData().stream().map(productResponseItem -> UtilStripeApp.createProduct(

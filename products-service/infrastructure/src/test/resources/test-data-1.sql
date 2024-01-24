@@ -58,8 +58,29 @@ INSERT INTO platforms(
 
 
 INSERT INTO products
-(creation_date, description, name, update_date, url_image)
+(creation_date, description, price, name, update_date, url_image)
 VALUES
-    ('2023-12-28T10:00:00Z', 'Descripción del producto test 1', 'Producto test 1', '2023-12-28T10:00:00Z', '/default_product.png');
+    ('2023-12-28T10:00:00Z', 'Descripción del producto test 1', 20.0, 'Producto test 1', '2023-12-28T10:00:00Z', '/default_product.png');
 
+INSERT INTO products
+(creation_date, description, price, name, update_date, url_image)
+VALUES
+    ('2023-12-28T10:00:00Z', 'Descripción del producto test 2', 30.0, 'Producto test 2', '2023-12-28T10:00:00Z', '/default_product.png');
+
+INSERT INTO products
+(creation_date, description, price, name, update_date, url_image)
+VALUES
+    ('2023-12-28T10:00:00Z', 'Descripción del producto test 3', 40.0, 'Producto test 3', '2023-12-28T10:00:00Z', '/default_product.png');
+
+INSERT INTO public.key_products(
+	key_code, active_date, create_date, inactive_date, plattform_id, product_id, sold_date, status)
+	VALUES ('DS43wqrF45523r423234f2358g0', '2023-12-28T10:00:00Z', '2023-12-28T10:00:00Z', NULL, 1, 1, NULL, 'ACTIVE');
+
+INSERT INTO public.key_products(
+	key_code, active_date, create_date, inactive_date, plattform_id, product_id, sold_date, status)
+	VALUES ('RS43wqrF45523r423234f2358KM', '2023-12-28T10:00:00Z', '2023-12-28T10:00:00Z', NULL, 1, 2, NULL, 'ACTIVE');
+
+INSERT INTO public.key_products(
+	key_code, active_date, create_date, inactive_date, plattform_id, product_id, sold_date, status)
+	VALUES ('LU63thyT47728f454634f2358aP', '2023-12-28T10:00:00Z', '2023-12-28T10:00:00Z', NULL, 1, 3, NULL, 'ACTIVE');
 
