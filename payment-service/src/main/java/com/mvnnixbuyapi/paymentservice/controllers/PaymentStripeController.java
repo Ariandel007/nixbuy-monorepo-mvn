@@ -49,8 +49,8 @@ public class PaymentStripeController {
                 SessionCreateParams.builder()
                         .setMode(SessionCreateParams.Mode.PAYMENT)
                         .setCustomer(customer.getId())
-                        .setSuccessUrl(this.clientUrl + "/success?session_id={CHECKOUT_SESSION_ID}")
-                        .setCancelUrl(this.clientUrl + "/failure");
+                        .setSuccessUrl(this.clientUrl + "/payment/success?session_id={CHECKOUT_SESSION_ID}")
+                        .setCancelUrl(this.clientUrl + "/payment/failure");
 
         List<Product> productList = this.stripeProductsService.getProductsById(requestDTO.getItemIdList(), requestDTO.getIdPlatform());
         for (Product product : productList) {
