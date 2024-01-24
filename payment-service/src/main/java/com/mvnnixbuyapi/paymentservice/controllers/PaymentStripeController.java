@@ -83,7 +83,7 @@ public class PaymentStripeController {
         // Start by finding existing customer or creating a new one if needed
         Customer customer = UtilStripeApp.findOrCreateCustomer(requestDTO.getCustomerEmail(), requestDTO.getCustomerName());
 
-        List<Product> productList = this.stripeProductsService.getProductsById(requestDTO.getItemIdList());
+        List<Product> productList = this.stripeProductsService.getProductsById(requestDTO.getItemIdList(), requestDTO.getIdPlatform());
         BigDecimal totalCost = productList.stream().map(x->x.getDefaultPriceObject().getUnitAmountDecimal()).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         // Create a PaymentIntent and send it's client secret to the client
