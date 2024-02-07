@@ -15,8 +15,8 @@ public class ProductListByIdHandler {
         this.productDao = productDao;
     }
 
-    public List<ProductDto> execute(List<Long> productIds, Long idPlatform) {
-        return this.productDao.getProductByIds(productIds, idPlatform);
+    public List<ProductDto> execute(Long orderId) {
+        return this.productDao.getProductByIds(orderId);
     }
 
 }

@@ -1,6 +1,8 @@
 package com.mvnnixbuyapi.paymentservice.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,10 +10,12 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-@Data
 @Entity
 @Table(name = "orders")
+@AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
 public class Order implements Serializable {
     private static final long serialVersionUID = 1003100000L;
 
@@ -23,13 +27,15 @@ public class Order implements Serializable {
     private BigDecimal totalPriceWithoutTaxes;
     @Column(name = "taxes_percentage")
     private BigDecimal taxesPercentage;
-    @Column(name = "description", length = 255)
-    private String description;
     @Column(name = "currency_code", length = 3)
     private String currencyCode;
     @Column(name = "expiration_date")
     private Instant expirationDate;
     @Column(name = "creation_date")
     private Instant creationDate;
+    @Column(name = "user_id")
+    private Long userId;
+    @Column(name = "status") //PENDING,CONFIRMED,EXECUTED,CANCELED
+    private String status;
 
 }

@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS public.key_products
     inactive_date timestamp(6) with time zone,
     plattform_id bigint NOT NULL,
     product_id bigint NOT NULL,
+    order_id bigint,
     sold_date timestamp(6) with time zone,
     status character varying(10) COLLATE pg_catalog."default",
     CONSTRAINT key_products_pkey PRIMARY KEY (key_id),

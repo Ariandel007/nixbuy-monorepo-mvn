@@ -1,3 +1,33 @@
 server:
   port: 3804
 CLIENT_URL: http://localhost:4200
+spring:
+  application:
+    name: payment-service-nixbuy
+  datasource:
+    initialization-mode: always
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/nixbuy_payments
+    platform: postgres
+    password: admin
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: 'true'
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    service-url:
+      defaultZone: http://localhost:3800/eureka
+
+#feign:
+#  httpclient:
+#    enabled: false

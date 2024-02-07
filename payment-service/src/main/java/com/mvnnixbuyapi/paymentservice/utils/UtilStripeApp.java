@@ -53,7 +53,8 @@ public class UtilStripeApp {
         sampleProduct.setId(id.toString());
 
         samplePrice.setCurrency(currency);
-        samplePrice.setUnitAmountDecimal(price);
+        //Multiplicamos por 100 porque stripe espera enteros que luego seran pasados a decimales en su API
+        samplePrice.setUnitAmountDecimal(price.multiply(new BigDecimal(100)));
 
         sampleProduct.setDefaultPriceObject(samplePrice);
 

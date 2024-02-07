@@ -26,12 +26,9 @@ public class ProductQueryController {
 
     @GetMapping(value = "/v1/get-products-to-buy")
     public ResponseEntity<GenericResponseForBody<List<ProductDto>>> listResponseEntityProductDtoToBuy(
-            @RequestParam("productIds") List<Long> productIds, @RequestParam("idPlatform") Long idPlatform
+            @RequestParam("orderId") Long orderId
     ) {
-        if(productIds.size() > 20) {
-            return ResponseUtils.buildBadRequestResponse("TOO_LONG_LIST_ERROR");
-        }
-        List<ProductDto> productDtoList = this.productListByIdHandler.execute(productIds, idPlatform);
+        List<ProductDto> productDtoList = this.productListByIdHandler.execute(orderId);
         return ResponseUtils.buildSuccessResponse(productDtoList);
     }
 

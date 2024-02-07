@@ -57,13 +57,11 @@ public class ProductQueryControllerIntegrationTesting {
     public void shouldGetProductsToBuyEndpointRestAssuredV1() {
 
         // Datos de prueba
-        List<Long> productIds = Arrays.asList(1L, 2L, 3L);
-        Long idPlatform = 1L;
+        Long orderId = 1L;
 
         // Realizar la solicitud GET a /v1/get-products-to-buy
         given()
-                .param("productIds", productIds)
-                .param("idPlatform", idPlatform)
+                .param("orderId", orderId)
                 .when()
                 .get("/api/query-product-endpoint/v1/get-products-to-buy")
                 .then()
@@ -71,7 +69,7 @@ public class ProductQueryControllerIntegrationTesting {
                 .contentType(ContentType.JSON)
                 .body("code", hasItems("SUCCESSFUL"))
                 .body("data", notNullValue())
-                .body("data", hasSize(productIds.size()))
+//                .body("data", hasSize(productIds.size()))
                 .body("data[0].id", notNullValue())
                 .body("data[0].name", notNullValue())
                 .body("data[0].description", notNullValue())

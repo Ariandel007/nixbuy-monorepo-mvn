@@ -5,5 +5,5 @@ import com.stripe.model.Product;
 import java.util.List;
 
 public interface StripeProductsService {
-    List<Product> getProductsById(List<Long> ids, Long idPlatform);
+    List<Product> getProductsById(Long orderId);
 }

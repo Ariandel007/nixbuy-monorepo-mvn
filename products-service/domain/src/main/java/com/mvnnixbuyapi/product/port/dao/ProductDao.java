@@ -5,5 +5,5 @@ import com.mvnnixbuyapi.product.model.dto.ProductDto;
 import java.util.List;
 
 public interface ProductDao {
-    List<ProductDto> getProductByIds(List<Long> productIds, Long idPlatform);
+    List<ProductDto> getProductByIds(Long orderId);
 }

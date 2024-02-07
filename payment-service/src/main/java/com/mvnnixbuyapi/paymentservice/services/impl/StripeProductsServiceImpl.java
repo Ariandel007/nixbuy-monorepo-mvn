@@ -8,9 +8,12 @@ import com.mvnnixbuyapi.paymentservice.utils.UtilStripeApp;
 import com.stripe.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+@Service
 public class StripeProductsServiceImpl implements StripeProductsService {
 
     private final ProductsFeign productsFeign;
@@ -21,16 +24,16 @@ public class StripeProductsServiceImpl implements StripeProductsService {
     }
 
     @Override
-    public List<Product> getProductsById(List<Long> ids, Long idPlatform) {
+    public List<Product> getProductsById(Long orderId) {
         ResponseEntity<GenericResponseForBody<List<ProductDto>>> listResponseEntity =
-                this.productsFeign.listResponseEntityProductDto(ids, idPlatform);
+                this.productsFeign.listResponseEntityProductDto(orderId);
         GenericResponseForBody<List<ProductDto>> productResponse = listResponseEntity.getBody();
 
         List<Product> productList = productResponse.getData().stream().map(productResponseItem -> UtilStripeApp.createProduct(
                 productResponseItem.getName(),
                 productResponseItem.getId(),
                 "USD",
-                productResponseItem.getPrice()
+                productResponseItem.getPrice().multiply(new BigDecimal(productResponseItem.getQuantity()))
                 )
         ).toList();
 

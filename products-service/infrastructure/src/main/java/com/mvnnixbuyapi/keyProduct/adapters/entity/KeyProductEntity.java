@@ -37,6 +37,10 @@ public class KeyProductEntity implements Serializable {
     @Column(name = "sold_date")
     private Instant soldDate;
 
+    // No es una FK mapeada
+    @Column(name = "order_id", nullable = true)
+    private Long orderId;
+
     // FKS:
     @Column(name = "plattform_id", nullable = false)
     private Long plattformId;

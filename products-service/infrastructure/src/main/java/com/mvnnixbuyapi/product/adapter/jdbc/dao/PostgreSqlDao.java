@@ -24,10 +24,9 @@ public class PostgreSqlDao implements ProductDao {
 
 
     @Override
-    public List<ProductDto> getProductByIds(List<Long> productIds, Long idPlatform) {
+    public List<ProductDto> getProductByIds(Long orderId) {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("productIds", productIds);
-        parameters.addValue("idPlatform", idPlatform);
+        parameters.addValue("orderId", orderId);
         return jdbcTemplate.query(
                 PostgreSqlQueries.getAvaibleProductsToBuyByIds,
                 parameters,
