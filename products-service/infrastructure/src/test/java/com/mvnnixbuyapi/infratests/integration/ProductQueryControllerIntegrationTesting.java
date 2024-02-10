@@ -85,7 +85,7 @@ public class ProductQueryControllerIntegrationTesting {
 
         // Datos de prueba
         List<ItemCartDto> itemCartDtoList = new ArrayList<>();
-        itemCartDtoList.add(new ItemCartDto(1L,1));
+        itemCartDtoList.add(new ItemCartDto(3L,1));
 
         // Realizar la solicitud GET a /v1/get-products-of-orderId
         given()
