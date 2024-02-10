@@ -1,6 +1,5 @@
 package com.mvnnixbuyapi.product.query;
 
-import com.mvnnixbuyapi.product.mapper.ProductDtoMapper;
 import com.mvnnixbuyapi.product.model.dto.ProductDto;
 import com.mvnnixbuyapi.product.port.dao.ProductDao;
 import org.springframework.stereotype.Component;
@@ -8,10 +7,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ProductListByIdHandler {
+public class ProductListByOrderIdHandler {
     private final ProductDao productDao;
 
-    public ProductListByIdHandler(ProductDao productDao) {
+    public ProductListByOrderIdHandler(ProductDao productDao) {
         this.productDao = productDao;
     }
 

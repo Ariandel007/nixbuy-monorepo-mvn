@@ -1,7 +1,12 @@
 package com.mvnnixbuyapi.paymentservice.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
+import com.mvnnixbuyapi.commons.monads.ResultMonad;
+import com.mvnnixbuyapi.paymentservice.clients.feign.ProductsFeign;
+import com.mvnnixbuyapi.paymentservice.dto.reponse.ProductDto;
 import com.mvnnixbuyapi.paymentservice.dto.request.CreateOrderDto;
+import com.mvnnixbuyapi.paymentservice.dto.request.ItemCartDto;
 import com.mvnnixbuyapi.paymentservice.models.Order;
 import com.mvnnixbuyapi.paymentservice.models.OrderStates;
 import com.mvnnixbuyapi.paymentservice.models.OutboxTable;
@@ -9,24 +14,31 @@ import com.mvnnixbuyapi.paymentservice.repositories.OrderRepository;
 import com.mvnnixbuyapi.paymentservice.repositories.OutboxTableRepository;
 import com.mvnnixbuyapi.paymentservice.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final OutboxTableRepository outboxTableRepository;
 
+    private final ProductsFeign productsFeign;
+
+
     @Autowired
     public OrderServiceImpl(
             OrderRepository orderRepository,
-            OutboxTableRepository outboxTableRepository
+            OutboxTableRepository outboxTableRepository,
+            ProductsFeign productsFeign
     ) {
         this.orderRepository = orderRepository;
         this.outboxTableRepository = outboxTableRepository;
+        this.productsFeign = productsFeign;
     }
 
     @Override
@@ -36,10 +48,22 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = false)
-    public Order createOrder(CreateOrderDto createOrderDto) {
+    public ResultMonad<Order> createOrder(CreateOrderDto createOrderDto) {
+        List<ItemCartDto> itemCartDtoList = createOrderDto.getItemCartDtoList();
+        var responseForBodyResponseEntityProducts
+                    = this.productsFeign.listResponseEntityProductDtoToAddToOrder(itemCartDtoList).getBody().getData();
+        if(responseForBodyResponseEntityProducts.size() == 0){
+            return ResultMonad.error("ERROR_PRODUCTS_ASKED_NOT_AVAILABLE");
+        }
+        BigDecimal totalPrice =
+                responseForBodyResponseEntityProducts
+                .stream()
+                        .map(productDto -> productDto.getPrice().multiply(BigDecimal.valueOf(productDto.getQuantity())))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         // CALL ALLOWED PRODUCTS
         Order orderToSave = Order.builder()
-                .totalPriceWithoutTaxes(new BigDecimal("30.88"))
+                .totalPriceWithoutTaxes(totalPrice)
                 .taxesPercentage(new BigDecimal("1.0"))
                 .currencyCode("USD")
                 .creationDate(Instant.now())
@@ -47,13 +71,13 @@ public class OrderServiceImpl implements OrderService {
                 .userId(createOrderDto.getUserId())
                 .status(OrderStates.PENDING.toString())
                 .build();
-        Order orderCreated = this.orderRepository.save(orderToSave);
+        ResultMonad<Order> orderCreated = ResultMonad.ok(this.orderRepository.save(orderToSave));
 
         byte[] dataBytes = null;
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            dataBytes = objectMapper.writeValueAsBytes(orderCreated);
+            dataBytes = objectMapper.writeValueAsBytes(orderCreated.getValue());
         } catch (Exception e) {
             throw new RuntimeException("ERROR PROVISIONAL");
         }
@@ -62,11 +86,11 @@ public class OrderServiceImpl implements OrderService {
                 .eventType("OrderCreated")
                 .timestamp(Instant.now())
                 .data(dataBytes)
-                .aggregateId(orderCreated.getId().toString())
+                .aggregateId(orderCreated.getValue().getId().toString())
                 .aggregateType("OrderTable")
                 .build();
 
         this.outboxTableRepository.save(outboxTableToInsert);
-        return orderToSave;
+        return orderCreated;
     }
 }

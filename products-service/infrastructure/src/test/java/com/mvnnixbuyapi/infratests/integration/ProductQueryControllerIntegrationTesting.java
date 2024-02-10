@@ -1,6 +1,7 @@
 package com.mvnnixbuyapi.infratests.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mvnnixbuyapi.product.model.dto.query.ItemCartDto;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,23 +55,50 @@ public class ProductQueryControllerIntegrationTesting {
     }
 
     @Test
-    @DisplayName("Should Get Products to Buy - V1")
-    public void shouldGetProductsToBuyEndpointRestAssuredV1() {
+    @DisplayName("Should Get Products of Order id - V1")
+    public void shouldGetProductsOfOrderEndpointRestAssuredV1() {
 
         // Datos de prueba
         Long orderId = 1L;
 
-        // Realizar la solicitud GET a /v1/get-products-to-buy
+        // Realizar la solicitud GET a /v1/get-products-of-orderId
         given()
                 .param("orderId", orderId)
                 .when()
-                .get("/api/query-product-endpoint/v1/get-products-to-buy")
+                .get("/api/query-product-endpoint/v1/get-products-of-orderId")
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.JSON)
                 .body("code", hasItems("SUCCESSFUL"))
                 .body("data", notNullValue())
-//                .body("data", hasSize(productIds.size()))
+                .body("data", hasSize(2))
+                .body("data[0].id", notNullValue())
+                .body("data[0].name", notNullValue())
+                .body("data[0].description", notNullValue())
+                .body("data[0].price", notNullValue())
+        ;
+    }
+
+    @Test
+    @DisplayName("Should Get Products To Add to Order - V1")
+    public void shouldGetProductsToAddToOrderEndpointRestAssuredV1() {
+
+        // Datos de prueba
+        List<ItemCartDto> itemCartDtoList = new ArrayList<>();
+        itemCartDtoList.add(new ItemCartDto(1L,1));
+
+        // Realizar la solicitud GET a /v1/get-products-of-orderId
+        given()
+                .contentType(ContentType.JSON)
+                .body(itemCartDtoList)
+                .when()
+                .post("/api/query-product-endpoint/v1/products-to-add-to-order")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .contentType(ContentType.JSON)
+                .body("code", hasItems("SUCCESSFUL"))
+                .body("data", notNullValue())
+                .body("data", hasSize(1))
                 .body("data[0].id", notNullValue())
                 .body("data[0].name", notNullValue())
                 .body("data[0].description", notNullValue())

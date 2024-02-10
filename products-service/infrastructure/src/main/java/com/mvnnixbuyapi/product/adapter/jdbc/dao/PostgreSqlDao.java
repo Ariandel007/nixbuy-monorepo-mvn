@@ -2,6 +2,7 @@ package com.mvnnixbuyapi.product.adapter.jdbc.dao;
 
 import com.mvnnixbuyapi.product.adapter.jdbc.queries.PostgreSqlQueries;
 import com.mvnnixbuyapi.product.model.dto.ProductDto;
+import com.mvnnixbuyapi.product.model.dto.query.ItemCartDto;
 import com.mvnnixbuyapi.product.port.dao.ProductDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -28,7 +29,19 @@ public class PostgreSqlDao implements ProductDao {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("orderId", orderId);
         return jdbcTemplate.query(
-                PostgreSqlQueries.getAvaibleProductsToBuyByIds,
+                PostgreSqlQueries.getAvaibleProductsOfOrder,
+                parameters,
+                BeanPropertyRowMapper.newInstance(ProductDto.class)
+        );
+    }
+
+    @Override
+    public List<ProductDto> getProductsAvailable(List<ItemCartDto> itemCartDtoList) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        var idProductList = itemCartDtoList.stream().map(ItemCartDto::getProductId).toList();
+        parameters.addValue("idProductList", idProductList);
+        return jdbcTemplate.query(
+                PostgreSqlQueries.getProductsAvailable,
                 parameters,
                 BeanPropertyRowMapper.newInstance(ProductDto.class)
         );
