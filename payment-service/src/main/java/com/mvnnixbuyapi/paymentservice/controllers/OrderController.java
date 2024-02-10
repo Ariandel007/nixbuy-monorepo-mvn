@@ -24,7 +24,7 @@ public class OrderController {
     }
     @PostMapping(value = "/v1/create-order/{userId}")
     public ResponseEntity<GenericResponseForBody<Order>> listResponseEntityShowItems(
-            @RequestParam("userId") Long userId, @RequestBody CreateOrderDto createOrderDto
+            @PathVariable Long userId, @RequestBody CreateOrderDto createOrderDto
             ) {
         createOrderDto.setUserId(userId);
         ResultMonad<Order> orderResultMonad = this.orderService.createOrder(createOrderDto);

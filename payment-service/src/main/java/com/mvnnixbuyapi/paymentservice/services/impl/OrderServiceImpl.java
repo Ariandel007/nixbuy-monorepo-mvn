@@ -1,10 +1,9 @@
 package com.mvnnixbuyapi.paymentservice.services.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.mvnnixbuyapi.commons.monads.ResultMonad;
 import com.mvnnixbuyapi.paymentservice.clients.feign.ProductsFeign;
-import com.mvnnixbuyapi.paymentservice.dto.reponse.ProductDto;
 import com.mvnnixbuyapi.paymentservice.dto.request.CreateOrderDto;
 import com.mvnnixbuyapi.paymentservice.dto.request.ItemCartDto;
 import com.mvnnixbuyapi.paymentservice.models.Order;
@@ -14,7 +13,7 @@ import com.mvnnixbuyapi.paymentservice.repositories.OrderRepository;
 import com.mvnnixbuyapi.paymentservice.repositories.OutboxTableRepository;
 import com.mvnnixbuyapi.paymentservice.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -22,6 +21,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -76,7 +76,9 @@ public class OrderServiceImpl implements OrderService {
         byte[] dataBytes = null;
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = JsonMapper.builder()
+                    .findAndAddModules()
+                    .build();
             dataBytes = objectMapper.writeValueAsBytes(orderCreated.getValue());
         } catch (Exception e) {
             throw new RuntimeException("ERROR PROVISIONAL");
