@@ -25,7 +25,7 @@ public class OutboxTable {
     private Instant timestamp;
 
     //Esto seria un bytea en postgres:
-    @Lob
+    @Column(columnDefinition = "bytea")
     private byte[] data;
 
     @Column(name = "aggregate_id")
