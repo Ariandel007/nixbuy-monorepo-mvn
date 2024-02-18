@@ -7,6 +7,7 @@ import com.mvnnixbuyapi.product.model.dto.command.ProductCreateCommand;
 import com.mvnnixbuyapi.product.service.ProductCreateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ProductCreateHandler {
@@ -19,6 +20,7 @@ public class ProductCreateHandler {
         this.productCreateService = productCreateService;
     }
 
+    @Transactional
     public ResultMonad<ProductDto> execute(ProductCreateCommand productCreateCommand) {
         ProductDto productDtoCreated =
                 ProductDtoMapper.INSTANCE.toDto(this.productCreateService.execute(productCreateCommand));

@@ -9,6 +9,7 @@ import com.mvnnixbuyapi.product.service.ProductEditService;
 import com.mvnnixbuyapi.product.service.ProductUpdatePhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class ProductEditHandler {
@@ -24,6 +25,7 @@ public class ProductEditHandler {
         this.productUpdatePhotoService = productUpdatePhotoService;
     }
 
+    @Transactional
     public ResultMonad<ProductToEditDto> execute(ProductEditCommand productEditCommand) {
         if(productEditCommand.getIsPhotoUploaded()){
             if(productEditCommand.getMainPhotoOfProductFile() == null) {
