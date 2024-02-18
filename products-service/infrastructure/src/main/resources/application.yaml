@@ -21,7 +21,7 @@ spring:
     hibernate:
       ddl-auto: update
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:29092
     group-id: consume-payment-outbox-1
     properties:
       security.protocol: PLAINTEXT  # Protocolo de seguridad (puede variar según tu configuración)

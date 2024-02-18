@@ -26,12 +26,10 @@ public class KafkaConsumer {
         try {
             // Convertir JSON a HashMap
             HashMap<String, Object> map = mapper.readValue(message, new TypeReference<HashMap<String,Object>>() {});
+//            Map<String, Object> payloadMessage =  (Map<String, Object>) map.get("payload");
+//            OutboxTable outboxTableAfter = mapper.convertValue(payloadMessage.get("after"), OutboxTable.class);
 
-            // Utiliza el HashMap como desees
-            // Por ejemplo, imprimir los valores
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
-            }
+
         } catch (JsonProcessingException e) {
             e.printStackTrace(); // Manejo de errores si ocurre algún problema al procesar el JSON
         }
