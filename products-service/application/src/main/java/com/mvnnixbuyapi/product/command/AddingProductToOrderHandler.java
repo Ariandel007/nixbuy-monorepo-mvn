@@ -1,9 +1,7 @@
 package com.mvnnixbuyapi.product.command;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mvnnixbuyapi.order.model.dto.OrderDto;
-import com.mvnnixbuyapi.product.model.dto.command.OutboxTableDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
