@@ -25,19 +25,7 @@ public class AddingProductToOrderHandler {
     }
 
     @Transactional
-    public void execute(String message) {
-        String base64Json = "";
-        try {
-            // Convertir JSON a HashMap
-            HashMap<String, Object> map = mapper.readValue(message, new TypeReference<HashMap<String,Object>>() {});
-            HashMap<String, Object> payloadMessage =  (HashMap<String, Object>) map.get("payload");
-            OutboxTableDto outboxTableAfter = mapper.convertValue(payloadMessage.get("after"), OutboxTableDto.class);
-            base64Json = outboxTableAfter.getData();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace(); // Manejo de errores si ocurre algún problema al procesar el JSON
-            return;
-        }
+    public void execute(String base64Json) {
         String json = "";
         try{
             byte[] decodedBytes = Base64.getDecoder().decode(base64Json);
@@ -47,14 +35,15 @@ public class AddingProductToOrderHandler {
             e.printStackTrace(); // Manejo de errores si ocurre algún problema al procesar el JSON
             return;
         }
-
+        OrderDto orderDto = null;
         try {
-            OrderDto orderDto = mapper.readValue(json, OrderDto.class);
-
+            orderDto = mapper.readValue(json, OrderDto.class);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
             return;
         }
+        // TODO: I'm gonna analyze if I should use an aggregate for this...
+
     }
 }
