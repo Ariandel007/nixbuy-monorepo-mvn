@@ -81,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
                     .build();
             dataBytes = objectMapper.writeValueAsBytes(orderCreated.getValue());
         } catch (Exception e) {
+            //  TODO: CHANGE EXCEPTION
             throw new RuntimeException("ERROR PROVISIONAL");
         }
 
