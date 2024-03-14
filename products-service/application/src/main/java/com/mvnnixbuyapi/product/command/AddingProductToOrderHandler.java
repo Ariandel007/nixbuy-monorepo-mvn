@@ -1,7 +1,7 @@
 package com.mvnnixbuyapi.product.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mvnnixbuyapi.order.model.dto.OrderDto;
+import com.mvnnixbuyapi.order.model.dto.OrderReceivedDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
-import java.util.HashMap;
 
 @Component
 @Slf4j
@@ -33,9 +32,9 @@ public class AddingProductToOrderHandler {
             e.printStackTrace(); // Manejo de errores si ocurre algún problema al procesar el JSON
             return;
         }
-        OrderDto orderDto = null;
+        OrderReceivedDto orderDto = null;
         try {
-            orderDto = mapper.readValue(json, OrderDto.class);
+            orderDto = mapper.readValue(json, OrderReceivedDto.class);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
