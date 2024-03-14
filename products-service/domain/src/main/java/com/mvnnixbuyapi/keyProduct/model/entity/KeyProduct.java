@@ -3,6 +3,7 @@ package com.mvnnixbuyapi.keyProduct.model.entity;
 import com.mvnnixbuyapi.keyProduct.model.dto.command.KeyCreateCommand;
 import com.mvnnixbuyapi.keyProduct.model.entity.enumfiles.KeyStatusEnum;
 import com.mvnnixbuyapi.keyProduct.model.entity.valueobjects.*;
+import com.mvnnixbuyapi.order.model.entity.Order;
 import com.mvnnixbuyapi.platform.model.entity.Platform;
 import com.mvnnixbuyapi.product.model.entity.Product;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class KeyProduct {
     private KeySoldDate soldDate;
     private KeyProductProduct product;
     private KeyProductPlatform platform;
+    private KeyOrder keyOrder;
 
     public KeyProduct(
             Long id,
@@ -89,6 +91,9 @@ public class KeyProduct {
         return this;
     }
 
+    public void setOrder(Order order) {
+        this.keyOrder = new KeyOrder(order);
+    }
 
     public Long getId() {
         if(id == null)

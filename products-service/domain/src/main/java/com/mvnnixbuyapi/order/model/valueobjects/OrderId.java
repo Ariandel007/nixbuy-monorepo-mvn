@@ -1,4 +1,4 @@
 package com.mvnnixbuyapi.order.model.valueobjects;
 
-public record OrderId() {
+public record OrderId(Long id) {
 }

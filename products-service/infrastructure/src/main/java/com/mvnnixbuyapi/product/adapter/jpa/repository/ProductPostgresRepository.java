@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -47,6 +48,11 @@ public class ProductPostgresRepository implements ProductRepository {
         if(optionalProductEntity.isPresent()) {
             return this.productDboMapper.entityToProduct(optionalProductEntity.get());
         }
+        return null;
+    }
+
+    @Override
+    public List<Product> findProductsById(List<Long> productIdList) {
         return null;
     }
 }

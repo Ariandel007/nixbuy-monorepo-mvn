@@ -1,4 +1,6 @@
 package com.mvnnixbuyapi.order.model.valueobjects;
 
-public record OrderTaxesPercentage() {
+import java.math.BigDecimal;
+
+public record OrderTaxesPercentage(BigDecimal taxesPercentage) {
 }

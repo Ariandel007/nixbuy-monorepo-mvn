@@ -1,4 +1,6 @@
 package com.mvnnixbuyapi.order.model.valueobjects;
 
-public record OrderCreationDate() {
+import java.time.Instant;
+
+public record OrderCreationDate(Instant creationDate) {
 }

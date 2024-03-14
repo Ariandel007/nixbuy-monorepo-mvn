@@ -40,7 +40,8 @@ public class AddingProductToOrderHandler {
             e.printStackTrace();
             return;
         }
-        // TODO: I'm gonna analyze if I should use an aggregate for this...
+
+
 
     }
 }

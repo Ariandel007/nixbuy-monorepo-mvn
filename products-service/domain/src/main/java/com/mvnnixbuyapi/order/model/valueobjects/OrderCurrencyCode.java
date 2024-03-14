@@ -1,4 +1,4 @@
 package com.mvnnixbuyapi.order.model.valueobjects;
 
-public record OrderCurrencyCode() {
+public record OrderCurrencyCode(String currencyCode) {
 }

@@ -1,4 +1,6 @@
 package com.mvnnixbuyapi.order.model.valueobjects;
 
-public record OrderTotalPriceWithoutTaxes() {
+import java.math.BigDecimal;
+
+public record OrderTotalPriceWithoutTaxes(BigDecimal totalPriceWithoutTaxes) {
 }
