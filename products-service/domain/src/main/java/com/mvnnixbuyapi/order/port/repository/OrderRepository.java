@@ -1,8 +1,9 @@
 package com.mvnnixbuyapi.order.port.repository;
 
+import com.mvnnixbuyapi.order.model.entity.Order;
 import com.mvnnixbuyapi.product.model.entity.Product;
 
 public interface OrderRepository {
-    Product create(Product product);
+    Order create(Order product);
 
 }

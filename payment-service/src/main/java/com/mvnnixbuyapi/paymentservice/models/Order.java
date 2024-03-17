@@ -33,7 +33,7 @@ public class Order implements Serializable {
     private Instant expirationDate;
     @Column(name = "creation_date")
     private Instant creationDate;
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Long userId;
     @Column(name = "status") //PENDING,CONFIRMED,EXECUTED,CANCELED
     private String status;

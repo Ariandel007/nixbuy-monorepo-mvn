@@ -6,6 +6,7 @@ import com.mvnnixbuyapi.keyProduct.adapters.mapper.KeyDboMapper;
 import com.mvnnixbuyapi.keyProduct.model.entity.KeyProduct;
 import com.mvnnixbuyapi.keyProduct.port.repository.KeyRepository;
 import com.mvnnixbuyapi.product.adapter.entity.ProductEntity;
+import com.mvnnixbuyapi.product.model.dto.ProductReceivedDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,8 +55,7 @@ public class KeyPostgresRepository implements KeyRepository {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public KeyProduct findByProductsId(List<Long> productIds) {
+    public List<KeyProduct> findByProductsId(List<ProductReceivedDto> productList) {
         return null;
     }
 }
