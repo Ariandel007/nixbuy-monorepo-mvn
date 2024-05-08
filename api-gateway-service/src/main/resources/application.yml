@@ -10,7 +10,7 @@ eureka:
     registerWithEureka: true
     fetchRegistry: true
     service-url:
-      defaultZone: http://localhost:3800/eureka
+      defaultZone: http://host.docker.internal:3800/eureka
 spring:
   main:
     web-application-type: reactive
@@ -29,7 +29,7 @@ spring:
 management:
   zipkin:
     tracing:
-      endpoint: http://${ZIPKIN_HOST:localhost}:9411/api/v2/spans
+      endpoint: http://${ZIPKIN_HOST:host.docker.internal}:9411/api/v2/spans
   tracing:
     sampling:
       probability: 1.0

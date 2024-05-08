@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StripeWebhookController {
 
     private final String STRIPE_WEBHOOK_SECRET;
-//    stripe listen --forward-to localhost:3804/stripe/webhook
+//    stripe listen --forward-to host.docker.internal:3804/stripe/webhook
     public StripeWebhookController(@Value("${STRIPE_WEBHOOK_SECRET}") String STRIPE_WEBHOOK_SECRET) {
         this.STRIPE_WEBHOOK_SECRET = STRIPE_WEBHOOK_SECRET;
     }
