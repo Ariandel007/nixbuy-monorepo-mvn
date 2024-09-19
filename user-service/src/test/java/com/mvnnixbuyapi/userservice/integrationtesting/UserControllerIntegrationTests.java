@@ -5,17 +5,21 @@ import com.mvnnixbuyapi.userservice.data.DataToTest;
 import com.mvnnixbuyapi.userservice.dto.LoginUserDto;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.dto.UserToUpdateDto;
+import com.mvnnixbuyapi.userservice.services.UploadToCloudService;
 import com.mvnnixbuyapi.userservice.utils.UserServiceMessageErrors;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.web.multipart.MultipartFile;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -27,6 +31,7 @@ import java.time.Instant;
 
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -38,6 +43,8 @@ public class UserControllerIntegrationTests {
     @Autowired
     ObjectMapper objectMapper;
 
+    @MockBean
+    private UploadToCloudService uploadToCloudService;
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13.9")
             .withDatabaseName("integration-tests-db").withUsername("username").withPassword("password")
@@ -187,6 +194,9 @@ public class UserControllerIntegrationTests {
     void shouldUpdatePhotoUrlForUser() throws Exception {
         Path path = Paths.get("src/test/resources/testImages/testFile1.jpg");
         byte[] fileContent = Files.readAllBytes(path);
+        // Prepara el mock para que devuelva una URL simulada
+        when(uploadToCloudService.uploadFileToCloudinary(ArgumentMatchers.any(MultipartFile.class)))
+                .thenReturn("http://example.com/test.jpg");
 
         RestAssured
                 .given()
