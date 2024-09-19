@@ -21,12 +21,7 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
-eureka:
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    service-url:
-      defaultZone: http://host.docker.internal:3800/eureka
+
 
 #feign:
 #  httpclient:
