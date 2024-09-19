@@ -1,24 +1,24 @@
-  server:
-    port: 3801
-  spring:
-    application:
-      name: user-service-nixbuy
-    datasource:
-      initialization-mode: always
-      username: ${BD_USERNAME:postgres}
-      url: ${BD_URL:jdbc:postgresql://host.docker.internal:5432/nixbuy_security}
-      platform: postgres
-      password: ${BD_PASSWORD:admin}
-    jpa:
-      show-sql: true
-      properties:
-        hibernate:
-          jdbc:
-            lob:
-              non_contextual_creation: 'true'
-          format_sql: true
+server:
+  port: 3801
+spring:
+  application:
+    name: user-service-nixbuy
+  datasource:
+    initialization-mode: always
+    username: ${BD_USERNAME:postgres}
+    url: ${BD_URL:jdbc:postgresql://host.docker.internal:5432/nixbuy_security}
+    platform: postgres
+    password: ${BD_PASSWORD:admin}
+  jpa:
+    show-sql: true
+    properties:
       hibernate:
-        ddl-auto: ${DDL_AUTO:update}
+        jdbc:
+          lob:
+            non_contextual_creation: 'true'
+        format_sql: true
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
 #    kafka:
 #      bootstrap-servers: host.docker.internal:9092
 #      properties:
@@ -27,30 +27,36 @@
 #        key-serializer: org.apache.kafka.common.serialization.StringSerializer  # Serializador de clave (puede variar)
 #        value-serializer: org.apache.kafka.common.serialization.StringSerializer  # Serializador de valor (puede variar)
 
-  #  profiles:
-  #    active: development
-  #  cloud:
-  #    config:
-  #      uri: http://host.docker.internal:8888
-  logging:
-    pattern:
+#  profiles:
+#    active: development
+#  cloud:
+#    config:
+#      uri: http://host.docker.internal:8888
+logging:
+  pattern:
   #    level: %{5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]}
-    level:
-      org.hibernate.SQL: DEBUG
-      org.hibernate.type: TRACE
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
 
 
-  management:
-    zipkin:
-      tracing:
-        endpoint: ${ZIPKIN_TRACING_URL_ENDPOINT:http://host.docker.internal:9411/api/v2/spans}
+management:
+  zipkin:
     tracing:
-      sampling:
-        probability: 1.0
-    endpoints:
-      web:
-        exposure:
-          include: health,info,prometheus,metrics
-    metrics:
-      tags:
-        application: ${spring.application.name}
+      endpoint: ${ZIPKIN_TRACING_URL_ENDPOINT:http://host.docker.internal:9411/api/v2/spans}
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+nixbuy:
+  cloudinaryParams:
+    cloudName: ${CLOUDINARY_CLOUD_NAME}
+    apiKey: ${CLOUDINARY_API_KEY}
+    apiSecret: ${CLOUDINARY_SECRET}
