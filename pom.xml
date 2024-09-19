@@ -13,7 +13,6 @@
     <modules>
         <module>commons</module>
         <module>user-service</module>
-        <module>eurekaserver-service</module>
         <module>api-gateway-service</module>
         <module>products-service</module>
         <module>payment-service</module>

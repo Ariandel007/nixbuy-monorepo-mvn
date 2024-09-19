@@ -69,12 +69,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--Eureka Client-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-            <version>4.0.2</version>
-        </dependency>
 
         <!--Add datatypes to Jackson-->
         <dependency>
