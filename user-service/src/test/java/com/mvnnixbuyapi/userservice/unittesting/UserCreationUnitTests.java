@@ -1,9 +1,12 @@
 package com.mvnnixbuyapi.userservice.unittesting;
 
 import com.mvnnixbuyapi.commons.exceptions.GeneralException;
+import com.mvnnixbuyapi.userservice.components.TokenProvider;
 import com.mvnnixbuyapi.userservice.data.DataToTest;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
+import com.mvnnixbuyapi.userservice.repositories.PasswordHistoryRepository;
+import com.mvnnixbuyapi.userservice.services.UploadToCloudService;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
 import com.mvnnixbuyapi.userservice.services.impl.UserApplicationServiceImpl;
 import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
@@ -27,7 +30,8 @@ import static org.mockito.Mockito.*;
         UserApplicationRepository.class,
         UserApplicationService.class,
         UserApplicationServiceImpl.class,
-        LocalValidatorFactoryBean.class
+        LocalValidatorFactoryBean.class,
+        TokenProvider.class,
 })
 public class UserCreationUnitTests {
 //    @MockBean
@@ -36,6 +40,10 @@ public class UserCreationUnitTests {
     PasswordEncoder passwordEncoder;
     @MockBean
     UserApplicationRepository userApplicationRepository;
+    @MockBean
+    PasswordHistoryRepository passwordHistoryRepository;
+    @MockBean
+    UploadToCloudService uploadToCloudService;  // Add this line to mock the UploadToCloudService
 
     @Autowired
     UserApplicationService userService;

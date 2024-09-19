@@ -10,8 +10,6 @@ import com.mvnnixbuyapi.userservice.repositories.PasswordHistoryRepository;
 import com.mvnnixbuyapi.userservice.services.UploadToCloudService;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
 import com.mvnnixbuyapi.userservice.components.TokenProvider;
-import com.mvnnixbuyapi.userservice.dto.*;
-import com.mvnnixbuyapi.userservice.exceptions.*;
 import com.mvnnixbuyapi.userservice.mappers.UserMapper;
 import com.mvnnixbuyapi.userservice.models.RoleApplication;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
