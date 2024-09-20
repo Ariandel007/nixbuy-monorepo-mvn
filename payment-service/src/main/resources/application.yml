@@ -22,7 +22,7 @@ spring:
     hibernate:
       ddl-auto: update
 
-
+products-url: ${PRODUCTS_URL:http://host.docker.internal:3803}
 #feign:
 #  httpclient:
 #    enabled: false

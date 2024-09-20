@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "products-service-nixbuy")
+@FeignClient(name = "products-service-nixbuy", url = "${products-url}")
 public interface ProductsFeign {
     @GetMapping(value = "/api/query-product-endpoint/v1/get-products-of-orderId", produces = "application/json")
     ResponseEntity<GenericResponseForBody<List<ProductDto>>> listResponseEntityProductDto(

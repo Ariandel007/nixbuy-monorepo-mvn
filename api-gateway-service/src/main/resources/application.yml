@@ -15,7 +15,8 @@ spring:
     gateway:
       routes:
         - id: user-service-nixbuy-route
-          uri: lb://user-service-nixbuy
+#          uri: lb://user-service-nixbuy
+          uri: ${URI_USER_SERVICE:http://host.docker.internal:3801}
           predicates:
             - Path=/api/user-service-nixbuy/**
           filters:
