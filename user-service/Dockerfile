@@ -55,3 +55,6 @@ CMD ["java", "-jar", "app.jar"]
 # -e CLOUDINARY_API_KEY=<cloudinary-api-key> \
 # -e CLOUDINARY_SECRET=<cloudinary-secret> \
 # -p <host-port>:<container-port> nixbuy-user-service:0.0.1-SNAPSHOT
+# --network local-dev
+# --memory="250m"
+# --log-opt max-size=250m --log-opt max-file=3
