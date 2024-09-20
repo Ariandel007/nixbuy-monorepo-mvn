@@ -1,46 +1,40 @@
-#We define and arg for many steps
-ARG MODULE_NAME=user-service
-
 FROM maven:3.8.5-openjdk-17 as builder
-#We are using the first ARG:
-ARG MODULE_NAME
-WORKDIR /app/$MODULE_NAME
 
-COPY ./commons/pom.xml /app/commons/pom.xml
-COPY ./commons/src /app/commons/src
+WORKDIR /build
 
-COPY ./api-gateway-service/pom.xml /app/api-gateway-service/pom.xml
-COPY ./api-gateway-service/src /app/api-gateway-service/src
+COPY pom.xml pom.xml
+COPY commons/pom.xml commons/pom.xml
+COPY user-service/pom.xml user-service/pom.xml
+COPY api-gateway-service/pom.xml api-gateway-service/pom.xml
+COPY payment-service/pom.xml payment-service/pom.xml
+COPY products-service/pom.xml products-service/pom.xml
+COPY products-service/application/pom.xml products-service/application/pom.xml
+COPY products-service/infrastructure/pom.xml products-service/infrastructure/pom.xml
+COPY products-service/domain/pom.xml products-service/domain/pom.xml
 
-COPY ./payment-service/pom.xml /app/payment-service/pom.xml
-COPY ./payment-service/src /app/payment-service/src
+# Resolve dependencies for `common` module, e.g., shared libraries
+# Also build all the required projects needed by the common module.
+# In this case, it will also resolve dependencies for the `root` module.
+RUN mvn -q -ntp -B -pl commons -am dependency:go-offline
 
-COPY ./products-service/pom.xml /app/products-service/pom.xml
-COPY ./products-service/application/pom.xml /app/products-service/application/pom.xml
-COPY ./products-service/application/src /app/products-service/application/src
-COPY ./products-service/infrastructure/pom.xml /app/products-service/infrastructure/pom.xml
-COPY ./products-service/infrastructure/src /app/products-service/infrastructure/src
-COPY ./products-service/domain/pom.xml /app/products-service/domain/pom.xml
-COPY ./products-service/domain/src /app/products-service/domain/src
-
-
-COPY ./pom.xml /app
-COPY ./$MODULE_NAME/pom.xml .
-COPY ./$MODULE_NAME/src ./src
-
-#
-    # RUN mvn -f /app/commons/pom.xml clean install
-RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip -Dmaven.main.skip -Dspring-boot.repackage.skip && rm -r ./target/
-
-RUN mvn -f /app/pom.xml clean package
+# Copy full sources for `commons` module
+COPY commons commons
+# Install the commons module in the local Maven repo (`.m2`)
+# This will also install the `root` module.
+# See: `la -lat ~/.m2/repository/org/example/*/*`
+RUN mvn -q -B -pl commons install
+# Resolve dependencies for the main application
+RUN mvn -q -ntp -B -pl user-service -am dependency:go-offline
+# Copy sources for main application
+COPY user-service user-service
+# Package the common and application modules together. We are going to skip tests becuase of testcontainers(and using docker in docker is still not viable)
+RUN mvn -q -ntp -B -pl commons,user-service package -DskipTests
 
 FROM openjdk:17-jdk-alpine as imageToExecute
 #We are using the first ARG:
 ARG MODULE_NAME
 WORKDIR /app
-ARG FOLDER_FROM_BUILDER=/app/$MODULE_NAME/target
-COPY --from=builder $FOLDER_FROM_BUILDER/*.jar /app/app.jar
-
+COPY --from=builder /build/user-service/target/*.jar /app/app.jar
 CMD ["java", "-jar", "app.jar"]
 
 # Environment variables:
@@ -49,4 +43,15 @@ CMD ["java", "-jar", "app.jar"]
 
 # Command to build: docker build -t nixbuy-user-service:0.0.1-SNAPSHOT -f ./user-service/Dockerfile .
 
-
+# Command to run:
+# docker run -d --name nixbuy-user-service \
+# -e PORT=<your-port> \
+# -e BD_USERNAME=<your-db-username> \
+# -e BD_URL=<your-db-url> \
+# -e BD_PASSWORD=<your-db-password> \
+# -e DDL_AUTO=<ddl-auto-option> \
+# -e ZIPKIN_TRACING_URL_ENDPOINT=<zipkin-endpoint> \
+# -e CLOUDINARY_CLOUD_NAME=<cloudinary-name> \
+# -e CLOUDINARY_API_KEY=<cloudinary-api-key> \
+# -e CLOUDINARY_SECRET=<cloudinary-secret> \
+# -p <host-port>:<container-port> nixbuy-user-service:0.0.1-SNAPSHOT

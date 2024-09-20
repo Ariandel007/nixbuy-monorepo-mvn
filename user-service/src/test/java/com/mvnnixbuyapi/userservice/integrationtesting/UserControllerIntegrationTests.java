@@ -105,12 +105,12 @@ public class UserControllerIntegrationTests {
                 .given()
                 .contentType(ContentType.JSON)
                 .when()
-                .get("/api/users/v1/basic-user-info/1")
+                .get("/api/users/v1/basic-user-info/4")
                 .then()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
-                .body("id", equalTo(1))
-                .body("username", equalTo("ejemplo_usuario1"))
+                .body("id", equalTo(4))
+                .body("username", equalTo("ejemplo_usuario4"))
                 .body("country", equalTo("Ejemplolandia"))
                 .body("city", equalTo("Ciudad Ejemplo"));
     }
