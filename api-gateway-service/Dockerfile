@@ -24,37 +24,30 @@ COPY commons commons
 # See: `la -lat ~/.m2/repository/org/example/*/*`
 RUN mvn -q -B -pl commons install
 # Resolve dependencies for the main application
-RUN mvn -q -ntp -B -pl user-service -am dependency:go-offline
+RUN mvn -q -ntp -B -pl api-gateway-service -am dependency:go-offline
 # Copy sources for main application
-COPY user-service user-service
+COPY api-gateway-service api-gateway-service
 # Package the common and application modules together. We are going to skip tests becuase of testcontainers(and using docker in docker is still not viable)
-RUN mvn -q -ntp -B -pl commons,user-service package -DskipTests
+RUN mvn -q -ntp -B -pl commons,api-gateway-service package -DskipTests
 
 FROM openjdk:17-jdk-alpine as imageToExecute
 #We are using the first ARG:
 ARG MODULE_NAME
 WORKDIR /app
-COPY --from=builder /build/user-service/target/*.jar /app/app.jar
+COPY --from=builder /build/api-gateway-service/target/*.jar /app/app.jar
 CMD ["java", "-jar", "app.jar"]
 
 # Environment variables:
-# PORT, BD_USERNAME, BD_URL, BD_PASSWORD, DDL_AUTO, ZIPKIN_TRACING_URL_ENDPOINT,
-# CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_SECRET
+# URI_USER_SERVICE, ZIPKIN_TRACING_URL_ENDPOINT, PORT
 
-# Command to build: docker build -t user-service-nixbuy:0.0.1-SNAPSHOT -f ./user-service/Dockerfile .
+# Command to build: docker build -t gateway-service-nixbuy:0.0.1-SNAPSHOT -f ./api-gateway-service/Dockerfile .
 
 # Command to run:
-# docker run -d --name user-service-nixbuy \
+# docker run -d --name gateway-service-nixbuy \
 # -e PORT=<your-port> \
-# -e BD_USERNAME=<your-db-username> \
-# -e BD_URL=<your-db-url> \
-# -e BD_PASSWORD=<your-db-password> \
-# -e DDL_AUTO=<ddl-auto-option> \
-# -e ZIPKIN_TRACING_URL_ENDPOINT=<zipkin-endpoint> \
-# -e CLOUDINARY_CLOUD_NAME=<cloudinary-name> \
-# -e CLOUDINARY_API_KEY=<cloudinary-api-key> \
-# -e CLOUDINARY_SECRET=<cloudinary-secret> \
-# -p <host-port>:<container-port> user-service-nixbuy:0.0.1-SNAPSHOT
+# -e URI_USER_SERVICE=<your-db-username> \
+# -e ZIPKIN_TRACING_URL_ENDPOINT=<your-db-url> \
+# -p <host-port>:<container-port> gateway-service-nixbuy:0.0.1-SNAPSHOT
 # --network local-dev
 # --memory="250m"
 # --log-opt max-size=250m --log-opt max-file=3

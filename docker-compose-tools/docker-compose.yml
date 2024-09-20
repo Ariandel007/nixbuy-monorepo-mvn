@@ -1,44 +1,78 @@
-version: '3'
 services:
 
   zipkin:
     container_name: zipkin-service
     image: openzipkin/zipkin:latest
-    restart: always
+    # restart: always
     ports:
       - "9411:9411"
+    networks:
+      - local-dev
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "60m"
+        max-file: "3"
 
   prometheus:
     container_name: prometheus-service
     image: prom/prometheus
-    restart: always
+    # restart: always
     extra_hosts:
       - host.docker.internal:host-gateway
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - /e/DockerVolumes/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_config:/etc/prometheus
     ports:
       - "9090:9090"
+    networks:
+      - local-dev
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "60m"
+        max-file: "3"
 
   grafana:
     container_name: grafana-service
     image: grafana/grafana
     ports:
       - "3000:3000"
+    networks:
+      - local-dev
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "60m"
+        max-file: "3"
+
   zookeeper:
+    container_name: zookeeper
     image: debezium/zookeeper:2.4.2.Final
     ports:
       - 2181:2181
       - 2888:2888
       - 3888:3888
+    networks:
+      - local-dev
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "60m"
+        max-file: "3"
+    volumes:
+      - zookeeper_conf:/zookeeper/conf
+      - zookeeper_data:/zookeeper/data
+      - zookeeper_logs:/zookeeper/logs
+      - zookeeper_txns:/zookeeper/txns
+
   kafka:
+    container_name: kafka
     image: debezium/kafka:2.4.2.Final
     ports:
       - 9092:9092
       - 29092:29092
-    links:
-      - zookeeper
     environment:
       ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_BROKER_ID: 1
@@ -46,24 +80,73 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_LISTENERS: PLAINTEXT://:9092,PLAINTEXT_HOST://0.0.0.0:29092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+    volumes:
+      - kafka_config:/kafka/config
+      - kafka_data:/kafka/data
+      - kafka_logs:/kafka/logs
+    networks:
+      - local-dev
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "60m"
+        max-file: "3"
+
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui
     ports:
       - "8080:8080"
-    # restart: always
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    networks:
+      - local-dev
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "60m"
+        max-file: "3"
+
   connect:
+    container_name: connect
     image: debezium/connect:2.4.2.Final
     ports:
       - 8083:8083
-    links:
-      - kafka
     environment:
       - BOOTSTRAP_SERVERS=kafka:9092
       - GROUP_ID=1
       - CONFIG_STORAGE_TOPIC=my_connect_configs
       - OFFSET_STORAGE_TOPIC=my_connect_offsets
       - STATUS_STORAGE_TOPIC=my_connect_statuses
+    networks:
+      - local-dev
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "60m"
+        max-file: "3"
+
+networks:
+  local-dev:
+    external: true
+
+volumes:
+  kafka_log4j_folder:
+    external: true
+  prometheus_config:
+    external: true
+  kafka_config:
+    external: true
+  kafka_data:
+    external: true
+  kafka_logs:
+    external: true
+  zookeeper_conf:
+    external: true
+  zookeeper_data:
+    external: true
+  zookeeper_logs:
+    external: true
+  zookeeper_txns:
+    external: true

@@ -1,5 +1,5 @@
 server:
-  port: 3802
+  port: ${PORT:3802}
 
 logging:
   level:
@@ -25,7 +25,7 @@ spring:
 management:
   zipkin:
     tracing:
-      endpoint: http://${ZIPKIN_HOST:host.docker.internal}:9411/api/v2/spans
+      endpoint: ${ZIPKIN_TRACING_URL_ENDPOINT:http://host.docker.internal:9411/api/v2/spans}
   tracing:
     sampling:
       probability: 1.0
