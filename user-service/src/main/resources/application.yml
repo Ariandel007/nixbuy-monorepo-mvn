@@ -1,5 +1,5 @@
 server:
-  port: 3801
+  port: ${PORT:3801}
 spring:
   application:
     name: user-service-nixbuy
@@ -10,6 +10,7 @@ spring:
     platform: postgres
     password: ${BD_PASSWORD:admin}
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     properties:
       hibernate:
