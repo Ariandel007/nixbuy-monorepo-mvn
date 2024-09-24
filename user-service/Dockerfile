@@ -38,7 +38,7 @@ COPY --from=builder /build/user-service/target/*.jar /app/app.jar
 CMD ["java", "-jar", "app.jar"]
 
 # Environment variables:
-# PORT, BD_USERNAME, BD_URL, BD_PASSWORD, DDL_AUTO, ZIPKIN_TRACING_URL_ENDPOINT,
+# PORT, BD_USERNAME, BD_URL, BD_PASSWORD, DDL_AUTO, TRACING_URL_ENDPOINT,
 # CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_SECRET
 
 # Command to build: docker build -t user-service-nixbuy:0.0.1-SNAPSHOT -f ./user-service/Dockerfile .
@@ -50,11 +50,11 @@ CMD ["java", "-jar", "app.jar"]
 # -e BD_URL=<your-db-url> \
 # -e BD_PASSWORD=<your-db-password> \
 # -e DDL_AUTO=<ddl-auto-option> \
-# -e ZIPKIN_TRACING_URL_ENDPOINT=<zipkin-endpoint> \
+# -e TRACING_URL_ENDPOINT=<zipkin-endpoint> \
 # -e CLOUDINARY_CLOUD_NAME=<cloudinary-name> \
 # -e CLOUDINARY_API_KEY=<cloudinary-api-key> \
 # -e CLOUDINARY_SECRET=<cloudinary-secret> \
 # -p <host-port>:<container-port> user-service-nixbuy:0.0.1-SNAPSHOT
 # --network local-dev
-# --memory="250m"
+# --memory="360m"
 # --log-opt max-size=250m --log-opt max-file=3

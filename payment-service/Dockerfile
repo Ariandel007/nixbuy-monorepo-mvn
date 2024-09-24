@@ -24,30 +24,37 @@ COPY commons commons
 # See: `la -lat ~/.m2/repository/org/example/*/*`
 RUN mvn -q -B -pl commons install
 # Resolve dependencies for the main application
-RUN mvn -q -ntp -B -pl api-gateway-service -am dependency:go-offline
+RUN mvn -q -ntp -B -pl payment-service -am dependency:go-offline
 # Copy sources for main application
-COPY api-gateway-service api-gateway-service
+COPY payment-service payment-service
 # Package the common and application modules together. We are going to skip tests becuase of testcontainers(and using docker in docker is still not viable)
-RUN mvn -q -ntp -B -pl commons,api-gateway-service package -DskipTests
+RUN mvn -q -ntp -B -pl commons,payment-service package -DskipTests
 
 FROM openjdk:17-jdk-alpine as imageToExecute
 #We are using the first ARG:
 ARG MODULE_NAME
 WORKDIR /app
-COPY --from=builder /build/api-gateway-service/target/*.jar /app/app.jar
+COPY --from=builder /build/payment-service/target/*.jar /app/app.jar
 CMD ["java", "-jar", "app.jar"]
 
 # Environment variables:
-# URI_USER_SERVICE, TRACING_URL_ENDPOINT, PORT
+# PORT, BD_USERNAME, BD_URL, BD_PASSWORD, DDL_AUTO, WEBCLIENT_URL, PRODUCTS_URL, STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET
 
-# Command to build: docker build -t gateway-service-nixbuy:0.0.1-SNAPSHOT -f ./api-gateway-service/Dockerfile .
+# Command to build: docker build -t payment-service-nixbuy:0.0.1-SNAPSHOT -f ./payment-service/Dockerfile .
 
 # Command to run:
-# docker run -d --name gateway-service-nixbuy \
+# docker run -d --name payment-service-nixbuy \
 # -e PORT=<your-port> \
-# -e URI_USER_SERVICE=<your-db-username> \
-# -e TRACING_URL_ENDPOINT=<your-db-url> \
-# -p <host-port>:<container-port> gateway-service-nixbuy:0.0.1-SNAPSHOT
+# -e BD_USERNAME=<your-db-username> \
+# -e BD_URL=<your-db-url> \
+# -e BD_PASSWORD=<your-db-password> \
+# -e DDL_AUTO=<ddl-auto-option> \
+# -e WEBCLIENT_URL=<webclient-url> \
+# -e PRODUCTS_URL=<products-url> \
+# -e STRIPE_API_KEY=<products-url> \
+# -e STRIPE_WEBHOOK_SECRET=<products-url> \
+# -e PRODUCTS_URL=<products-url> \
+# -p <host-port>:<container-port> payment-service-nixbuy:0.0.1-SNAPSHOT
 # --network local-dev
 # --memory="360m"
 # --log-opt max-size=250m --log-opt max-file=3

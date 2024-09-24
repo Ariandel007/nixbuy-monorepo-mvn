@@ -41,10 +41,13 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type: TRACE
 
+tracing:
+  url: ${TRACING_URL_ENDPOINT:http://host.docker.internal:4317}
 management:
-  zipkin:
-    tracing:
-      endpoint: http://${ZIPKIN_HOST:host.docker.internal}:9411/api/v2/spans
+  #  zipkin:
+  #    tracing:
+  #      endpoint: ${TRACING_URL_ENDPOINT:http://host.docker.internal:9411/api/v2/spans}
+  # el sampling probability en 0.1 esta bien en un entorno de produccion
   tracing:
     sampling:
       probability: 1.0

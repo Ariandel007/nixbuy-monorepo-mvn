@@ -1,18 +1,25 @@
 services:
 
-  zipkin:
-    container_name: zipkin-service
-    image: openzipkin/zipkin:latest
-    # restart: always
+  # zipkin:
+  #   container_name: zipkin-service
+  #   image: openzipkin/zipkin:latest
+  #   # restart: always
+  #   ports:
+  #     - "9411:9411"
+  #   networks:
+  #     - local-dev
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "60m"
+  #       max-file: "3"
+  jaeger:
+    image: jaegertracing/all-in-one:latest
     ports:
-      - "9411:9411"
-    networks:
-      - local-dev
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "60m"
-        max-file: "3"
+      - "16686:16686" # the jaeger UI
+      - "4317:4317" # the OpenTelemetry collector grpc
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
 
   prometheus:
     container_name: prometheus-service
