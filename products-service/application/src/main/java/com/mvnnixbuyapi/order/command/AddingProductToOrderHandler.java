@@ -35,7 +35,7 @@ public class AddingProductToOrderHandler {
             json = new String(decodedBytes);
         } catch (Exception e) {
             log.error(e.getMessage());
-            e.printStackTrace(); // Manejo de errores si ocurre algún problema al procesar el JSON
+            e.printStackTrace(); // TODO: Error handling if any problem occurs while processing the JSON
             return;
         }
         OrderReceivedDto orderDto = null;

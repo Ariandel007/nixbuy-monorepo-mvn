@@ -20,7 +20,7 @@ public class OrderDboMapper {
                 .currencyCode(order.getCurrencyCode())
                 .expirationDate(order.getExpirationDate())
                 .taxesPercentage(order.getTaxesPercentage())
-//                .userId()
+                .userId(order.getOrderUserId())
                 .totalPriceWithoutTaxes(order.getTotalPriceWithoutTaxes())
                 .status(order.getStatus())
                 .build();
@@ -37,7 +37,8 @@ public class OrderDboMapper {
                 orderEntity.getCurrencyCode(),
                 orderEntity.getExpirationDate(),
                 orderEntity.getCreationDate(),
-                orderEntity.getStatus()
+                orderEntity.getStatus(),
+                orderEntity.getUserId()
         );
     }
 }

@@ -80,6 +80,11 @@
             <scope>test</scope>
         </dependency>
 
+        <!--Add datatypes to Jackson(like Instant)-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
 
     </dependencies>
 
