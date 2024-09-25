@@ -10,7 +10,7 @@ public interface KeyRepository {
     KeyProduct create(KeyProduct product);
     KeyProduct edit(KeyProduct product);
     KeyProduct find(KeyProduct product);
-
+    void setOrderIds(List<KeyProduct> product);
     List<KeyProduct> findByProductsId(List<ProductReceivedDto> productList);
 
 }

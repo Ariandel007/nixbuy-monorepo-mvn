@@ -2,7 +2,7 @@ package com.mvnnixbuyapi.order.kafka.listener;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mvnnixbuyapi.product.command.AddingProductToOrderHandler;
+import com.mvnnixbuyapi.order.command.AddingProductToOrderHandler;
 import com.mvnnixbuyapi.product.model.dto.command.OutboxTableDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

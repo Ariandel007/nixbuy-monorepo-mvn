@@ -85,3 +85,5 @@ INSERT INTO public.key_products(
 	key_code, active_date, create_date, inactive_date, plattform_id, product_id, sold_date, status)
 	VALUES ('LU63thyT47728f454634f2358aP', '2023-12-28T10:00:00Z', '2023-12-28T10:00:00Z', NULL, 1, 3, NULL, 'ACTIVE');
 
+CREATE INDEX idx_key_products_product_id_status_create_date
+ON key_products(product_id, status, create_date);

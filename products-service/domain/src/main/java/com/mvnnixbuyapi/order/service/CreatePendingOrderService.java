@@ -6,6 +6,7 @@ import com.mvnnixbuyapi.order.model.entity.Order;
 import com.mvnnixbuyapi.order.port.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class CreatePendingOrderService {
@@ -21,12 +22,14 @@ public class CreatePendingOrderService {
         this.keyRepository = keyRepository;
     }
 
+    @Transactional
     public Order execute(OrderReceivedDto orderReceivedDto) {
         var orderToPersist = new Order().requestToCreate(orderReceivedDto);
+        var orderSaved = this.orderRepository.create(orderToPersist);
         var productList = orderReceivedDto.getProductList();
         var keyList = this.keyRepository.findByProductsId(productList);
-        orderToPersist.addProducts(keyList);
-        // TODO: ADD ORDER
-        return this.orderRepository.create(orderToPersist);
+        orderSaved.addProducts(keyList);
+        this.keyRepository.setOrderIds(orderSaved.getKeyProducts().keyProductList());
+        return orderSaved;
     }
 }
