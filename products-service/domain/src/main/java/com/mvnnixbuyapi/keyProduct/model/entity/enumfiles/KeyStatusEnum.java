@@ -4,5 +4,6 @@ public enum KeyStatusEnum {
     ACTIVE,
     RESERVED,
     INACTIVE,
-    SOLD
+    SOLD,
+    IN_ORDER
 }

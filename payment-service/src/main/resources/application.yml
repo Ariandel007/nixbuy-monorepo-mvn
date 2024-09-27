@@ -1,15 +1,16 @@
 server:
-  port: 3804
-CLIENT_URL: http://host.docker.internal:4200
+  port: ${PORT:3804}
+CLIENT_URL: ${WEBCLIENT_URL:http://host.docker.internal:4200}
 spring:
   application:
     name: payment-service-nixbuy
   datasource:
     initialization-mode: always
-    username: postgres
-    url: jdbc:postgresql://host.docker.internal:5432/nixbuy_payments
+    username: ${BD_USERNAME:postgres}
+    url: ${BD_URL:jdbc:postgresql://host.docker.internal:5432/nixbuy_payments}
     platform: postgres
-    password: admin
+    password: ${BD_PASSWORD:admin}
+
   jpa:
     show-sql: true
     properties:
@@ -21,13 +22,26 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
-eureka:
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    service-url:
-      defaultZone: http://host.docker.internal:3800/eureka
 
+products-url: ${PRODUCTS_URL:http://host.docker.internal:3803}
 #feign:
 #  httpclient:
 #    enabled: false
+#The port 4317 is for gRPC, which is lighter than the HTTP protocol.
+tracing:
+  url: ${TRACING_URL_ENDPOINT:http://host.docker.internal:4317}
+management:
+  #  zipkin:
+  #    tracing:
+  #      endpoint: ${TRACING_URL_ENDPOINT:http://host.docker.internal:9411/api/v2/spans}
+  # el sampling probability en 0.1 esta bien en un entorno de produccion
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  metrics:
+    tags:
+      application: ${spring.application.name}

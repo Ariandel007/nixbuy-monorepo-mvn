@@ -2,8 +2,6 @@ package com.mvnnixbuyapi.keyProduct.adapters.mapper;
 
 import com.mvnnixbuyapi.keyProduct.adapters.entity.KeyProductEntity;
 import com.mvnnixbuyapi.keyProduct.model.entity.KeyProduct;
-import com.mvnnixbuyapi.keyProduct.model.entity.valueobjects.KeyProductPlatform;
-import com.mvnnixbuyapi.keyProduct.model.entity.valueobjects.KeyProductProduct;
 import com.mvnnixbuyapi.platform.model.entity.Platform;
 import com.mvnnixbuyapi.product.model.entity.Product;
 import org.springframework.stereotype.Component;

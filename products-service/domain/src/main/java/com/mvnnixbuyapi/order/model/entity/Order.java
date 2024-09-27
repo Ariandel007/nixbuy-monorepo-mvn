@@ -23,7 +23,7 @@ public class Order {
     private OrderTaxesPercentage orderTaxesPercentage;
     private OrderTotalPriceWithoutTaxes orderTotalPriceWithoutTaxes;
     private OrderKeyProducts keyProducts;
-//    private OrderUser orderUser;
+    private OrderUser orderUser;
 
     public Order(
             Long id,
@@ -32,7 +32,8 @@ public class Order {
             String currencyCode,
             Instant expirationDate,
             Instant creationDate,
-            String status
+            String status,
+            Long userId
     ) {
         this.orderId = new OrderId(id);
         this.orderTotalPriceWithoutTaxes = new OrderTotalPriceWithoutTaxes(totalPriceWithoutTaxes);
@@ -42,6 +43,7 @@ public class Order {
         this.orderCreationDate = new OrderCreationDate(creationDate);
         this.orderStatus = new OrderStatus(status);
         this.keyProducts = new OrderKeyProducts(new ArrayList<>());
+        this.orderUser = new OrderUser(userId);
     }
 
     public Order requestToCreate(OrderReceivedDto orderReceivedDto){
@@ -53,6 +55,7 @@ public class Order {
         this.orderCreationDate = new OrderCreationDate(orderReceivedDto.getCreationDate());
         this.orderStatus = new OrderStatus(orderReceivedDto.getStatus());
         this.keyProducts = new OrderKeyProducts(new ArrayList<>());
+        this.orderUser = new OrderUser(orderReceivedDto.getUserId());
         return this;
     }
 // TODO: MUST IMPLEMENT USER
@@ -92,6 +95,9 @@ public class Order {
     }
     public String getStatus() {
         return orderStatus.status();
+    }
+    public Long getOrderUserId() {
+        return orderUser.id();
     }
 
 }

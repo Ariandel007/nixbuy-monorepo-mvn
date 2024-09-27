@@ -28,6 +28,7 @@ public class OrderController {
             ) {
         createOrderDto.setUserId(userId);
         ResultMonad<Order> orderResultMonad = this.orderService.createOrder(createOrderDto);
+        //TODO: HANDLE EXCEPTION
         return ResponseUtils.buildSuccessResponse(orderResultMonad.getValue());
     }
 

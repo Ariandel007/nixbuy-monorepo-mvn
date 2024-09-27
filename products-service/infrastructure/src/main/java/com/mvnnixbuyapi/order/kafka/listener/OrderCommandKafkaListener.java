@@ -2,7 +2,8 @@ package com.mvnnixbuyapi.order.kafka.listener;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mvnnixbuyapi.product.command.AddingProductToOrderHandler;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.mvnnixbuyapi.order.command.AddingProductToOrderHandler;
 import com.mvnnixbuyapi.product.model.dto.command.OutboxTableDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,25 +37,25 @@ public class OrderCommandKafkaListener {
             @Payload String message,
             @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
         log.info("Received Message: " + message + " from partition: " + partition);
-
+        mapper.registerModule(new JavaTimeModule());
         // Listener
         OutboxTableDto outboxTableAfter = null;
         try {
-            // Convertir JSON a HashMap
+            // Parse JSON to HashMap
             HashMap<String, Object> map = mapper.readValue(message, new TypeReference<HashMap<String,Object>>() {});
             HashMap<String, Object> payloadMessage =  (HashMap<String, Object>) map.get("payload");
             outboxTableAfter = mapper.convertValue(payloadMessage.get("after"), OutboxTableDto.class);
 //            base64Json = outboxTableAfter.getData();
         } catch (Exception e) {
             log.error(e.getMessage());
-            e.printStackTrace(); // Manejo de errores si ocurre algún problema al procesar el JSON
+            e.printStackTrace(); // TODO: Error handling if any problem occurs while processing the JSON
             return;
         }
 
         switch (outboxTableAfter.getAggregateType()+"-"+outboxTableAfter.getEventType()) {
             case "OrderTable-OrderCreated":
                 // secuencia
-                this.addingProductToOrderHandler.execute(message);
+                this.addingProductToOrderHandler.execute(outboxTableAfter.getData());
                 break;
         }
 

@@ -1,16 +1,11 @@
 server:
-  port: 3802
+  port: ${PORT:3802}
 
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type: TRACE
-eureka:
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    service-url:
-      defaultZone: http://host.docker.internal:3800/eureka
+
 spring:
   main:
     web-application-type: reactive
@@ -20,16 +15,20 @@ spring:
     gateway:
       routes:
         - id: user-service-nixbuy-route
-          uri: lb://user-service-nixbuy
+#          uri: lb://user-service-nixbuy
+          uri: ${URI_USER_SERVICE:http://host.docker.internal:3801}
           predicates:
             - Path=/api/user-service-nixbuy/**
           filters:
             - RewritePath=/api/user-service-nixbuy/(?<remaining>.*), /api/${remaining}
+tracing:
+  url: ${TRACING_URL_ENDPOINT:http://host.docker.internal:4317}
 
 management:
-  zipkin:
-    tracing:
-      endpoint: http://${ZIPKIN_HOST:host.docker.internal}:9411/api/v2/spans
+#  zipkin:
+#    tracing:
+#      endpoint: ${TRACING_URL_ENDPOINT:http://host.docker.internal:9411/api/v2/spans}
+  # el sampling probability en 0.1 esta bien en un entorno de produccion
   tracing:
     sampling:
       probability: 1.0
