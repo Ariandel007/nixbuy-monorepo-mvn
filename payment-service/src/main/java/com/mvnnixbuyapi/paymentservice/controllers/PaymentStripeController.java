@@ -41,11 +41,7 @@ public class PaymentStripeController {
         Stripe.apiKey = this.stripeApiKey;
         // Start by finding an existing customer record from Stripe or creating a new one if needed
         Customer customer = UtilStripeApp.findOrCreateCustomer(requestDTO.getCustomerEmail(), requestDTO.getCustomerName());
-        Map<String, String> metadata = new HashMap<>();
-        // Comprobar que ORDER ID corresponda a idUser
-        metadata.put("orderId", requestDTO.getOrderId().toString());
-        metadata.put("idUser", idUser.toString());
-        customer.setMetadata(metadata);
+        // TODO: Check orderId and idUser are related
 
         // Next, create a checkout session by adding the details of the checkout
         SessionCreateParams.Builder paramsBuilder =
@@ -53,9 +49,15 @@ public class PaymentStripeController {
                         .setMode(SessionCreateParams.Mode.PAYMENT)
                         .setCustomer(customer.getId())
                         .setSuccessUrl(this.clientUrl + "/payment/success?session_id={CHECKOUT_SESSION_ID}")
-                        .setCancelUrl(this.clientUrl + "/payment/failure");
+                        .setCancelUrl(this.clientUrl + "/payment/failure")
+                        .setPaymentIntentData(
+                                SessionCreateParams.PaymentIntentData.builder()
+                                        .putMetadata("orderId", requestDTO.getOrderId().toString())
+                                        .putMetadata("idUser", idUser.toString())
+                                        .build()
+                        );
 
-        // Cambiar a busqueda por orden
+        // Find products by OrderId
         List<Product> productList = this.stripeProductsService.getProductsById(requestDTO.getOrderId());
 
         for (Product product : productList) {
