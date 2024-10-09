@@ -3,6 +3,7 @@ package com.mvnnixbuyapi.paymentservice.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mvnnixbuyapi.paymentservice.services.OrderService;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
@@ -27,14 +28,18 @@ public class StripeWebhookController {
     private final ObjectMapper objectMapper;
 
     private final String STRIPE_WEBHOOK_SECRET;
+    private final OrderService orderService;
+
 //    stripe listen --forward-to host.docker.internal:3804/stripe/webhook
     @Autowired
     public StripeWebhookController(
             ObjectMapper objectMapper,
-            @Value("${STRIPE_WEBHOOK_SECRET}") String STRIPE_WEBHOOK_SECRET
+            @Value("${STRIPE_WEBHOOK_SECRET}") String STRIPE_WEBHOOK_SECRET,
+            OrderService orderService
     ) {
         this.objectMapper = objectMapper;
         this.STRIPE_WEBHOOK_SECRET = STRIPE_WEBHOOK_SECRET;
+        this.orderService = orderService;
     }
 
     @PostMapping("/stripe/webhook")
