@@ -134,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
             return ResultMonad.error("ERROR_ORDER_ID_NOT_FOUND");
         }
         var orderToUpdate = optionalOrderInBD.get();
-        orderToUpdate.setStatus(OrderStates.CONFIRMED.name());
+        orderToUpdate.setStatus(orderStatus);
         Order orderUpdated = this.orderRepository.save(orderToUpdate);
         OrderStatusUpdateKafkaDto orderStatusUpdateKafkaDto = OrderMapper.INSTANCE.toDtoStatusOrder(orderUpdated);
         //
@@ -151,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         OutboxTable outboxTableToInsert = OutboxTable.builder()
-                .eventType("OrderStatusUpdated")
+                .eventType("OrderStatusPaymentExecuted")
                 .timestamp(Instant.now())
                 .data(dataBytes)
                 .aggregateId(orderStatusUpdateKafkaDto.getId().toString())

@@ -29,4 +29,11 @@ public class OrderPostgresRepository implements OrderRepository {
         var orderEntityCreated = this.orderSpringJpaAdapterRepository.save(orderEntityToCreate);
         return this.orderDboMapper.entityToDomain(orderEntityCreated);
     }
+
+    @Override
+    public Order updateOrder(Order product) {
+        var orderEntityToCreate = this.orderDboMapper.domainToEntity(product);
+        var orderEntityCreated = this.orderSpringJpaAdapterRepository.save(orderEntityToCreate);
+        return this.orderDboMapper.entityToDomain(orderEntityCreated);
+    }
 }

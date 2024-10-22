@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mvnnixbuyapi.order.command.AddingProductToOrderHandler;
+import com.mvnnixbuyapi.order.command.PaymentExecutedHandler;
 import com.mvnnixbuyapi.product.model.dto.command.OutboxTableDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,17 @@ import java.util.HashMap;
 public class OrderCommandKafkaListener {
 
     private final AddingProductToOrderHandler addingProductToOrderHandler;
+    private final PaymentExecutedHandler paymentExecutedHandler;
     private final ObjectMapper mapper;
 
     @Autowired
     public OrderCommandKafkaListener(
             AddingProductToOrderHandler addingProductToOrderHandler,
+            PaymentExecutedHandler paymentExecutedHandler,
             @Qualifier("generalObjectMapper") ObjectMapper mapper
     ) {
         this.addingProductToOrderHandler = addingProductToOrderHandler;
+        this.paymentExecutedHandler = paymentExecutedHandler;
         this.mapper = mapper;
     }
 
@@ -52,10 +56,15 @@ public class OrderCommandKafkaListener {
             return;
         }
 
+        //TODO: CREATE UPDATE DATE COLUMN IN ORDER TABLE SO WE CAN COMPARE EVENTS DATES AND IGNORING THE OLDER TIMESTAMPS
+
         switch (outboxTableAfter.getAggregateType()+"-"+outboxTableAfter.getEventType()) {
             case "OrderTable-OrderCreated":
                 // secuencia
                 this.addingProductToOrderHandler.execute(outboxTableAfter.getData());
+                break;
+            case "OrderTable-OrderStatusPaymentExecuted":
+                this.paymentExecutedHandler.execute(outboxTableAfter.getData());
                 break;
         }
 

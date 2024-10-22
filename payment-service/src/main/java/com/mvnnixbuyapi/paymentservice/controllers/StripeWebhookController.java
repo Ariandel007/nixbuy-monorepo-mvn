@@ -3,6 +3,7 @@ package com.mvnnixbuyapi.paymentservice.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mvnnixbuyapi.paymentservice.models.OrderStates;
 import com.mvnnixbuyapi.paymentservice.services.OrderService;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
@@ -72,7 +73,7 @@ public class StripeWebhookController {
                     // Convert to Long
                     Long numberOrderId = Long.valueOf(orderId);
                     Long numberIdUser = Long.valueOf(idUser);
-                    // TODO: UPDATE ORDER STATUS
+                    this.orderService.updateOrderStatusById(numberOrderId, OrderStates.EXECUTED.name());
 
                     log.info("Pago exitoso. ID del paymentIntent: " + paymentIntentMap.get("id"));
                     log.info("orderId: " + orderId + ", idUser: " + idUser);
