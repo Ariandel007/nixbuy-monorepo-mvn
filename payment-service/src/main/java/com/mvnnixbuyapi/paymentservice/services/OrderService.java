@@ -9,5 +9,6 @@ public interface OrderService {
     boolean checkIfOrderIsForUser(Long orderId, Long userId);
     ResultMonad<Order> createOrder(CreateOrderDto createOrderDto);
     ResultMonad<Order> updateOrderStatusById(Long orderId, String orderStatus);
+    ResultMonad<Order> findOrderById(Long orderId);
 
 }

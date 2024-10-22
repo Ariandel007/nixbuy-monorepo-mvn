@@ -162,4 +162,14 @@ public class OrderServiceImpl implements OrderService {
         //
         return ResultMonad.ok(orderUpdated);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResultMonad<Order> findOrderById(Long orderId) {
+        var optionalOrder = this.orderRepository.findById(orderId);
+        //TODO: CREATE CUSTOM ERROR
+        return optionalOrder
+                .map(order -> ResultMonad.ok(order))
+                .orElseGet(() -> ResultMonad.error("ERROR"));
+    }
 }
