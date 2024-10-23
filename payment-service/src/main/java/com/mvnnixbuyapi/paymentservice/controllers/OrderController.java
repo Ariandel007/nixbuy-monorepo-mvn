@@ -33,7 +33,7 @@ public class OrderController {
         return ResponseUtils.buildSuccessResponse(orderResultMonad.getValue());
     }
 
-    @PostMapping(value = "/v1/get-order/{orderId}")
+    @GetMapping(value = "/v1/get-order/{orderId}")
     public ResponseEntity<GenericResponseForBody<Order>> getOrderById(
             @PathVariable Long orderId
     ) {
