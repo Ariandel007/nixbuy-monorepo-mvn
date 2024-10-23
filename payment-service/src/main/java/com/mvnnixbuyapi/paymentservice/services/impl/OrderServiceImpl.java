@@ -11,7 +11,7 @@ import com.mvnnixbuyapi.paymentservice.dto.sendToKafka.OrderStatusUpdateKafkaDto
 import com.mvnnixbuyapi.paymentservice.dto.sendToKafka.ProductKafkaDto;
 import com.mvnnixbuyapi.paymentservice.mapper.OrderMapper;
 import com.mvnnixbuyapi.paymentservice.models.Order;
-import com.mvnnixbuyapi.paymentservice.models.OrderStates;
+import com.mvnnixbuyapi.commons.enums.OrderStates;
 import com.mvnnixbuyapi.paymentservice.models.OutboxTable;
 import com.mvnnixbuyapi.paymentservice.repositories.OrderRepository;
 import com.mvnnixbuyapi.paymentservice.repositories.OutboxTableRepository;
@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {

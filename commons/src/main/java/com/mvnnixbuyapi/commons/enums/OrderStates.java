@@ -1,4 +1,4 @@
-package com.mvnnixbuyapi.paymentservice.models;
+package com.mvnnixbuyapi.commons.enums;
 
 public enum OrderStates {
     PENDING,

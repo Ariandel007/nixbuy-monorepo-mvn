@@ -1,14 +1,12 @@
 package com.mvnnixbuyapi.paymentservice.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mvnnixbuyapi.paymentservice.models.OrderStates;
+import com.mvnnixbuyapi.commons.enums.OrderStates;
 import com.mvnnixbuyapi.paymentservice.services.OrderService;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
-import com.stripe.model.PaymentIntent;
 import com.stripe.net.Webhook;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

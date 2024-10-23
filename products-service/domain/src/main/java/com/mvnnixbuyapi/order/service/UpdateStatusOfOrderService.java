@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.order.service;
 
+import com.mvnnixbuyapi.commons.enums.OrderStates;
 import com.mvnnixbuyapi.order.model.dto.OrderReceivedDto;
 import com.mvnnixbuyapi.order.model.entity.Order;
 import com.mvnnixbuyapi.order.port.repository.OrderRepository;
@@ -16,6 +17,7 @@ public class UpdateStatusOfOrderService {
 
     @Transactional
     public Order execute(OrderReceivedDto orderReceivedDto) {
+        orderReceivedDto.setStatus(OrderStates.EXECUTED_CONFIRMED.name());
         var orderToPersist = new Order().requestToCreate(orderReceivedDto);
         return this.orderRepository.updateOrder(orderToPersist);
     }

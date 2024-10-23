@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.order.service;
 
+import com.mvnnixbuyapi.commons.enums.OrderStates;
 import com.mvnnixbuyapi.keyProduct.port.repository.KeyRepository;
 import com.mvnnixbuyapi.order.model.dto.OrderReceivedDto;
 import com.mvnnixbuyapi.order.model.entity.Order;
@@ -24,6 +25,7 @@ public class CreatePendingOrderService {
 
     @Transactional
     public Order execute(OrderReceivedDto orderReceivedDto) {
+        orderReceivedDto.setStatus(OrderStates.PENDING_CONFIRMED.name());
         var orderToPersist = new Order().requestToCreate(orderReceivedDto);
         var orderSaved = this.orderRepository.create(orderToPersist);
         var productList = orderReceivedDto.getProductList();
