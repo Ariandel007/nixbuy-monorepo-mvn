@@ -1,8 +1,13 @@
 package com.mvnnixbuyapi.paymentservice.kafka.listeners;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mvnnixbuyapi.commons.enums.OrderStates;
+import com.mvnnixbuyapi.commons.utils.JsonUtils;
 import com.mvnnixbuyapi.paymentservice.dto.receivedFromKafka.OutboxTableDto;
+import com.mvnnixbuyapi.paymentservice.models.Order;
+import com.mvnnixbuyapi.paymentservice.services.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,15 +22,20 @@ import java.util.HashMap;
 @Slf4j
 public class OrderEventsKafkaListeners {
     private final ObjectMapper mapper;
+    private final OrderService orderService;
 
     @Autowired
-    public OrderEventsKafkaListeners(ObjectMapper mapper) {
+    public OrderEventsKafkaListeners(
+            ObjectMapper mapper,
+            OrderService orderService
+    ) {
         this.mapper = mapper;
+        this.orderService = orderService;
     }
 
     @KafkaListener(topics = "pg-topic.public.outbox_table", groupId = "consume-payment-outbox-1")
     public void listenWithHeaders(@Payload String message,
-                                  @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
+                                  @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) throws JsonProcessingException {
         log.info("Received Message: " + message + " from partition: " + partition);
 
         // Listener
@@ -46,12 +56,18 @@ public class OrderEventsKafkaListeners {
 
         switch (outboxTableAfter.getAggregateType()+"-"+outboxTableAfter.getEventType()) {
             case "OrderTable-OrderPendingConfirmed":
-                // TODO: UPDATE
+                this.eventOfOrderSendedByKafka(outboxTableAfter.getData(), OrderStates.PENDING_CONFIRMED.name());
                 break;
             case "OrderTable-OrderExecutedConfirmed":
-                // TODO: UPDATE
+                this.eventOfOrderSendedByKafka(outboxTableAfter.getData(), OrderStates.EXECUTED_CONFIRMED.name());
                 break;
         }
 
+    }
+
+    private void eventOfOrderSendedByKafka(String jsonBase64,  String orderStatus) throws JsonProcessingException {
+        String json = JsonUtils.convertBase64JsonToJson(jsonBase64);
+        Order order = mapper.readValue(json, Order.class);
+        this.orderService.updateOrderStatusById(order.getId(), orderStatus);
     }
 }

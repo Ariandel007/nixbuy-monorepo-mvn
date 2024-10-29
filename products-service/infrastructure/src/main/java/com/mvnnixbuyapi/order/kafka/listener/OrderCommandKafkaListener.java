@@ -57,7 +57,6 @@ public class OrderCommandKafkaListener {
         }
 
         //TODO: CREATE UPDATE DATE COLUMN IN ORDER TABLE SO WE CAN COMPARE EVENTS DATES AND IGNORING THE OLDER TIMESTAMPS
-
         switch (outboxTableAfter.getAggregateType()+"-"+outboxTableAfter.getEventType()) {
             case "OrderTable-OrderCreated":
                 // secuencia
