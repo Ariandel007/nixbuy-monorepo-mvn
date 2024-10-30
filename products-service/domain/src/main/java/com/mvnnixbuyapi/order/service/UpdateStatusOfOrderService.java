@@ -5,8 +5,10 @@ import com.mvnnixbuyapi.order.model.dto.OrderReceivedDto;
 import com.mvnnixbuyapi.order.model.entity.Order;
 import com.mvnnixbuyapi.order.port.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Component
 public class UpdateStatusOfOrderService {
     private final OrderRepository orderRepository;
 

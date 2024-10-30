@@ -33,7 +33,7 @@ public class OrderEventsKafkaListeners {
         this.orderService = orderService;
     }
 
-    @KafkaListener(topics = "pg-topic.public.outbox_table", groupId = "consume-payment-outbox-1")
+    @KafkaListener(topics = "pg-topic-nixbuy_products.public.outbox_table", groupId = "consume-payment-outbox-1")
     public void listenWithHeaders(@Payload String message,
                                   @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) throws JsonProcessingException {
         log.info("Received Message: " + message + " from partition: " + partition);

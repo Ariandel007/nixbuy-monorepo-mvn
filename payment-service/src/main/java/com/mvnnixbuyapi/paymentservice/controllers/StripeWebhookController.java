@@ -29,7 +29,7 @@ public class StripeWebhookController {
     private final String STRIPE_WEBHOOK_SECRET;
     private final OrderService orderService;
 
-//    stripe listen --forward-to host.docker.internal:3804/stripe/webhook
+//    stripe listen --forward-to host.docker.internal:3804/stripe/webhook --skip-verify
     @Autowired
     public StripeWebhookController(
             ObjectMapper objectMapper,

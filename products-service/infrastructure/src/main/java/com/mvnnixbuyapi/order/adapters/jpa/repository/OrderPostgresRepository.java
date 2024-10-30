@@ -2,6 +2,7 @@ package com.mvnnixbuyapi.order.adapters.jpa.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.mvnnixbuyapi.commons.enums.OrderStates;
 import com.mvnnixbuyapi.order.adapters.jpa.OrderSpringJpaAdapterRepository;
 import com.mvnnixbuyapi.order.adapters.mapper.OrderDboMapper;
 import com.mvnnixbuyapi.order.model.entity.Order;
@@ -80,14 +81,16 @@ public class OrderPostgresRepository implements OrderRepository {
             throw new RuntimeException("ERROR PROVISIONAL");
         }
 
-        OutboxTable outboxTableToInsert = OutboxTable.builder()
-                .eventType("OrderExecutedConfirmed")
-                .timestamp(Instant.now())
-                .data(dataBytes)
-                .aggregateId(orderEntityCreated.getId().toString())
-                .aggregateType("OrderTable")
-                .build();
-        this.outboxTableSpringJpaAdapterRepository.save(outboxTableToInsert);
+        if(orderEntityCreated.getStatus().equals(OrderStates.EXECUTED_CONFIRMED.name())) {
+            OutboxTable outboxTableToInsert = OutboxTable.builder()
+                    .eventType("OrderExecutedConfirmed")
+                    .timestamp(Instant.now())
+                    .data(dataBytes)
+                    .aggregateId(orderEntityCreated.getId().toString())
+                    .aggregateType("OrderTable")
+                    .build();
+            this.outboxTableSpringJpaAdapterRepository.save(outboxTableToInsert);
+        }
         //
         return this.orderDboMapper.entityToDomain(orderEntityCreated);
     }

@@ -148,16 +148,18 @@ public class OrderServiceImpl implements OrderService {
             //  TODO: CHANGE EXCEPTION
             throw new RuntimeException("ERROR PROVISIONAL");
         }
+        //TODO: ANALYZE MORE EVENTS
+        if(orderStatus.equals(OrderStates.EXECUTED.name())) {
+            OutboxTable outboxTableToInsert = OutboxTable.builder()
+                    .eventType("OrderStatusPaymentExecuted")
+                    .timestamp(Instant.now())
+                    .data(dataBytes)
+                    .aggregateId(orderStatusUpdateKafkaDto.getId().toString())
+                    .aggregateType("OrderTable")
+                    .build();
 
-        OutboxTable outboxTableToInsert = OutboxTable.builder()
-                .eventType("OrderStatusPaymentExecuted")
-                .timestamp(Instant.now())
-                .data(dataBytes)
-                .aggregateId(orderStatusUpdateKafkaDto.getId().toString())
-                .aggregateType("OrderTable")
-                .build();
-
-        this.outboxTableRepository.save(outboxTableToInsert);
+            this.outboxTableRepository.save(outboxTableToInsert);
+        }
         //
         return ResultMonad.ok(orderUpdated);
     }
