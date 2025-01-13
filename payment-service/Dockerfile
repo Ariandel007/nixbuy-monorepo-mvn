@@ -24,17 +24,17 @@ COPY commons commons
 # See: `la -lat ~/.m2/repository/org/example/*/*`
 RUN mvn -q -B -pl commons install
 # Resolve dependencies for the main application
-RUN mvn -q -ntp -B -pl payment-service -am dependency:go-offline
+RUN mvn -q -ntp -B -pl products-service/infrastructure -am dependency:go-offline
 # Copy sources for main application
-COPY payment-service payment-service
+COPY products-service products-service
 # Package the common and application modules together. We are going to skip tests becuase of testcontainers(and using docker in docker is still not viable)
-RUN mvn -q -ntp -B -pl commons,payment-service package -DskipTests
+RUN mvn -q -ntp -B -pl commons,products-service/domain,products-service/application,products-service/infrastructure package -DskipTests
 
 FROM openjdk:17-jdk-alpine as imageToExecute
 #We are using the first ARG:
 ARG MODULE_NAME
 WORKDIR /app
-COPY --from=builder /build/payment-service/target/*.jar /app/app.jar
+COPY --from=builder /build/products-service/infrastructure/target/*.jar /app/app.jar
 CMD ["java", "-jar", "app.jar"]
 
 # Environment variables:
@@ -43,7 +43,7 @@ CMD ["java", "-jar", "app.jar"]
 # Command to build: docker build -t payment-service-nixbuy:0.0.1-SNAPSHOT -f ./payment-service/Dockerfile .
 
 # Command to run:
-# docker run -d --name payment-service-nixbuy \
+# docker run -d --name products-service-nixbuy \
 # -e PORT=<your-port> \
 # -e BD_USERNAME=<your-db-username> \
 # -e BD_URL=<your-db-url> \
