@@ -21,9 +21,9 @@ spring:
             non_contextual_creation: 'true'
         format_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DDL_AUTO:update}
   kafka:
-    bootstrap-servers: host.docker.internal:29092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:host.docker.internal:29092}
     group-id: consume-payment-from-products-outbox-1
     properties:
       security.protocol: PLAINTEXT  # Protocolo de seguridad (puede variar según tu configuración)

@@ -1,14 +1,14 @@
 server:
-  port: 3803
+  port: ${PORT:3803}
 spring:
   application:
     name: products-service-nixbuy
   datasource:
     initialization-mode: always
-    username: postgres
-    url: jdbc:postgresql://host.docker.internal:5432/nixbuy_products
+    username: ${BD_USERNAME:postgres}
+    url: ${BD_URL:jdbc:postgresql://host.docker.internal:5432/nixbuy_products}
     platform: postgres
-    password: admin
+    password: ${BD_PASSWORD:admin}
   jpa:
     show-sql: true
     properties:
@@ -19,9 +19,9 @@ spring:
             non_contextual_creation: 'true'
         format_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DDL_AUTO:update}
   kafka:
-    bootstrap-servers: host.docker.internal:29092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:host.docker.internal:29092}
     group-id: consume-payment-outbox-1
     properties:
       security.protocol: PLAINTEXT  # Protocolo de seguridad (puede variar según tu configuración)

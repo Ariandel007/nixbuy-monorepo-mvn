@@ -54,6 +54,8 @@ CMD ["java", "-jar", "app.jar"]
 # -e STRIPE_API_KEY=<products-url> \
 # -e STRIPE_WEBHOOK_SECRET=<products-url> \
 # -e PRODUCTS_URL=<products-url> \
+# -e TRACING_URL_ENDPOINT=<tracing-url> \
+# -e KAFKA_BOOTSTRAP_SERVERS=<kafka-boostrap-servers> \
 # -p <host-port>:<container-port> payment-service-nixbuy:0.0.1-SNAPSHOT
 # --network local-dev
 # --memory="360m"

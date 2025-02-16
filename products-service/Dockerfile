@@ -49,12 +49,12 @@ CMD ["java", "-jar", "app.jar"]
 # -e BD_URL=<your-db-url> \
 # -e BD_PASSWORD=<your-db-password> \
 # -e DDL_AUTO=<ddl-auto-option> \
-# -e WEBCLIENT_URL=<webclient-url> \
-# -e PRODUCTS_URL=<products-url> \
-# -e STRIPE_API_KEY=<products-url> \
-# -e STRIPE_WEBHOOK_SECRET=<products-url> \
-# -e PRODUCTS_URL=<products-url> \
-# -p <host-port>:<container-port> payment-service-nixbuy:0.0.1-SNAPSHOT
+# -e KAFKA_BOOTSTRAP_SERVERS=<kafka-bootstrap-servers> \
+# -e TRACING_URL_ENDPOINT=<tracing-url> \
+# -e CLOUDINARY_CLOUD_NAME=<cloudinary-cloud-name> \
+# -e CLOUDINARY_API_KEY=<cloudinary-api-key> \
+# -e CLOUDINARY_SECRET=<cloudinary-secret> \
+# -p <host-port>:<container-port> products-service-nixbuy:0.0.1-SNAPSHOT
 # --network local-dev
 # --memory="360m"
 # --log-opt max-size=250m --log-opt max-file=3
