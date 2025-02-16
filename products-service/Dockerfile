@@ -40,7 +40,7 @@ CMD ["java", "-jar", "app.jar"]
 # Environment variables:
 # PORT, BD_USERNAME, BD_URL, BD_PASSWORD, DDL_AUTO, WEBCLIENT_URL, PRODUCTS_URL, STRIPE_API_KEY, STRIPE_WEBHOOK_SECRET
 
-# Command to build: docker build -t payment-service-nixbuy:0.0.1-SNAPSHOT -f ./payment-service/Dockerfile .
+# Command to build: docker build -t products-service-nixbuy:0.0.1-SNAPSHOT -f ./products-service/Dockerfile .
 
 # Command to run:
 # docker run -d --name products-service-nixbuy \

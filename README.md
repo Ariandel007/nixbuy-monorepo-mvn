@@ -17,21 +17,94 @@ The following is being used:
 - Junit
 - TestContainers
 
-# Español
+## How to  build
 
-Este es un proyecto con la única intención de hacer un mono repositorio de microservicios, cada uno de los cuales utiliza diferentes enfoques de arquitectura.
+### Api Gateway Service
+In the root of the project run the following command:
+```bash
+docker build -t gateway-service-nixbuy:0.0.1-SNAPSHOT -f ./api-gateway-service/Dockerfile .
+```
+Then for starting the image, run the following command:
+```bash
+docker run -d --name gateway-service-nixbuy \
+-e PORT=<your-port> \
+-e URI_USER_SERVICE=<your-db-username> \
+-e TRACING_URL_ENDPOINT=<your-db-url> \
+-p <host-port>:<container-port> gateway-service-nixbuy:0.0.1-SNAPSHOT
+--network local-dev
+--memory="360m"
+--log-opt max-size=250m --log-opt max-file=3
+```
 
-## Tech
-Se esta usando lo siguiente:
-- Maven
-- Spring Boot
-- Spring JPA
-- Resilence4j
-- Zipkin
-- Debezium
-- PostgreSQL
-- Spring Cloud Gateway
-- Apache Kafka
-- Rest Assured
-- Junit
-- TestContainers
+### Payment Service
+In the root of the project run the following command:
+```bash
+docker build -t payment-service-nixbuy:0.0.1-SNAPSHOT -f ./payment-service/Dockerfile .
+```
+Then for starting the image, run the following command:
+```bash
+docker run -d --name payment-service-nixbuy \
+-e PORT=<your-port> \
+-e BD_USERNAME=<your-db-username> \
+-e BD_URL=<your-db-url> \
+-e BD_PASSWORD=<your-db-password> \
+-e DDL_AUTO=<ddl-auto-option> \
+-e WEBCLIENT_URL=<webclient-url> \
+-e PRODUCTS_URL=<products-url> \
+-e STRIPE_API_KEY=<products-url> \
+-e STRIPE_WEBHOOK_SECRET=<products-url> \
+-e PRODUCTS_URL=<products-url> \
+-e TRACING_URL_ENDPOINT=<tracing-url> \
+-e KAFKA_BOOTSTRAP_SERVERS=<kafka-boostrap-servers> \
+-p <host-port>:<container-port> payment-service-nixbuy:0.0.1-SNAPSHOT
+--network local-dev
+--memory="360m"
+--log-opt max-size=250m --log-opt max-file=3
+```
+
+### Products Service
+In the root of the project run the following command:
+```bash
+docker build -t products-service-nixbuy:0.0.1-SNAPSHOT -f ./products-service/Dockerfile .
+```
+Then for starting the image, run the following command:
+```bash
+docker run -d --name products-service-nixbuy \
+-e PORT=<your-port> \
+-e BD_USERNAME=<your-db-username> \
+-e BD_URL=<your-db-url> \
+-e BD_PASSWORD=<your-db-password> \
+-e DDL_AUTO=<ddl-auto-option> \
+-e KAFKA_BOOTSTRAP_SERVERS=<kafka-bootstrap-servers> \
+-e TRACING_URL_ENDPOINT=<tracing-url> \
+-e CLOUDINARY_CLOUD_NAME=<cloudinary-cloud-name> \
+-e CLOUDINARY_API_KEY=<cloudinary-api-key> \
+-e CLOUDINARY_SECRET=<cloudinary-secret> \
+-p <host-port>:<container-port> products-service-nixbuy:0.0.1-SNAPSHOT
+--network local-dev
+--memory="360m"
+--log-opt max-size=250m --log-opt max-file=3
+```
+
+### User Service
+In the root of the project run the following command:
+```bash
+docker build -t user-service-nixbuy:0.0.1-SNAPSHOT -f ./user-service/Dockerfile .
+```
+Then for starting the image, run the following command:
+```bash
+docker run -d --name user-service-nixbuy \
+-e PORT=<your-port> \
+-e BD_USERNAME=<your-db-username> \
+-e BD_URL=<your-db-url> \
+-e BD_PASSWORD=<your-db-password> \
+-e DDL_AUTO=<ddl-auto-option> \
+-e TRACING_URL_ENDPOINT=<zipkin-endpoint> \
+-e CLOUDINARY_CLOUD_NAME=<cloudinary-name> \
+-e CLOUDINARY_API_KEY=<cloudinary-api-key> \
+-e CLOUDINARY_SECRET=<cloudinary-secret> \
+-p <host-port>:<container-port> user-service-nixbuy:0.0.1-SNAPSHOT
+--network local-dev
+--memory="360m"
+--log-opt max-size=250m --log-opt max-file=3
+```
