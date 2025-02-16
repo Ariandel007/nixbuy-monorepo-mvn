@@ -44,22 +44,21 @@ docker build -t payment-service-nixbuy:0.0.1-SNAPSHOT -f ./payment-service/Docke
 Then for starting the image, run the following command:
 ```bash
 docker run -d --name payment-service-nixbuy \
--e PORT=<your-port> \
--e BD_USERNAME=<your-db-username> \
--e BD_URL=<your-db-url> \
--e BD_PASSWORD=<your-db-password> \
--e DDL_AUTO=<ddl-auto-option> \
--e WEBCLIENT_URL=<webclient-url> \
--e PRODUCTS_URL=<products-url> \
--e STRIPE_API_KEY=<products-url> \
--e STRIPE_WEBHOOK_SECRET=<products-url> \
--e PRODUCTS_URL=<products-url> \
--e TRACING_URL_ENDPOINT=<tracing-url> \
--e KAFKA_BOOTSTRAP_SERVERS=<kafka-boostrap-servers> \
--p <host-port>:<container-port> payment-service-nixbuy:0.0.1-SNAPSHOT
---network local-dev
---memory="360m"
---log-opt max-size=250m --log-opt max-file=3
+  --network local-dev \
+  --memory="360m" \
+  --log-opt max-size=250m --log-opt max-file=3 \
+  -e PORT=<your-port> \
+  -e BD_USERNAME=<your-db-username> \
+  -e BD_URL=<your-db-url> \
+  -e BD_PASSWORD=<your-db-password> \
+  -e DDL_AUTO=<ddl-auto-option> \
+  -e WEBCLIENT_URL=<webclient-url> \
+  -e PRODUCTS_URL=<products-url> \
+  -e STRIPE_API_KEY=<products-url> \
+  -e STRIPE_WEBHOOK_SECRET=<products-url> \
+  -e TRACING_URL_ENDPOINT=<tracing-url> \
+  -e KAFKA_BOOTSTRAP_SERVERS=<kafka-boostrap-servers> \
+  -p <host-port>:<container-port> payment-service-nixbuy:0.0.1-SNAPSHOT  
 ```
 
 ### Products Service
@@ -70,20 +69,20 @@ docker build -t products-service-nixbuy:0.0.1-SNAPSHOT -f ./products-service/Doc
 Then for starting the image, run the following command:
 ```bash
 docker run -d --name products-service-nixbuy \
--e PORT=<your-port> \
--e BD_USERNAME=<your-db-username> \
--e BD_URL=<your-db-url> \
--e BD_PASSWORD=<your-db-password> \
--e DDL_AUTO=<ddl-auto-option> \
--e KAFKA_BOOTSTRAP_SERVERS=<kafka-bootstrap-servers> \
--e TRACING_URL_ENDPOINT=<tracing-url> \
--e CLOUDINARY_CLOUD_NAME=<cloudinary-cloud-name> \
--e CLOUDINARY_API_KEY=<cloudinary-api-key> \
--e CLOUDINARY_SECRET=<cloudinary-secret> \
--p <host-port>:<container-port> products-service-nixbuy:0.0.1-SNAPSHOT
---network local-dev
---memory="360m"
---log-opt max-size=250m --log-opt max-file=3
+  --network local-dev \
+  --memory="360m" \
+  --log-opt max-size=250m --log-opt max-file=3 \
+  -e PORT=<your-port>  \
+  -e BD_USERNAME=<your-db-username> \
+  -e BD_URL=<your-db-url> \
+  -e BD_PASSWORD=<your-db-password> \
+  -e DDL_AUTO=none \
+  -e KAFKA_BOOTSTRAP_SERVERS=<kafka-bootstrap-servers> \
+  -e TRACING_URL_ENDPOINT=<tracing-url> \
+  -e CLOUDINARY_CLOUD_NAME=<cloudinary-cloud-name> \
+  -e CLOUDINARY_API_KEY=<cloudinary-api-key> \
+  -e CLOUDINARY_SECRET=<cloudinary-secret> \
+  -p <host-port>:<container-port> products-service-nixbuy:0.0.1-SNAPSHOT
 ```
 
 ### User Service
@@ -94,17 +93,17 @@ docker build -t user-service-nixbuy:0.0.1-SNAPSHOT -f ./user-service/Dockerfile 
 Then for starting the image, run the following command:
 ```bash
 docker run -d --name user-service-nixbuy \
--e PORT=<your-port> \
--e BD_USERNAME=<your-db-username> \
--e BD_URL=<your-db-url> \
--e BD_PASSWORD=<your-db-password> \
--e DDL_AUTO=<ddl-auto-option> \
--e TRACING_URL_ENDPOINT=<zipkin-endpoint> \
--e CLOUDINARY_CLOUD_NAME=<cloudinary-name> \
--e CLOUDINARY_API_KEY=<cloudinary-api-key> \
--e CLOUDINARY_SECRET=<cloudinary-secret> \
--p <host-port>:<container-port> user-service-nixbuy:0.0.1-SNAPSHOT
---network local-dev
---memory="360m"
---log-opt max-size=250m --log-opt max-file=3
+  --network local-dev \
+  --memory="360m" \
+  --log-opt max-size=250m --log-opt max-file=3 \
+  -e PORT=<port> \
+  -e BD_USERNAME=<username-bd> \
+  -e BD_URL=<bd-url> \
+  -e BD_PASSWORD=<bd-password> \
+  -e DDL_AUTO=none \
+  -e TRACING_URL_ENDPOINT=<jagger-url-endpoint> \
+  -e CLOUDINARY_CLOUD_NAME=<cloudinary-name> \
+  -e CLOUDINARY_API_KEY=<cloudinary-api-key \
+  -e CLOUDINARY_SECRET=<cloudinary-secret> \
+  -p <host-port>:<container-port> user-service-nixbuy:0.0.1-SNAPSHOT
 ```

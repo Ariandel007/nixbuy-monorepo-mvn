@@ -45,16 +45,16 @@ CMD ["java", "-jar", "app.jar"]
 
 # Command to run:
 # docker run -d --name user-service-nixbuy \
-# -e PORT=<your-port> \
-# -e BD_USERNAME=<your-db-username> \
-# -e BD_URL=<your-db-url> \
-# -e BD_PASSWORD=<your-db-password> \
-# -e DDL_AUTO=<ddl-auto-option> \
-# -e TRACING_URL_ENDPOINT=<zipkin-endpoint> \
-# -e CLOUDINARY_CLOUD_NAME=<cloudinary-name> \
-# -e CLOUDINARY_API_KEY=<cloudinary-api-key> \
-# -e CLOUDINARY_SECRET=<cloudinary-secret> \
-# -p <host-port>:<container-port> user-service-nixbuy:0.0.1-SNAPSHOT
-# --network local-dev
-# --memory="360m"
-# --log-opt max-size=250m --log-opt max-file=3
+#   --network local-dev \
+#   --memory="360m" \
+#   --log-opt max-size=250m --log-opt max-file=3 \
+#   -e PORT=<port> \
+#   -e BD_USERNAME=<username-bd> \
+#   -e BD_URL=<bd-url> \
+#   -e BD_PASSWORD=<bd-password> \
+#   -e DDL_AUTO=none \
+#   -e TRACING_URL_ENDPOINT=<jagger-url-endpoint> \
+#   -e CLOUDINARY_CLOUD_NAME=<cloudinary-name> \
+#   -e CLOUDINARY_API_KEY=<cloudinary-api-key \
+#   -e CLOUDINARY_SECRET=<cloudinary-secret> \
+#   -p <host-port>:<container-port> user-service-nixbuy:0.0.1-SNAPSHOT

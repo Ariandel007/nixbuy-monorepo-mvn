@@ -44,19 +44,18 @@ CMD ["java", "-jar", "app.jar"]
 
 # Command to run:
 # docker run -d --name payment-service-nixbuy \
-# -e PORT=<your-port> \
-# -e BD_USERNAME=<your-db-username> \
-# -e BD_URL=<your-db-url> \
-# -e BD_PASSWORD=<your-db-password> \
-# -e DDL_AUTO=<ddl-auto-option> \
-# -e WEBCLIENT_URL=<webclient-url> \
-# -e PRODUCTS_URL=<products-url> \
-# -e STRIPE_API_KEY=<products-url> \
-# -e STRIPE_WEBHOOK_SECRET=<products-url> \
-# -e PRODUCTS_URL=<products-url> \
-# -e TRACING_URL_ENDPOINT=<tracing-url> \
-# -e KAFKA_BOOTSTRAP_SERVERS=<kafka-boostrap-servers> \
-# -p <host-port>:<container-port> payment-service-nixbuy:0.0.1-SNAPSHOT
-# --network local-dev
-# --memory="360m"
-# --log-opt max-size=250m --log-opt max-file=3
+#   --network local-dev \
+#   --memory="360m" \
+#   --log-opt max-size=250m --log-opt max-file=3 \
+#   -e PORT=<your-port> \
+#   -e BD_USERNAME=<your-db-username> \
+#   -e BD_URL=<your-db-url> \
+#   -e BD_PASSWORD=<your-db-password> \
+#   -e DDL_AUTO=<ddl-auto-option> \
+#   -e WEBCLIENT_URL=<webclient-url> \
+#   -e PRODUCTS_URL=<products-url> \
+#   -e STRIPE_API_KEY=<products-url> \
+#   -e STRIPE_WEBHOOK_SECRET=<products-url> \
+#   -e TRACING_URL_ENDPOINT=<tracing-url> \
+#   -e KAFKA_BOOTSTRAP_SERVERS=<kafka-boostrap-servers> \
+#   -p <host-port>:<container-port> payment-service-nixbuy:0.0.1-SNAPSHOT
