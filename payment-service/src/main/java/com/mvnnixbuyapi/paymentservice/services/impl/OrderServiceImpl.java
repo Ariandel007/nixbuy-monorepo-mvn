@@ -7,10 +7,11 @@ import com.mvnnixbuyapi.paymentservice.clients.feign.ProductsFeign;
 import com.mvnnixbuyapi.paymentservice.dto.request.CreateOrderDto;
 import com.mvnnixbuyapi.paymentservice.dto.request.ItemCartDto;
 import com.mvnnixbuyapi.paymentservice.dto.sendToKafka.OrderKafkaDto;
+import com.mvnnixbuyapi.paymentservice.dto.sendToKafka.OrderStatusUpdateKafkaDto;
 import com.mvnnixbuyapi.paymentservice.dto.sendToKafka.ProductKafkaDto;
 import com.mvnnixbuyapi.paymentservice.mapper.OrderMapper;
 import com.mvnnixbuyapi.paymentservice.models.Order;
-import com.mvnnixbuyapi.paymentservice.models.OrderStates;
+import com.mvnnixbuyapi.commons.enums.OrderStates;
 import com.mvnnixbuyapi.paymentservice.models.OutboxTable;
 import com.mvnnixbuyapi.paymentservice.repositories.OrderRepository;
 import com.mvnnixbuyapi.paymentservice.repositories.OutboxTableRepository;
@@ -23,7 +24,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
                 .creationDate(Instant.now())
                 .expirationDate(Instant.now().plus(1, ChronoUnit.HOURS))
                 .userId(createOrderDto.getUserId())
-                .status(OrderStates.PENDING.toString())
+                .status(OrderStates.PENDING.name())
                 .build();
         // SAVE
         ResultMonad<Order> orderCreated = ResultMonad.ok(this.orderRepository.save(orderToSave));
@@ -122,5 +122,55 @@ public class OrderServiceImpl implements OrderService {
 
         this.outboxTableRepository.save(outboxTableToInsert);
         return orderCreated;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public ResultMonad<Order> updateOrderStatusById(Long orderId, String orderStatus) {
+        var optionalOrderInBD = this.orderRepository.findById(orderId);
+        if (optionalOrderInBD.isEmpty()){
+            //TODO: HANDLE ORDER NOT PRESENT
+            return ResultMonad.error("ERROR_ORDER_ID_NOT_FOUND");
+        }
+        var orderToUpdate = optionalOrderInBD.get();
+        orderToUpdate.setStatus(orderStatus);
+        Order orderUpdated = this.orderRepository.save(orderToUpdate);
+        OrderStatusUpdateKafkaDto orderStatusUpdateKafkaDto = OrderMapper.INSTANCE.toDtoStatusOrder(orderUpdated);
+        //
+        byte[] dataBytes = null;
+
+        try {
+            ObjectMapper objectMapper = JsonMapper.builder()
+                    .findAndAddModules()
+                    .build();
+            dataBytes = objectMapper.writeValueAsBytes(orderStatusUpdateKafkaDto);
+        } catch (Exception e) {
+            //  TODO: CHANGE EXCEPTION
+            throw new RuntimeException("ERROR PROVISIONAL");
+        }
+        //TODO: ANALYZE MORE EVENTS
+        if(orderStatus.equals(OrderStates.EXECUTED.name())) {
+            OutboxTable outboxTableToInsert = OutboxTable.builder()
+                    .eventType("OrderStatusPaymentExecuted")
+                    .timestamp(Instant.now())
+                    .data(dataBytes)
+                    .aggregateId(orderStatusUpdateKafkaDto.getId().toString())
+                    .aggregateType("OrderTable")
+                    .build();
+
+            this.outboxTableRepository.save(outboxTableToInsert);
+        }
+        //
+        return ResultMonad.ok(orderUpdated);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResultMonad<Order> findOrderById(Long orderId) {
+        var optionalOrder = this.orderRepository.findById(orderId);
+        //TODO: CREATE CUSTOM ERROR
+        return optionalOrder
+                .map(order -> ResultMonad.ok(order))
+                .orElseGet(() -> ResultMonad.error("ERROR"));
     }
 }

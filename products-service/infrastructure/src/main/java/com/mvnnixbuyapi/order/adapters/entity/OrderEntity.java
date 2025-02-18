@@ -31,6 +31,6 @@ public class OrderEntity {
     private Instant creationDate;
     @Column(name = "user_id", nullable = false)
     private Long userId;
-    @Column(name = "status") //PENDING,CONFIRMED,EXECUTED,CANCELED
+    @Column(name = "status") //PENDING,PENDING_CONFIRMED,EXECUTED,EXECUTED_CONFIRMED,CANCELED
     private String status;
 }

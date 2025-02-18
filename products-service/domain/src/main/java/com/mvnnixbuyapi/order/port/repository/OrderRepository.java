@@ -5,5 +5,6 @@ import com.mvnnixbuyapi.product.model.entity.Product;
 
 public interface OrderRepository {
     Order create(Order product);
+    Order updateOrder(Order product);
 
 }

@@ -21,7 +21,16 @@ spring:
             non_contextual_creation: 'true'
         format_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${DDL_AUTO:update}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:host.docker.internal:29092}
+    group-id: consume-payment-from-products-outbox-1
+    properties:
+      security.protocol: PLAINTEXT  # Protocolo de seguridad (puede variar según tu configuración)
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer  # Serializador de clave (puede variar)
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer  # Serializador de valor (puede variar)
+
 
 products-url: ${PRODUCTS_URL:http://host.docker.internal:3803}
 #feign:

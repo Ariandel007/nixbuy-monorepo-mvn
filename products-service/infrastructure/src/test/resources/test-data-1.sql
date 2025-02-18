@@ -87,3 +87,15 @@ INSERT INTO public.key_products(
 
 CREATE INDEX idx_key_products_product_id_status_create_date
 ON key_products(product_id, status, create_date);
+
+----------------------------------------
+CREATE TABLE IF NOT EXISTS public.outbox_table
+(
+    event_id character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    aggregate_id character varying(255) COLLATE pg_catalog."default",
+    aggregate_type character varying(255) COLLATE pg_catalog."default",
+    data bytea,
+    event_type character varying(255) COLLATE pg_catalog."default",
+    "timestamp" timestamp(6) with time zone,
+    CONSTRAINT outbox_table_pkey PRIMARY KEY (event_id)
+)

@@ -22,12 +22,22 @@ public class OrderController {
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
+
     @PostMapping(value = "/v1/create-order/{userId}")
     public ResponseEntity<GenericResponseForBody<Order>> listResponseEntityShowItems(
             @PathVariable Long userId, @RequestBody CreateOrderDto createOrderDto
             ) {
         createOrderDto.setUserId(userId);
         ResultMonad<Order> orderResultMonad = this.orderService.createOrder(createOrderDto);
+        //TODO: HANDLE EXCEPTION
+        return ResponseUtils.buildSuccessResponse(orderResultMonad.getValue());
+    }
+
+    @GetMapping(value = "/v1/get-order/{orderId}")
+    public ResponseEntity<GenericResponseForBody<Order>> getOrderById(
+            @PathVariable Long orderId
+    ) {
+        ResultMonad<Order> orderResultMonad = this.orderService.findOrderById(orderId);
         //TODO: HANDLE EXCEPTION
         return ResponseUtils.buildSuccessResponse(orderResultMonad.getValue());
     }

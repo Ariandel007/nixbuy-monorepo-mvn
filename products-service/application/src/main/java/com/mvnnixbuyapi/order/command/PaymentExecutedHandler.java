@@ -2,7 +2,7 @@ package com.mvnnixbuyapi.order.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mvnnixbuyapi.order.model.dto.OrderReceivedDto;
-import com.mvnnixbuyapi.order.service.CreatePendingOrderService;
+import com.mvnnixbuyapi.order.service.UpdateStatusOfOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,18 +13,15 @@ import java.util.Base64;
 
 @Component
 @Slf4j
-public class AddingProductToOrderHandler {
-
+public class PaymentExecutedHandler {
     private final ObjectMapper mapper;
-    private final CreatePendingOrderService createPendingOrderService;
+    private final UpdateStatusOfOrderService updateStatusOfOrderService;
 
     @Autowired
-    public AddingProductToOrderHandler(
-            @Qualifier("generalObjectMapper") ObjectMapper mapper,
-            CreatePendingOrderService createPendingOrderService
-    ) {
+    public PaymentExecutedHandler(@Qualifier("generalObjectMapper") ObjectMapper mapper,
+                                  UpdateStatusOfOrderService updateStatusOfOrderService) {
         this.mapper = mapper;
-        this.createPendingOrderService = createPendingOrderService;
+        this.updateStatusOfOrderService = updateStatusOfOrderService;
     }
 
     @Transactional
@@ -42,7 +39,7 @@ public class AddingProductToOrderHandler {
         OrderReceivedDto orderDto = null;
         try {
             orderDto = mapper.readValue(json, OrderReceivedDto.class);
-            createPendingOrderService.execute(orderDto);
+            updateStatusOfOrderService.execute(orderDto);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();

@@ -45,7 +45,9 @@ CMD ["java", "-jar", "app.jar"]
 # Command to run:
 # docker run -d --name gateway-service-nixbuy \
 # -e PORT=<your-port> \
-# -e URI_USER_SERVICE=<your-db-username> \
+# -e URI_USER_SERVICE=<uri-user-service> \
+# -e URI_PRODUCTS_SERVICE=<uri-products-service> \
+# -e URI_PAYMENT_SERVICE=<uri-payment-service> \
 # -e TRACING_URL_ENDPOINT=<your-db-url> \
 # -p <host-port>:<container-port> gateway-service-nixbuy:0.0.1-SNAPSHOT
 # --network local-dev
