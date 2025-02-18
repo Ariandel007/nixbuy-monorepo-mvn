@@ -35,11 +35,12 @@ public class SpringSecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(authorize -> authorize
+                        //Actuator
                         .pathMatchers("/actuator/health").permitAll()
                         .pathMatchers("/actuator/info").permitAll()
                         .pathMatchers("/actuator/prometheus").permitAll()
                         .pathMatchers("/actuator/metrics").permitAll()
-                        .pathMatchers(HttpMethod.POST, "/api/user-service-nixbuy/security/**").permitAll()
+                        // User Service
                         .pathMatchers(HttpMethod.PATCH,
                                 "/api/user-service-nixbuy/users/v1/update-user-info/{userId}",
                                 "/api/user-service-nixbuy/users/v1/update-photo-url/{userId}",
@@ -49,7 +50,20 @@ public class SpringSecurityConfig {
                                 "/api/user-service-nixbuy/users/v1/basic-user-info/{userId}"
                         ).access(this::currentUserIdMatchesPath)
                         .pathMatchers(HttpMethod.GET,"/api/user-service-nixbuy/users/v1/find-users-list/**").hasAnyRole("ROLE_ADMIN")
+                        .pathMatchers(HttpMethod.POST,"/api/user-service-nixbuy/users/v1/register-user").hasAnyRole("ROLE_ADMIN")
                         .pathMatchers("/api/user-service-nixbuy/users/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+                        .pathMatchers(HttpMethod.POST, "/api/user-service-nixbuy/security/**").permitAll()
+                        // Product Service
+                        .pathMatchers(HttpMethod.POST,"/api/products-service-nixbuy/**").hasAnyRole("ROLE_ADMIN")
+                        .pathMatchers(HttpMethod.PATCH,"/api/products-service-nixbuy/**").hasAnyRole("ROLE_ADMIN")
+                        // Payment Service
+                        .pathMatchers(HttpMethod.POST,
+                                "/api/payment-service-nixbuy/payment/v1/create-order/{userId}",
+                                "/api/payment-service-nixbuy/payment/stripe/v1/checkout/hosted/{userId}"
+                        ).access(this::currentUserIdMatchesPath)
+                        .pathMatchers(HttpMethod.POST,
+                                "/api/payment-service-nixbuy/payment/v1/get-order/**"
+                        ).hasAnyRole("ROLE_USER", "ROLE_ADMIN")
                         .anyExchange()
                         .authenticated()
                 )

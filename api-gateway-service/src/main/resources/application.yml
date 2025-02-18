@@ -21,6 +21,23 @@ spring:
             - Path=/api/user-service-nixbuy/**
           filters:
             - RewritePath=/api/user-service-nixbuy/(?<remaining>.*), /api/${remaining}
+        - id: products-service-nixbuy-route
+          uri: ${URI_PRODUCTS_SERVICE:http://host.docker.internal:3803}
+          predicates:
+            - Path=/api/products-service-nixbuy/**
+          filters:
+            - RewritePath=/api/products-service-nixbuy/(?<remaining>.*), /api/${remaining}
+        - id: payment-service-nixbuy-route
+          uri: ${URI_PAYMENT_SERVICE:http://host.docker.internal:3804}
+          predicates:
+            - Path=/api/payment-service-nixbuy/**
+          filters:
+            - RewritePath=/api/payment-service-nixbuy/(?<remaining>.*), /api/${remaining}
+        - id: stripe-webhook-route
+          uri: ${URI_PAYMENT_SERVICE:http://host.docker.internal:3804}
+          predicates:
+            - Path=/stripe/webhook
+            #stripe listen --forward-to host.docker.internal:3802/stripe/webhook --skip-verify
 tracing:
   url: ${TRACING_URL_ENDPOINT:http://host.docker.internal:4317}
 
