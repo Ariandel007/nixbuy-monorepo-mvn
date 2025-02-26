@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-config
+data:
+  TRACING_URL_ENDPOINT: "<insert url jaeger grpc>"
+  PORT: "<insert port>"
+  BD_URL: "<insert bd url>"
+  DDL_AUTO: "<insert ddl auto>"

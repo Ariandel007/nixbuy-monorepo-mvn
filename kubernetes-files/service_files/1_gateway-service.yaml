@@ -1,12 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: gateway-service
+  name: gateway-service-nixbuy
 spec:
   selector:
-    app: gateway-service
+    app: gateway-service-nixbuy-app
   ports:
     - protocol: TCP
       port: <host-port> # Reemplaza con el puerto que expondrás en el host
       targetPort: <container-port> # Reemplaza con el puerto del contenedor
-  type: NodePort # O ClusterIP si solo necesitas acceso dentro del clúster
+  type: LoadBalancer # Proporciona una dirección IP externa para acceder al servicio. En entornos de nube, esto generalmente aprovisiona un Load Balancer real.
+  # NodePort Expone el servicio en un puerto específico de cada nodo del clúster
+  # O ClusterIP si solo necesitas acceso dentro del clúster
+
+# In minikube you can use: minikube service gateway-service-nixbuy --url
+#  Minikube then returns the URL that allows you to access the service from your local machine.
