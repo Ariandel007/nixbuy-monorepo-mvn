@@ -1,0 +1,62 @@
+#----------Crear un PersistentVolume (PV)--------
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+spec:
+  capacity:
+    storage: 1Gi  # Ajusta la capacidad según tus necesidades
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany  # O ReadWriteOnce si solo un pod necesita escribir
+  persistentVolumeReclaimPolicy: Retain  # O Delete, dependiendo de cómo quieras manejar la eliminación
+  nfs:
+    server: <tu-servidor-nfs>  # Reemplaza con la dirección IP o nombre de host de tu servidor NFS
+    path: "/path/to/nfs/export"  # Reemplaza con la ruta de exportación en tu servidor NFS
+
+
+
+#----------Crear un PersistentVolumeClaim (PVC)-------
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc
+spec:
+  accessModes:
+    - ReadWriteMany  # Debe coincidir con el accessMode del PV
+  resources:
+    requests:
+      storage: 1Gi  # Debe coincidir o ser menor que la capacidad del PV
+
+#----------Modificar el Deployment para montar el PVC-------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-service-nixbuy-app
+  template:
+    metadata:
+      labels:
+        app: user-service-nixbuy-app
+    spec:
+      containers:
+        - name: user-service-nixbuy-app
+          image: tunombreusuario/user-service-nixbuy:0.0.1-SNAPSHOT
+          ports:
+            - containerPort: <container-port>
+          resources:
+            limits:
+              memory: "360Mi"
+          env:
+          # ... (tus variables de entorno)
+          volumeMounts:
+            - name: nfs-storage  # Nombre del volumen que se montará
+              mountPath: /ruta/en/el/contenedor  # Ruta donde se montará el volumen en el contenedor
+      volumes:
+        - name: nfs-storage
+          persistentVolumeClaim:
+            claimName: nfs-pvc
