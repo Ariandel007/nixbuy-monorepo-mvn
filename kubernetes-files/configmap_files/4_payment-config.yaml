@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-config
+data:
+  PORT: "<insert port>"
+  BD_URL: "<insert bd url>"
+  DDL_AUTO: "<insert ddl_auto>"
+  KAFKA_BOOTSTRAP_SERVERS: "<insert kafka bootstrap servers>"
+  TRACING_URL_ENDPOINT: "<insert tracing url endpoint>"
+  WEBCLIENT_URL: "<insert webclient url>"
+  PRODUCTS_URL: "<insert products url>"
