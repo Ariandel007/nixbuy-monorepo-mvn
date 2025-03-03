@@ -81,3 +81,13 @@ spec:
                 configMapKeyRef:
                   name: payment-config
                   key: PRODUCTS_URL
+            - name: STRIPE_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: STRIPE_WEBHOOK_SECRET
+            - name: STRIPE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: STRIPE_API_KEY
