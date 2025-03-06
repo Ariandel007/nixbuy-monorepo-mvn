@@ -17,6 +17,22 @@ spec:
           image: tunombreusuario/products-service-nixbuy:0.0.1-SNAPSHOT # Reemplaza con tu usuario de Docker Hub
           ports:
             - containerPort: <container-port> # Reemplaza con el puerto del contenedor
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: <container-port>
+            initialDelaySeconds: 120 # seconds to wait before first probe
+            periodSeconds: 10 # seconds to wait between probes
+            timeoutSeconds: 3 # seconds to wait for the probe to respond
+            failureThreshold: 3 # number of consecutive failures for the probe to be considered failed
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: <container-port>
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
           resources:
             limits:
               memory: "360Mi"

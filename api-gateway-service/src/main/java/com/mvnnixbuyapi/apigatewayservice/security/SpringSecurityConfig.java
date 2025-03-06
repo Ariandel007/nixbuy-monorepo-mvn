@@ -36,10 +36,7 @@ public class SpringSecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(authorize -> authorize
                         //Actuator
-                        .pathMatchers("/actuator/health").permitAll()
-                        .pathMatchers("/actuator/info").permitAll()
-                        .pathMatchers("/actuator/prometheus").permitAll()
-                        .pathMatchers("/actuator/metrics").permitAll()
+                        .pathMatchers("/actuator/**").permitAll()
                         // User Service
                         .pathMatchers(HttpMethod.PATCH,
                                 "/api/user-service-nixbuy/users/v1/update-user-info/{userId}",

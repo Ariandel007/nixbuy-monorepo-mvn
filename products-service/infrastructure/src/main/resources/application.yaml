@@ -58,7 +58,16 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
-
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
 nixbuy:
   cloudinaryParams:
     cloudName: ${CLOUDINARY_CLOUD_NAME}
