@@ -36,6 +36,7 @@ spec:
           resources:
             limits:
               memory: "360Mi"
+              cpu: "180m"
           env:
             - name: PORT
               valueFrom:
