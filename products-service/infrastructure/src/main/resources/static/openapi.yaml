@@ -152,7 +152,7 @@ components:
           type: array
           items:
             type: string
-            example: "200"
+            example: "SUCCESSFUL"
         data:
           $ref: "#/components/schemas/ProductDto"
 
@@ -163,5 +163,6 @@ components:
           type: array
           items:
             type: string
+            example: "SUCCESSFUL"
         data:
           $ref: "#/components/schemas/ProductToEditDto"
