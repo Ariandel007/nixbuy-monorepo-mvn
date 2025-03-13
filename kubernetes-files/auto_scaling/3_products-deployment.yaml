@@ -1,0 +1,24 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: products-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: products-service-deployment
+  minReplicas: 2 # Coincide con el número inicial de réplicas en tu Deployment
+  maxReplicas: 10 # Ajusta este valor según tus necesidades
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70 # Ajusta este valor según tus necesidades
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70 # Ajusta este valor según tus necesidades
