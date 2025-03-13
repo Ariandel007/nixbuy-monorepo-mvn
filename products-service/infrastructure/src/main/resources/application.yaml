@@ -75,9 +75,9 @@ nixbuy:
     apiSecret: ${CLOUDINARY_SECRET}
 springdoc:
   api-docs:
-    enabled: true  # Habilita los endpoints /v3/api-docs y /v3/api-docs.yaml
+    enabled: ${SHOW_OPEN_API:true}  # Habilita los endpoints /v3/api-docs y /v3/api-docs.yaml
   swagger-ui:
-    enabled: true
+    enabled: ${SHOW_OPEN_API:true}
     url: /openapi.yaml
     path: /swagger-ui.html
 
