@@ -1,0 +1,22 @@
+type: object
+required:
+  - name
+  - description
+  - price
+properties:
+  name:
+    type: string
+    description: "Name of the product"
+    minLength: 1  # Equivalent to @NotBlank
+    example: "Sample Product"
+  description:
+    type: string
+    description: "Product description"
+    minLength: 1  # Equivalent to @NotBlank
+    example: "This is a product description."
+  price:
+    type: number
+    format: float
+    description: "Product price"
+    minimum: 0  # Equivalent to @Min(value = 0)
+    example: 10.5
