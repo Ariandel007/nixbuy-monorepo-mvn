@@ -74,3 +74,13 @@ nixbuy:
     cloudName: ${CLOUDINARY_CLOUD_NAME}
     apiKey: ${CLOUDINARY_API_KEY}
     apiSecret: ${CLOUDINARY_SECRET}
+springdoc:
+  api-docs:
+    enabled: ${SHOW_OPEN_API:true}  # Habilita los endpoints /v3/api-docs y /v3/api-docs.yaml
+  swagger-ui:
+    enabled: ${SHOW_OPEN_API:true}
+    url: /openapi.yaml
+    path: /swagger-ui.html
+# Swagger UI: http://localhost:3803/swagger-ui.html
+# OpenAPI JSON: http://localhost:3803/v3/api-docs
+# OpenAPI YAML: http://localhost:3803/v3/api-docs.yaml
