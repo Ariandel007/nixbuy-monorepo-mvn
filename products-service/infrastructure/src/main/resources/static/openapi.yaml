@@ -1,0 +1,88 @@
+openapi: 3.0.1
+info:
+  title: "Product API"
+  description: "API for managing products, including creation and editing"
+  version: "1.0.0"
+
+paths:
+  /api/command-product-endpoint/v1/create-product:
+    post:
+      tags:
+          - Product Management
+      summary: "Create a new product"
+      description: "Creates a new product with the given details."
+      operationId: createProductV1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductCreateCommand"
+      responses:
+        "200":
+          description: "Product created successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponseForBodyProductDto"
+        "400":
+          description: "Validation errors occurred."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponseForBodyError"
+
+
+  /api/command-product-endpoint/v1/update-main-photo:
+    patch:
+      tags:
+            - Product Management
+      summary: "Update the main photo of a product."
+      description: "Updates the main product image along with other details."
+      operationId: updateMainPhoto
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                productName:
+                  type: string
+                productDescription:
+                  type: string
+                urlImage:
+                  type: string
+                price:
+                  type: string
+                mainPhotoOfProductFile:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: "Product updated successfully."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponseForBodyForProductToEditDto"
+        "400":
+          description: "Validation errors occurred."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponseForBodyError"
+
+components:
+  schemas:
+    ProductDto:
+      $ref: "./schemas/ProductDto.yaml"
+    ProductCreateCommand:
+      $ref: "./schemas/ProductCreateCommand.yaml"
+    ProductToEditDto:
+      $ref: "./schemas/ProductToEditDto.yaml"
+    GenericResponseForBodyError:
+      $ref: "./schemas/GenericResponseForBodyError.yaml"
+    GenericResponseForBodyProductDto:
+      $ref: "./schemas/GenericResponseForBodyProductDto.yaml"
+    GenericResponseForBodyForProductToEditDto:
+      $ref: "./schemas/GenericResponseForBodyForProductToEditDto.yaml"

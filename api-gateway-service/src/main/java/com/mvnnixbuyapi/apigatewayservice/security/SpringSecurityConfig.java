@@ -36,10 +36,7 @@ public class SpringSecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(authorize -> authorize
                         //Actuator
-                        .pathMatchers("/actuator/health").permitAll()
-                        .pathMatchers("/actuator/info").permitAll()
-                        .pathMatchers("/actuator/prometheus").permitAll()
-                        .pathMatchers("/actuator/metrics").permitAll()
+                        .pathMatchers("/actuator/**").permitAll()
                         // User Service
                         .pathMatchers(HttpMethod.PATCH,
                                 "/api/user-service-nixbuy/users/v1/update-user-info/{userId}",
@@ -49,13 +46,13 @@ public class SpringSecurityConfig {
                         .pathMatchers(HttpMethod.GET,
                                 "/api/user-service-nixbuy/users/v1/basic-user-info/{userId}"
                         ).access(this::currentUserIdMatchesPath)
-                        .pathMatchers(HttpMethod.GET,"/api/user-service-nixbuy/users/v1/find-users-list/**").hasAnyRole("ROLE_ADMIN")
-                        .pathMatchers(HttpMethod.POST,"/api/user-service-nixbuy/users/v1/register-user").hasAnyRole("ROLE_ADMIN")
-                        .pathMatchers("/api/user-service-nixbuy/users/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+                        .pathMatchers(HttpMethod.GET,"/api/user-service-nixbuy/users/v1/find-users-list/**").hasAnyAuthority("ROLE_ADMIN")
+                        .pathMatchers(HttpMethod.POST,"/api/user-service-nixbuy/users/v1/register-user").hasAnyAuthority("ROLE_ADMIN")
+                        .pathMatchers("/api/user-service-nixbuy/users/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .pathMatchers(HttpMethod.POST, "/api/user-service-nixbuy/security/**").permitAll()
                         // Product Service
-                        .pathMatchers(HttpMethod.POST,"/api/products-service-nixbuy/**").hasAnyRole("ROLE_ADMIN")
-                        .pathMatchers(HttpMethod.PATCH,"/api/products-service-nixbuy/**").hasAnyRole("ROLE_ADMIN")
+                        .pathMatchers(HttpMethod.POST,"/api/products-service-nixbuy/**").hasAnyAuthority("ROLE_ADMIN")
+                        .pathMatchers(HttpMethod.PATCH,"/api/products-service-nixbuy/**").hasAnyAuthority("ROLE_ADMIN")
                         // Payment Service
                         .pathMatchers(HttpMethod.POST,
                                 "/api/payment-service-nixbuy/payment/v1/create-order/{userId}",

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+data:
+  PORT: "<your-port>"
+  URI_USER_SERVICE: "<uri-user-service>"
+  URI_PRODUCTS_SERVICE: "<uri-products-service>"
+  URI_PAYMENT_SERVICE: "<uri-payment-service>"
+  TRACING_URL_ENDPOINT: "<your-db-url>"

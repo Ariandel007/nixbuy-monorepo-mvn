@@ -1,0 +1,78 @@
+#----------Crear un PersistentVolume (PV)--------
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+spec:
+  capacity:
+    storage: 1Gi  # Ajusta la capacidad según tus necesidades
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany  # O ReadWriteOnce si solo un pod necesita escribir
+  persistentVolumeReclaimPolicy: Retain  # O Delete, dependiendo de cómo quieras manejar la eliminación
+  nfs:
+    server: <tu-servidor-nfs>  # Reemplaza con la dirección IP o nombre de host de tu servidor NFS
+    path: "/path/to/nfs/export"  # Reemplaza con la ruta de exportación en tu servidor NFS
+
+#----------Crear un PersistentVolumeClaim (PVC)-------
+#Kubernetes enlazará automáticamente el PVC con un PV que coincida en términos de capacidad y modo de acceso.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc
+spec:
+  accessModes:
+    - ReadWriteMany  # Debe coincidir con el accessMode del PV
+  resources:
+    requests:
+      storage: 1Gi  # Debe coincidir o ser menor que la capacidad del PV
+
+#----------Modificar el Deployment para montar el PVC-------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-service-nixbuy-app
+  template:
+    metadata:
+      labels:
+        app: user-service-nixbuy-app
+    spec:
+      containers:
+        - name: user-service-nixbuy-app
+          image: tunombreusuario/user-service-nixbuy:0.0.1-SNAPSHOT
+          ports:
+            - containerPort: <container-port>
+          resources:
+            limits:
+              memory: "360Mi"
+          env:
+          # ... (tus variables de entorno)
+          volumeMounts:
+            - name: nfs-storage  # Nombre del volumen que se montará
+              mountPath: /ruta/en/el/contenedor  # Ruta donde se montará el volumen en el contenedor
+      volumes:
+        - name: nfs-storage
+          persistentVolumeClaim:
+            claimName: nfs-pvc
+
+
+#----------Si volvieramos el Persistence Volume de Arriba para que se enlace con el driver de CSI para Amazon EFS ------
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: efs-pv
+spec:
+  capacity:
+    storage: 1Gi  # Placeholder, Amazon EFS es elástico y no tiene un límite fijo
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany  # Amazon EFS permite múltiples accesos simultáneos
+  persistentVolumeReclaimPolicy: Retain  # O Delete según la necesidad
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: <file-system-id>::<optional-subpath>  # Reemplaza con tu ID de sistema de archivos EFS y subruta opcional

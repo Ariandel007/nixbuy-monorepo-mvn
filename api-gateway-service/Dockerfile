@@ -43,13 +43,14 @@ CMD ["java", "-jar", "app.jar"]
 # Command to build: docker build -t gateway-service-nixbuy:0.0.1-SNAPSHOT -f ./api-gateway-service/Dockerfile .
 
 # Command to run:
+
 # docker run -d --name gateway-service-nixbuy \
+# --network local-dev \
+# --memory="360m" \
+# --log-opt max-size=250m --log-opt max-file=3 \
 # -e PORT=<your-port> \
 # -e URI_USER_SERVICE=<uri-user-service> \
 # -e URI_PRODUCTS_SERVICE=<uri-products-service> \
 # -e URI_PAYMENT_SERVICE=<uri-payment-service> \
 # -e TRACING_URL_ENDPOINT=<your-db-url> \
 # -p <host-port>:<container-port> gateway-service-nixbuy:0.0.1-SNAPSHOT
-# --network local-dev
-# --memory="360m"
-# --log-opt max-size=250m --log-opt max-file=3

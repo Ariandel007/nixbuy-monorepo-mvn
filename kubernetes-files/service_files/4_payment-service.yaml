@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service-nixbuy
+spec:
+  selector:
+    app: payment-service-nixbuy-app
+  ports:
+    - protocol: TCP
+      port: 3804 # Reemplaza con el puerto que expondrás en el host
+      targetPort: 3804 # Reemplaza con el puerto del contenedor
+  type: ClusterIP # Proporciona una dirección IP externa para acceder al servicio. En entornos de nube, esto generalmente aprovisiona un Load Balancer real.

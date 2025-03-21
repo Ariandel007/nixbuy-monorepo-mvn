@@ -37,7 +37,7 @@ public class OrderControllerIntegrationTesting {
     @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13.9")
             .withDatabaseName("integration-tests-db").withUsername("username").withPassword("password")
-            .withInitScript("test-data-1.sql");
+            .withInitScript("test-data.sql");
 
     static {
         postgreSQLContainer.start();

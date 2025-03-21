@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service-nixbuy
+spec:
+  selector:
+    app: user-service-nixbuy-app
+  ports:
+    - protocol: TCP
+      port: 3801 # Reemplaza con el puerto que expondrás en el host
+      targetPort: 3801 # Reemplaza con el puerto del contenedor
+  type: ClusterIP # Proporciona una dirección IP externa para acceder al servicio. En entornos de nube, esto generalmente aprovisiona un Load Balancer real.

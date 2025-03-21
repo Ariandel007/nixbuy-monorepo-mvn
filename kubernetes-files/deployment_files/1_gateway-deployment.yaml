@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-service-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gateway-service-nixbuy-app
+  template:
+    metadata:
+      labels:
+        app: gateway-service-nixbuy-app
+    spec:
+      containers:
+        - name: gateway-service-nixbuy-app
+          image: tunombreusuario/gateway-service-nixbuy:0.0.1-SNAPSHOT # Reemplaza con tu usuario de Docker Hub
+          ports:
+            - containerPort: <container-port> # Reemplaza con el puerto del contenedor
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: <container-port>
+            initialDelaySeconds: 120 # seconds to wait before first probe
+            periodSeconds: 10 # seconds to wait between probes
+            timeoutSeconds: 3 # seconds to wait for the probe to respond
+            failureThreshold: 3 # number of consecutive failures for the probe to be considered failed
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: <container-port>
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "360Mi"
+              cpu: "100m"
+            limits:
+              memory: "360Mi"
+              cpu: "180m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: PORT
+            - name: URI_USER_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: URI_USER_SERVICE
+            - name: URI_PRODUCTS_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: URI_PRODUCTS_SERVICE
+            - name: URI_PAYMENT_SERVICE
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: URI_PAYMENT_SERVICE
+            - name: TRACING_URL_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: TRACING_URL_ENDPOINT
+
+# Diferencias:
+# metadata.name es el nombre del recurso en sí.
+# spec.selector.matchLabels es cómo un recurso encuentra los pods que le corresponden.
+# spec.template.metadata.labels son las etiquetas que el recurso pone en los pods que crea.
+
+# La relación clave aquí es que el spec.selector.matchLabels debe coincidir
+# con el spec.template.metadata.labels para que el Deployment y el Service funcionen correctamente.
+# El Deployment crea pods con las etiquetas definidas en spec.template.metadata.labels,
+# y luego el Deployment y el Service usan spec.selector.matchLabels para encontrar esos pods.

@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: payment-service-nixbuy-app
+  template:
+    metadata:
+      labels:
+        app: payment-service-nixbuy-app
+    spec:
+      containers:
+        - name: payment-service-nixbuy-app
+          image: tunombreusuario/payment-service-nixbuy:0.0.1-SNAPSHOT # Reemplaza con tu usuario de Docker Hub
+          ports:
+            - containerPort: <container-port> # Reemplaza con el puerto del contenedor
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: <container-port>
+            initialDelaySeconds: 120 # seconds to wait before first probe
+            periodSeconds: 10 # seconds to wait between probes
+            timeoutSeconds: 3 # seconds to wait for the probe to respond
+            failureThreshold: 3 # number of consecutive failures for the probe to be considered failed
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: <container-port>
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "360Mi"
+              cpu: "100m"
+            limits:
+              memory: "360Mi"
+              cpu: "180m"
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: PORT
+            - name: TRACING_URL_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: TRACING_URL_ENDPOINT
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+            - name: CLOUDINARY_CLOUD_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: CLOUDINARY_CLOUD_NAME
+            - name: CLOUDINARY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: CLOUDINARY_SECRET
+            - name: CLOUDINARY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: CLOUDINARY_API_KEY
+            - name: BD_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: BD_URL
+            - name: DDL_AUTO
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: DDL_AUTO
+            - name: BD_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: BD_USERNAME
+            - name: BD_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: BD_PASSWORD
+            - name: WEBCLIENT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: WEBCLIENT_URL
+            - name: PRODUCTS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-config
+                  key: PRODUCTS_URL
+            - name: STRIPE_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: STRIPE_WEBHOOK_SECRET
+            - name: STRIPE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secret
+                  key: STRIPE_API_KEY
