@@ -1,15 +1,14 @@
 package com.mvnnixbuyapi.userservice.services.impl;
 
+import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
+import com.mvnnixbuyapi.commons.dtos.response.UserToLogin;
+import com.mvnnixbuyapi.commons.utils.ResponseUtils;
 import com.mvnnixbuyapi.userservice.dto.*;
-import com.mvnnixbuyapi.userservice.exceptions.InvalidPatternOfPasswordException;
-import com.mvnnixbuyapi.userservice.exceptions.InvalidUserToRegisterException;
-import com.mvnnixbuyapi.userservice.exceptions.UserAlreadyExistsException;
-import com.mvnnixbuyapi.userservice.exceptions.UserToUpdateNotFoundException;
+import com.mvnnixbuyapi.userservice.exceptions.*;
 import com.mvnnixbuyapi.userservice.models.PasswordHistory;
 import com.mvnnixbuyapi.userservice.repositories.PasswordHistoryRepository;
 import com.mvnnixbuyapi.userservice.services.UploadToCloudService;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
-import com.mvnnixbuyapi.userservice.components.TokenProvider;
 import com.mvnnixbuyapi.userservice.mappers.UserMapper;
 import com.mvnnixbuyapi.userservice.models.RoleApplication;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
@@ -40,7 +39,6 @@ public class UserApplicationServiceImpl implements UserApplicationService {
     private final UserApplicationRepository userApplicationRepository;
 
     private final PasswordHistoryRepository passwordHistoryRepository;
-    private final TokenProvider tokenProvider;
 
     private final UploadToCloudService uploadToCloudService;
 
@@ -49,13 +47,11 @@ public class UserApplicationServiceImpl implements UserApplicationService {
             UserApplicationRepository userApplicationRepository,
             PasswordEncoder passwordEncoder,
             Validator validator,
-            TokenProvider tokenProvider,
             PasswordHistoryRepository passwordHistoryRepository,
             UploadToCloudService uploadToCloudService) {
         this.userApplicationRepository = userApplicationRepository;
         this.passwordEncoder = passwordEncoder;
         this.validator = validator;
-        this.tokenProvider = tokenProvider;
         this.passwordHistoryRepository = passwordHistoryRepository;
         this.uploadToCloudService = uploadToCloudService;
     };
@@ -186,29 +182,6 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     @Override
     @Transactional(readOnly = false)
-    @NewSpan(value = "user-service-generateToken-method-span")
-    public AuthTokenDto generateToken(LoginUserDto loginUser) {
-        Optional<UserApplication> userApplicationOptional =
-                this.userApplicationRepository.findByUsername(loginUser.getUsername());
-
-        if(userApplicationOptional.isPresent()) {
-            UserApplication userApplication = userApplicationOptional.get();
-            userApplication.setAttemps((short) (userApplication.getAttemps() + 1));
-            if(this.passwordEncoder.matches(loginUser.getPassword(), userApplication.getPassword()) ) {
-                userApplication.setAttemps((short) 0);
-                String token = this.tokenProvider.generateToken(userApplication);
-                this.userApplicationRepository.save(userApplication);
-                return new AuthTokenDto(token);
-            } else {
-                return null;
-            }
-        }
-
-        return null;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     @NewSpan(value = "user-service-uploadPhoto-method-span")
     public UserPhotoUpdated uploadPhoto(Long userId, MultipartFile filePhoto) {
         String urlUserLogo = "/assets/default_user_login.png";
@@ -284,5 +257,25 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                 .collect(Collectors.toList());
 
         return result;
+    }
+
+    @Override
+    public UserToLogin findUserByUsername(String username) {
+        UserApplication userApplication = this.userApplicationRepository.findByUsername(username).orElseThrow(
+                ()-> new UserAppplicationNotFoundException(
+                        UserServiceMessageErrors.USERNAME_NOT_FOUNDED,
+                        UserServiceMessageErrors.USERNAME_NOT_FOUNDED_MSG)
+        );
+        return UserMapper.INSTANCE.mapUserApplicationToUserToLogin(userApplication);
+    }
+
+    @Override
+    public UserToLogin findUserByEmail(String email) {
+        UserApplication userApplication = this.userApplicationRepository.findByEmail(email).orElseThrow(
+                ()-> new UserAppplicationNotFoundException(
+                        UserServiceMessageErrors.USERNAME_NOT_FOUNDED,
+                        UserServiceMessageErrors.USERNAME_NOT_FOUNDED_MSG)
+        );
+        return UserMapper.INSTANCE.mapUserApplicationToUserToLogin(userApplication);
     }
 }

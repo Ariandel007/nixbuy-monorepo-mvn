@@ -16,5 +16,10 @@ public interface UserApplicationRepository extends JpaRepository<UserApplication
     @Query(UserServiceQueries.selectUserToFindDto)
     UserToFindDto findUserToFindDto(@Param("userId") Long userId);
 
-    Optional<UserApplication> findByUsername(String username);
+    @Query(UserServiceQueries.findUserByUsername)
+    Optional<UserApplication> findByUsername(@Param("username") String username);
+
+    @Query(UserServiceQueries.findUserByEmail)
+    Optional<UserApplication> findByEmail(@Param("email") String email);
+
 }

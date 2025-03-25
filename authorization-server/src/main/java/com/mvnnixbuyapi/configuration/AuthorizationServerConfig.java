@@ -174,7 +174,7 @@ public class AuthorizationServerConfig {
 }
 // STEP 1
 //GET:
-//http://localhost:8080/oauth2/authorize?
+//http://localhost:3805/oauth2/authorize?
 //response_type=code&
 //client_id=angular-client&
 //redirect_uri=http://localhost:4200/callback&
@@ -184,7 +184,7 @@ public class AuthorizationServerConfig {
 
 // STEP 2
 //Exchange for an access token
-//POST http://localhost:8080/oauth2/token
+//POST http://localhost:3805/oauth2/token
 //Content-Type: application/x-www-form-urlencoded
 //BODY
 //grant_type=authorization_code
@@ -195,7 +195,7 @@ public class AuthorizationServerConfig {
 
 // STEP 3
 //Exchange for a Refresh token
-//POST http://localhost:8080/oauth2/token
+//POST http://localhost:3805/oauth2/token
 //Content-Type: application/x-www-form-urlencoded
 //BODY
 //grant_type=refresh_token

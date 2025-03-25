@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         GenericResponseForBody<UserToLogin> user = this.userApplicationFeignClient.
                 findUserByUsername(username).getBody();
 
-        if(user.getCode().equals("USER_NOT_FOUND")) {
+        if(!user.getCode().contains("SUCCESSFUL")) {
             throw new UsernameNotFoundException("User not found");
         }
         var userFounded = user.getData();

@@ -40,5 +40,8 @@ public class UserServiceMessageErrors {
  public static String ERROR_FILE_CONVERTER_CODE = "ERROR_FILE_CONVERTER";
  public static String ERROR_FILE_CONVERTER_MSG = "Hubo un error al convertir un archivo";
 
+ public static String USERNAME_NOT_FOUNDED = "USERNAME_NOT_FOUNDED";
+ public static String USERNAME_NOT_FOUNDED_MSG = "The username was not founded";
+
 
 }

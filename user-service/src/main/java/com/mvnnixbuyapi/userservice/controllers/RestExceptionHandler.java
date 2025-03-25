@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.userservice.controllers;
 
+import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.exceptions.GeneralBodyExceptionHandler;
 import com.mvnnixbuyapi.commons.exceptions.GeneralException;
 import com.mvnnixbuyapi.userservice.exceptions.*;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.List;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
@@ -51,4 +54,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(),
                 HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
+
+    @ExceptionHandler(value= {UserAppplicationNotFoundException.class})
+    protected ResponseEntity<Object> handleErrorForInternalApis(GeneralException ex, WebRequest request) {
+        return handleExceptionInternal(
+                ex,
+                new GenericResponseForBody<>(List.of(ex.getErrorCode())),
+                new HttpHeaders(),
+                HttpStatus.NOT_FOUND, request);
+    }
+
 }

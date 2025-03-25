@@ -1,5 +1,8 @@
 package com.mvnnixbuyapi.userservice.controllers;
 
+import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
+import com.mvnnixbuyapi.commons.dtos.response.UserToLogin;
+import com.mvnnixbuyapi.commons.utils.ResponseUtils;
 import com.mvnnixbuyapi.userservice.dto.*;
 import com.mvnnixbuyapi.userservice.services.UserApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +56,15 @@ public class UserController {
     @GetMapping(value = "/v1/find-users-list/{cursorId}")
     ResponseEntity<List<UserDataWithRolesDto>> findUsersList(@PathVariable Long cursorId) {
         return ResponseEntity.ok().body(this.userService.listUserDataWithRolesDtos(cursorId));
+    }
+
+    @GetMapping(value = "/v1/users-app/{username}")
+    ResponseEntity<GenericResponseForBody<UserToLogin>> findUserByUsername(@PathVariable String username) {
+        return ResponseUtils.buildSuccessResponse(this.userService.findUserByUsername(username));
+    }
+
+    @GetMapping(value = "/v1/users-app/email/{email}")
+    ResponseEntity<GenericResponseForBody<UserToLogin>> findUserByEmail(@PathVariable String email) {
+        return ResponseUtils.buildSuccessResponse(this.userService.findUserByEmail(email));
     }
 }
