@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <head>
     <title>Please Log In</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -7,17 +8,15 @@
 <body>
 <div class="login-page">
     <div class="form">
-
         <a href="/oauth2/authorization/google" role="link" class="google-sign-in">
             Login with Google
         </a>
 
         <h2>Please Log In</h2>
-        <div class="error" th:if="${param.error}">
-            Invalid username and password.</div>
-        <div class="error" th:if="${param.logout}">
-            You have been logged out.</div>
-        <form  class="login-form" th:action="@{/login}" method="post">
+
+        <div class="error" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+        <form class="login-form" th:action="@{/login}" method="post">
             <div>
                 <input type="text" name="username" placeholder="Username"/>
             </div>

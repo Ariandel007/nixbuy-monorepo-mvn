@@ -5,6 +5,7 @@ import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.dtos.response.RoleApplicationLogin;
 import com.mvnnixbuyapi.commons.dtos.response.UserToLogin;
 import com.mvnnixbuyapi.model.CustomUserDetails;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,12 +30,18 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        GenericResponseForBody<UserToLogin> user = this.userApplicationFeignClient.
-                findUserByUsername(username).getBody();
+        GenericResponseForBody<UserToLogin> user;
+        try {
+            user = this.userApplicationFeignClient.
+                    findUserByUsername(username).getBody();
+        } catch (FeignException.NotFound e) {
+            throw new UsernameNotFoundException("User not found");
+        }
 
         if(!user.getCode().contains("SUCCESSFUL")) {
             throw new UsernameNotFoundException("User not found");
         }
+
         var userFounded = user.getData();
 
 

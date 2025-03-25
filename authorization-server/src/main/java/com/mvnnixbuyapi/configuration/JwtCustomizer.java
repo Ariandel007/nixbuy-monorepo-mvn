@@ -66,8 +66,8 @@ public class JwtCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> 
     }
 }
 
-//http://localhost:8080/oauth2/jwks
+//http://localhost:3805/oauth2/jwks
 
 
-//http://localhost:8080/.well-known/openid-configuration
+//http://localhost:3805/.well-known/openid-configuration
 //This is the standard URL for OpenID Connect discovery, and it contains all the necessary endpoints, including the URL to retrieve the JWK Set (/oauth2/jwks).
