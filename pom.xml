@@ -16,13 +16,14 @@
         <module>api-gateway-service</module>
         <module>products-service</module>
         <module>payment-service</module>
+        <module>authorization-server</module>
     </modules>
 
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.2</version>
+        <version>3.4.3</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
