@@ -1,6 +1,7 @@
 package com.mvnnixbuyapi.configuration;
 
 import com.mvnnixbuyapi.clients.UserApplicationFeignClient;
+import com.mvnnixbuyapi.commons.dtos.request.UserToCreateAuth;
 import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.dtos.response.RoleApplicationLogin;
 import com.mvnnixbuyapi.commons.dtos.response.UserToLogin;
@@ -53,7 +54,12 @@ public class JwtCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> 
 
                 // If user does not exist, create a new user with that email
                 if (userFromBd.getCode().equals("USER_NOT_FOUND")) {
-
+                    var userToCreate = UserToCreateAuth.builder()
+                            .authType("google")
+                            .email(email)
+                            .username(email)
+                            .build();
+                    userFromBd = this.userApplicationFeignClient.createUserFromOidcUser(userToCreate).getBody();
                 }
 
                 var userFounded = userFromBd.getData();

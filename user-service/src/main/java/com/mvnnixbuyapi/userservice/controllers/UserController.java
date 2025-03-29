@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.userservice.controllers;
 
+import com.mvnnixbuyapi.commons.dtos.request.UserToCreateAuth;
 import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.dtos.response.UserToLogin;
 import com.mvnnixbuyapi.commons.utils.ResponseUtils;
@@ -66,5 +67,10 @@ public class UserController {
     @GetMapping(value = "/v1/users-app/email/{email}")
     ResponseEntity<GenericResponseForBody<UserToLogin>> findUserByEmail(@PathVariable String email) {
         return ResponseUtils.buildSuccessResponse(this.userService.findUserByEmail(email));
+    }
+
+    @PostMapping (value = "/v1/users-app/oidc-user")
+    ResponseEntity<GenericResponseForBody<UserToLogin>> createUserFromOidcUser(@RequestBody UserToCreateAuth userToCreateAuth) {
+        return ResponseUtils.buildSuccessResponse(this.userService.createUserFromOidcUser(userToCreateAuth));
     }
 }

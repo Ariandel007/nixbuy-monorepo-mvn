@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.userservice.services;
 
+import com.mvnnixbuyapi.commons.dtos.request.UserToCreateAuth;
 import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.dtos.response.UserToLogin;
 import com.mvnnixbuyapi.userservice.dto.*;
@@ -23,4 +24,7 @@ public interface UserApplicationService {
     UserToLogin findUserByUsername(String username);
 
     UserToLogin findUserByEmail(String email);
+
+    UserToLogin createUserFromOidcUser(UserToCreateAuth userToCreateAuth);
+
 }

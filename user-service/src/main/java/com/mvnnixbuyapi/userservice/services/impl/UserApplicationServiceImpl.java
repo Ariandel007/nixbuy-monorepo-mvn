@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.userservice.services.impl;
 
+import com.mvnnixbuyapi.commons.dtos.request.UserToCreateAuth;
 import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.dtos.response.UserToLogin;
 import com.mvnnixbuyapi.commons.utils.ResponseUtils;
@@ -24,10 +25,7 @@ import org.springframework.validation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -277,5 +275,25 @@ public class UserApplicationServiceImpl implements UserApplicationService {
                         UserServiceMessageErrors.USERNAME_NOT_FOUNDED_MSG)
         );
         return UserMapper.INSTANCE.mapUserApplicationToUserToLogin(userApplication);
+    }
+
+    @Override
+    public UserToLogin createUserFromOidcUser(UserToCreateAuth userToCreateAuth) {
+        UserApplication userApplication = UserMapper.INSTANCE.mapUserToCreateAuthToUserApplication(userToCreateAuth);
+//        userApplication.setBirthDate(Instant.parse(userRegisterDto.getBirthDateUtc()));
+
+        // hashing password with bcrypt
+        userApplication.setPassword(this.passwordEncoder.encode(UUID.randomUUID().toString()));//TODO: check how to randomize this better
+        userApplication.setAccountCreationDate(Instant.now());
+
+        //Roles
+        List<RoleApplication> roleList = new ArrayList<>();
+        RoleApplication roleApplication = new RoleApplication(1L,"ROLE_USER");
+        roleList.add(roleApplication);
+        userApplication.setRoleApplicationList(roleList);
+
+        UserApplication userCreated = this.userApplicationRepository.save(userApplication);
+
+        return UserMapper.INSTANCE.mapUserApplicationToUserToLogin(userCreated);
     }
 }
