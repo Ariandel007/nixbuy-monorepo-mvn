@@ -6,6 +6,7 @@ import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.dtos.response.RoleApplicationLogin;
 import com.mvnnixbuyapi.commons.dtos.response.UserToLogin;
 import com.mvnnixbuyapi.model.CustomUserDetails;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -49,19 +50,30 @@ public class JwtCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> 
                 // fetch user by email to obtain User object when principal is not already a User object, here's lets gonna asume is google
                 String email = oidcUser.getEmail();
                 // Check if user exists in database
-                GenericResponseForBody<UserToLogin> userFromBd = this.userApplicationFeignClient.
-                        findUserByEmail(email).getBody();
+                GenericResponseForBody<UserToLogin> userFromBd;
+                try {
+                    userFromBd = this.userApplicationFeignClient.
+                            findUserByEmail(email).getBody();
+                } catch (FeignException e) {
+                    // verify is 404
+                    if (e.status() == 404) {
+                        // check the body if is necesary
+                        //String responseBody = e.contentUTF8();
+                        //System.out.println("404 Response Body: " + responseBody);
+                        // Create user since it does not exists
+                        var userToCreate = UserToCreateAuth.builder()
+                                .authType("google")
+                                .email(email)
+                                .username(email)
+                                .build();
 
-                // If user does not exist, create a new user with that email
-                if (userFromBd.getCode().equals("USER_NOT_FOUND")) {
-                    var userToCreate = UserToCreateAuth.builder()
-                            .authType("google")
-                            .email(email)
-                            .username(email)
-                            .build();
-                    userFromBd = this.userApplicationFeignClient.createUserFromOidcUser(userToCreate).getBody();
+                        // call API to create user
+                        userFromBd = this.userApplicationFeignClient.createUserFromOidcUser(userToCreate).getBody();
+                    } else {
+                        // Rethrow for other errores
+                        throw e;
+                    }
                 }
-
                 var userFounded = userFromBd.getData();
                 Set<String> roles = userFounded.getRoleApplicationList().stream()
                         .map(RoleApplicationLogin::getName)
