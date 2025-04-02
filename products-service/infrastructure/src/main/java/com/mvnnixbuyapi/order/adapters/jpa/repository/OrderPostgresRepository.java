@@ -3,6 +3,7 @@ package com.mvnnixbuyapi.order.adapters.jpa.repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.mvnnixbuyapi.commons.enums.OrderStates;
+import com.mvnnixbuyapi.commons.utils.JsonUtils;
 import com.mvnnixbuyapi.order.adapters.jpa.OrderSpringJpaAdapterRepository;
 import com.mvnnixbuyapi.order.adapters.mapper.OrderDboMapper;
 import com.mvnnixbuyapi.order.model.entity.Order;
@@ -21,16 +22,19 @@ public class OrderPostgresRepository implements OrderRepository {
     private final OrderSpringJpaAdapterRepository orderSpringJpaAdapterRepository;
     private final OrderDboMapper orderDboMapper;
     private final OutboxTableSpringJpaAdapterRepository outboxTableSpringJpaAdapterRepository;
+    private final ObjectMapper mapper;
 
     @Autowired
     public OrderPostgresRepository(
             OrderSpringJpaAdapterRepository orderSpringJpaAdapterRepository,
             OrderDboMapper orderDboMapper,
-            OutboxTableSpringJpaAdapterRepository outboxTableSpringJpaAdapterRepository
+            OutboxTableSpringJpaAdapterRepository outboxTableSpringJpaAdapterRepository,
+            ObjectMapper mapper
     ) {
         this.orderSpringJpaAdapterRepository = orderSpringJpaAdapterRepository;
         this.orderDboMapper = orderDboMapper;
         this.outboxTableSpringJpaAdapterRepository = outboxTableSpringJpaAdapterRepository;
+        this.mapper = mapper;
     }
 
     @Override
@@ -40,15 +44,10 @@ public class OrderPostgresRepository implements OrderRepository {
         //
         //TODO: MAKE DTO OF ORDER
         byte[] dataBytes = null;
-
         try {
-            ObjectMapper objectMapper = JsonMapper.builder()
-                    .findAndAddModules()
-                    .build();
-            dataBytes = objectMapper.writeValueAsBytes(orderEntityCreated);
+            dataBytes = JsonUtils.toJsonBytes(orderEntityCreated, this.mapper);
         } catch (Exception e) {
-            //  TODO: CHANGE EXCEPTION
-            throw new RuntimeException("ERROR PROVISIONAL");
+            throw new RuntimeException("ERROR AT CONVERTING ORDER TO JSON");
         }
 
         OutboxTable outboxTableToInsert = OutboxTable.builder()
@@ -72,13 +71,9 @@ public class OrderPostgresRepository implements OrderRepository {
         byte[] dataBytes = null;
 
         try {
-            ObjectMapper objectMapper = JsonMapper.builder()
-                    .findAndAddModules()
-                    .build();
-            dataBytes = objectMapper.writeValueAsBytes(orderEntityCreated);
+            dataBytes = JsonUtils.toJsonBytes(orderEntityCreated, this.mapper);
         } catch (Exception e) {
-            //  TODO: CHANGE EXCEPTION
-            throw new RuntimeException("ERROR PROVISIONAL");
+            throw new RuntimeException("ERROR AT CONVERTING ORDER TO JSON");
         }
 
         if(orderEntityCreated.getStatus().equals(OrderStates.EXECUTED_CONFIRMED.name())) {

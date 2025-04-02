@@ -1,5 +1,6 @@
 package com.mvnnixbuyapi.order.kafka.listener;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
@@ -39,34 +41,33 @@ public class OrderCommandKafkaListener {
     @KafkaListener(topics = "pg-topic.public.outbox_table", groupId = "consume-payment-outbox-1")
     public void listenWithHeaders(
             @Payload String message,
-            @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
+            @Header(KafkaHeaders.RECEIVED_PARTITION) int partition,
+            Acknowledgment acknowledgment) throws JsonProcessingException {
         log.info("Received Message: " + message + " from partition: " + partition);
         mapper.registerModule(new JavaTimeModule());
         // Listener
         OutboxTableDto outboxTableAfter = null;
-        try {
-            // Parse JSON to HashMap
-            HashMap<String, Object> map = mapper.readValue(message, new TypeReference<HashMap<String,Object>>() {});
-            HashMap<String, Object> payloadMessage =  (HashMap<String, Object>) map.get("payload");
-            outboxTableAfter = mapper.convertValue(payloadMessage.get("after"), OutboxTableDto.class);
-//            base64Json = outboxTableAfter.getData();
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace(); // TODO: Error handling if any problem occurs while processing the JSON
-            return;
-        }
+        // Parse JSON to HashMap
+        HashMap<String, Object> map = mapper.readValue(message, new TypeReference<HashMap<String,Object>>() {});
+        HashMap<String, Object> payloadMessage =  (HashMap<String, Object>) map.get("payload");
+        outboxTableAfter = mapper.convertValue(payloadMessage.get("after"), OutboxTableDto.class);
 
         //TODO: CREATE UPDATE DATE COLUMN IN ORDER TABLE SO WE CAN COMPARE EVENTS DATES AND IGNORING THE OLDER TIMESTAMPS
-        switch (outboxTableAfter.getAggregateType()+"-"+outboxTableAfter.getEventType()) {
-            case "OrderTable-OrderCreated":
-                // secuencia
-                this.addingProductToOrderHandler.execute(outboxTableAfter.getData());
-                break;
-            case "OrderTable-OrderStatusPaymentExecuted":
-                this.paymentExecutedHandler.execute(outboxTableAfter.getData());
-                break;
+        try {
+            switch (outboxTableAfter.getAggregateType() + "-" + outboxTableAfter.getEventType()) {
+                case "OrderTable-OrderCreated":
+                    // secuencia
+                    this.addingProductToOrderHandler.execute(outboxTableAfter.getData());
+                    break;
+                case "OrderTable-OrderStatusPaymentExecuted":
+                    this.paymentExecutedHandler.execute(outboxTableAfter.getData());
+                    break;
+            }
+
+            acknowledgment.acknowledge(); // Acknowledge the message after processing
+        } catch (Exception e) {
+            acknowledgment.acknowledge();
+            throw e; // Ensure transaction rollback
         }
-
     }
-
 }
