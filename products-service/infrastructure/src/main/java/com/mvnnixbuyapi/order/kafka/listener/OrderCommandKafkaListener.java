@@ -62,6 +62,9 @@ public class OrderCommandKafkaListener {
                 case "OrderTable-OrderStatusPaymentExecuted":
                     this.paymentExecutedHandler.execute(outboxTableAfter.getData());
                     break;
+                case "OrderTable-OrderStatusPaymentCanceled":
+                    //TODO: Command to cancel order
+                    break;
             }
 
             acknowledgment.acknowledge(); // Acknowledge the message after processing

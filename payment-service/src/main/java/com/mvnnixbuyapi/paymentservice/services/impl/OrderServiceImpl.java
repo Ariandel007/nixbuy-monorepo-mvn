@@ -149,9 +149,9 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("ERROR PROVISIONAL");
         }
         //TODO: ANALYZE MORE EVENTS
-        if(orderStatus.equals(OrderStates.EXECUTED.name())) {
+        if(orderStatus.equals(OrderStates.EXECUTED.name()) || orderStatus.equals(OrderStates.CANCELED.name())) {
             OutboxTable outboxTableToInsert = OutboxTable.builder()
-                    .eventType("OrderStatusPaymentExecuted")
+                    .eventType(OrderStates.EXECUTED.name().equals(orderStatus) ? "OrderStatusPaymentExecuted": "OrderStatusPaymentCanceled")
                     .timestamp(Instant.now())
                     .data(dataBytes)
                     .aggregateId(orderStatusUpdateKafkaDto.getId().toString())
