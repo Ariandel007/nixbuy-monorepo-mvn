@@ -21,8 +21,7 @@ public class CustomAccessDeniedHandler implements ServerAccessDeniedHandler {
 
         String body = """
                 {
-                    "status": 403,
-                    "error": "Forbidden",
+                    "code": ["USER_FORBIDDEN"],
                     "message": "You do not have permission to access this resource"
                 }
                 """;

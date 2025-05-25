@@ -21,8 +21,7 @@ public class CustomAuthenticationEntryPoint implements ServerAuthenticationEntry
 
         String body = """
                 {
-                    "status": 401,
-                    "error": "Unauthorized",
+                    "code": ["USER_UNAUTHORIZED"],
                     "message": "Token is missing or invalid"
                 }
                 """;
