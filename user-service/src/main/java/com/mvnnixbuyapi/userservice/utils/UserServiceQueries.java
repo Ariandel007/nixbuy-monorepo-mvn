@@ -7,4 +7,9 @@ public class UserServiceQueries {
             ") " +
             "FROM UserApplication u WHERE u.id = :userId ";
 
+    public static final String findUserByUsername =
+            "SELECT u FROM UserApplication u JOIN FETCH u.roleApplicationList WHERE u.username = :username ";
+
+    public static final String findUserByEmail =
+            "SELECT u FROM UserApplication u JOIN FETCH u.roleApplicationList WHERE u.email = :email ";
 }

@@ -1,24 +1,23 @@
 package com.mvnnixbuyapi.apigatewayservice.security;
 
-import com.mvnnixbuyapi.apigatewayservice.filters.JwtAuthenticationFilter;
+import com.mvnnixbuyapi.apigatewayservice.exceptions.CustomAccessDeniedHandler;
+import com.mvnnixbuyapi.apigatewayservice.exceptions.CustomAuthenticationEntryPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
-
- /**En spring boot 3.1.0 parece que es necesario usar el @Configuration ya que @EnableWebFluxSecurity no creara los beans
+/**En spring boot 3.1.0 parece que es necesario usar el @Configuration ya que @EnableWebFluxSecurity no creara los beans
   por si solo
   **/
 @Configuration
@@ -26,9 +25,17 @@ import java.util.Map;
 public class SpringSecurityConfig {
     Logger logger = LoggerFactory.getLogger(SpringSecurityConfig.class);
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+     @Value("${ISSUER_URI}") // Set this to the Authorization Server's issuer URI
+     private String issuerUri;
 
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    public SpringSecurityConfig(CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                                CustomAccessDeniedHandler customAccessDeniedHandler) {
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
+    }
 
     @Bean
     public SecurityWebFilterChain configure(ServerHttpSecurity http) {
@@ -64,33 +71,38 @@ public class SpringSecurityConfig {
                         .anyExchange()
                         .authenticated()
                 )
-                .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtDecoder(jwtDecoder())) // Configure JWT decoder
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                )
                 .build();
     }
 
-
-    private Mono<AuthorizationDecision> currentUserMatchesPath(Mono<Authentication> authentication, AuthorizationContext context) {
-        return authentication
-                .map(auth -> context.getVariables().get("username").equals(auth.getName())
-                        || auth.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN"))
-                )
-                .map((granted) -> new AuthorizationDecision(granted))
-                .defaultIfEmpty(new AuthorizationDecision(false));
-    }
+     @Bean
+     public ReactiveJwtDecoder jwtDecoder() {
+         // Automatically discovers the JWK URI from the issuer's well-known metadata
+        //http://localhost:3805/.well-known/openid-configuration
+         return ReactiveJwtDecoders.fromIssuerLocation(issuerUri);
+     }
 
     private Mono<AuthorizationDecision> currentUserIdMatchesPath(Mono<Authentication> authentication, AuthorizationContext context) {
         return authentication
                 .map(auth -> {
-                    if(auth.isAuthenticated()) {
-                        Map<String, String> details = (Map<String, String>) auth.getDetails();
-                        return (context.getVariables().get("userId").equals(details.get("id_user"))
-                                ||
-                                auth.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_ADMIN")));
+                    if (auth.isAuthenticated() && auth.getPrincipal() instanceof Jwt) {
+                        Jwt jwt = (Jwt) auth.getPrincipal();
+                        String userIdFromToken = jwt.getClaimAsString("user_id");
+                        String userIdFromPath = context.getVariables().get("userId").toString();
+
+                        return userIdFromPath.equals(userIdFromToken) ||
+                                auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
                     }
                     return false;
                 })
-                .map((granted) -> new AuthorizationDecision(granted))
+                .map(AuthorizationDecision::new)
                 .defaultIfEmpty(new AuthorizationDecision(false));
     }
 
-}
+ }

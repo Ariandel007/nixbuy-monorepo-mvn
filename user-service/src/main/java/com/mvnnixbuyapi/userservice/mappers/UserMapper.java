@@ -1,5 +1,7 @@
 package com.mvnnixbuyapi.userservice.mappers;
 
+import com.mvnnixbuyapi.commons.dtos.request.UserToCreateAuth;
+import com.mvnnixbuyapi.commons.dtos.response.UserToLogin;
 import com.mvnnixbuyapi.userservice.dto.UserPhotoUpdated;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.dto.UserToUpdateDto;
@@ -40,5 +42,9 @@ public interface UserMapper {
 
 
     UserPhotoUpdated mapUserApplicationToUserPhotoUpdated(UserApplication userApplication);
+
+    UserToLogin mapUserApplicationToUserToLogin(UserApplication userApplication);
+
+    UserApplication mapUserToCreateAuthToUserApplication(UserToCreateAuth userToCreateAuth);
 
 }
