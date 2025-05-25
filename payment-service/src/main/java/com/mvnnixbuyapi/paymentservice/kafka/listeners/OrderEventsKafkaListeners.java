@@ -61,6 +61,9 @@ public class OrderEventsKafkaListeners {
             case "OrderTable-OrderExecutedConfirmed":
                 this.eventOfOrderSendedByKafka(outboxTableAfter.getData(), OrderStates.EXECUTED_CONFIRMED.name());
                 break;
+            case "OrderTable-OrderError":
+                this.eventOfOrderSendedByKafka(outboxTableAfter.getData(), OrderStates.CANCELED.name());
+                break;
         }
 
     }

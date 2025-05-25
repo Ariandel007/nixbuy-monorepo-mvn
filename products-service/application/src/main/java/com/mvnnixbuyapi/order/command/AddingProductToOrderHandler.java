@@ -1,15 +1,19 @@
 package com.mvnnixbuyapi.order.command;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mvnnixbuyapi.commons.utils.JsonUtils;
+import com.mvnnixbuyapi.order.events.OrderErrorEvent;
 import com.mvnnixbuyapi.order.model.dto.OrderReceivedDto;
 import com.mvnnixbuyapi.order.service.CreatePendingOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Base64;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Component
 @Slf4j
@@ -17,36 +21,36 @@ public class AddingProductToOrderHandler {
 
     private final ObjectMapper mapper;
     private final CreatePendingOrderService createPendingOrderService;
+    private final ApplicationEventPublisher publisher;
 
     @Autowired
     public AddingProductToOrderHandler(
             @Qualifier("generalObjectMapper") ObjectMapper mapper,
-            CreatePendingOrderService createPendingOrderService
+            CreatePendingOrderService createPendingOrderService,
+            ApplicationEventPublisher publisher
     ) {
         this.mapper = mapper;
         this.createPendingOrderService = createPendingOrderService;
+        this.publisher = publisher;
     }
 
     @Transactional
-    public void execute(String base64Json) {
-        // TODO: Consider to use @TransactionalEventListener and ApplicationEventPublisher for sending events in case of rollback for RunTimeException
-        String json = "";
-        try{
-            byte[] decodedBytes = Base64.getDecoder().decode(base64Json);
-            json = new String(decodedBytes);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace(); // TODO: Error handling if any problem occurs while processing the JSON
-            return;
-        }
-        OrderReceivedDto orderDto = null;
-        try {
-            orderDto = mapper.readValue(json, OrderReceivedDto.class);
-            createPendingOrderService.execute(orderDto);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-            return;
-        }
+    public void execute(String base64Json) throws JsonProcessingException {
+        String json = JsonUtils.convertBase64JsonToJson(base64Json);
+        OrderReceivedDto orderDto = JsonUtils.fromJson(json, OrderReceivedDto.class, mapper);
+        // Send event in case of rollback
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCompletion(int status) {
+                if (status == TransactionSynchronization.STATUS_ROLLED_BACK) {
+                    publisher.publishEvent(
+                            new OrderErrorEvent(
+                                    "ROLLBACK_OCCURRED_IN_ADDING_PRODUCT_TO_ORDER",
+                                    orderDto)
+                    );
+                }
+            }
+        });
+        createPendingOrderService.execute(orderDto);
     }
 }

@@ -1,7 +1,6 @@
 package com.mvnnixbuyapi.userservice.unittesting;
 
 import com.mvnnixbuyapi.commons.exceptions.GeneralException;
-import com.mvnnixbuyapi.userservice.components.TokenProvider;
 import com.mvnnixbuyapi.userservice.data.DataToTest;
 import com.mvnnixbuyapi.userservice.dto.UserRegisterDto;
 import com.mvnnixbuyapi.userservice.models.UserApplication;
@@ -31,7 +30,6 @@ import static org.mockito.Mockito.*;
         UserApplicationService.class,
         UserApplicationServiceImpl.class,
         LocalValidatorFactoryBean.class,
-        TokenProvider.class,
 })
 public class UserCreationUnitTests {
 //    @MockBean

@@ -14,10 +14,4 @@ public class GeneralConfiguration {
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public OtlpGrpcSpanExporter otlpHttpSpanExporter(@Value("${tracing.url}") String url) {
-        return OtlpGrpcSpanExporter.builder().setEndpoint(url).build();
-    }
-
 }
