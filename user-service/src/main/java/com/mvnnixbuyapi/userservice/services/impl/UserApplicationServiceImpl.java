@@ -285,6 +285,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         // hashing password with bcrypt
         userApplication.setPassword(this.passwordEncoder.encode(UUID.randomUUID().toString()));//TODO: check how to randomize this better
         userApplication.setAccountCreationDate(Instant.now());
+        userApplication.setAuthType("oidc_registered");
 
         //Roles
         List<RoleApplication> roleList = new ArrayList<>();
@@ -296,4 +297,17 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
         return UserMapper.INSTANCE.mapUserApplicationToUserToLogin(userCreated);
     }
+
+    //TODO: REFACTOR SOLUTION
+    @Override
+    @Transactional(readOnly = true)
+    public UserToLogin updateSecretMultiFactorSecret(Long userId, String secret) {
+        Optional<UserApplication> userApplicationOptional = this.userApplicationRepository.findById(userId);
+        UserApplication userApplication = userApplicationOptional.get();
+        userApplication.setTwoFaRegistered(true);
+        userApplication.setMfaSecret(secret);
+        return UserMapper.INSTANCE.mapUserApplicationToUserToLogin(this.userApplicationRepository.save(userApplication));
+    }
+
+
 }

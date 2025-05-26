@@ -1,4 +1,4 @@
-package com.mvnnixbuyapi.configuration;
+package com.mvnnixbuyapi.security;
 
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;

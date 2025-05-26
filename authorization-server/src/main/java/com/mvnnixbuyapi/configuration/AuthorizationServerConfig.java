@@ -1,6 +1,7 @@
 package com.mvnnixbuyapi.configuration;
 
 import com.mvnnixbuyapi.clients.UserApplicationFeignClient;
+import com.mvnnixbuyapi.security.*;
 import com.mvnnixbuyapi.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
+import org.springframework.security.crypto.encrypt.BytesEncryptor;
+import org.springframework.security.crypto.keygen.BytesKeyGenerator;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -37,10 +42,15 @@ import org.springframework.security.oauth2.server.authorization.token.JwtGenerat
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.UUID;
 
 @Configuration
@@ -107,9 +117,12 @@ public class AuthorizationServerConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/webjars/**", "/images/**", "/css/**", "/assets/**", "/favicon.ico").permitAll()
                         .requestMatchers("/login").permitAll() // Permit login page and its query parameters
+                        .requestMatchers("/registration", "/authenticator").hasAuthority("ROLE_MFA_REQUIRED")
+                        .requestMatchers("/security-question").hasAuthority("ROLE_SECURITY_QUESTION_REQUIRED")
                         .anyRequest().authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
+                        .successHandler(new MFAHandler("/authenticator", "ROLE_MFA_REQUIRED")) // Only add a successHandler this if you want to handle MFA
                         .failureHandler(customAuthenticationFailureHandler())
                         .permitAll()
                 )
@@ -119,6 +132,20 @@ public class AuthorizationServerConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Aquí lo hacemos stateless
                 );
         return http.build();
+    }
+
+
+    /*     * This bean configures the authentication success handler for the authorization server.
+     * It uses `SavedRequestAwareAuthenticationSuccessHandler` to handle successful authentication.
+     *
+     * The `SavedRequestAwareAuthenticationSuccessHandler` is used to redirect users after they have successfully authenticated.
+     * It checks if there is a saved request (the URL the user was trying to access before logging in).
+     * This handler redirects the user to the URL they attempted to access before authenticating, or to a default URL if no previous request was saved.
+     * This is useful for ensuring that users are properly redirected after logging in.
+     */
+    @Bean
+    AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new SavedRequestAwareAuthenticationSuccessHandler();
     }
 
 
@@ -151,10 +178,10 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(@Value("${PRIVATE_KEY_BASE64}") String secret) {
         //Al final esto es lo que hara le diremos a Auth Server que verifique con las credenciales que se enviaron en su formulario
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService(secret));
         authProvider.setPasswordEncoder(passwordEncoder()); // Configura un encoder seguro
         return authProvider;
     }
@@ -165,8 +192,15 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService(userApplicationFeignClient);
+    public UserDetailsService userDetailsService(@Value("${PRIVATE_KEY_BASE64}") String secret) {
+        return new CustomUserDetailsService(userApplicationFeignClient, bytesEncryptor(secret));
+    }
+
+    @Bean
+    BytesEncryptor bytesEncryptor(@Value("${PRIVATE_KEY_BASE64}") String secret) {
+        SecretKey secretKey = new SecretKeySpec(Base64.getDecoder().decode(secret.trim()), "AES");
+        BytesKeyGenerator ivGenerator = KeyGenerators.secureRandom(12);
+        return new AesBytesEncryptor(secretKey, ivGenerator, AesBytesEncryptor.CipherAlgorithm.GCM);
     }
 
     @Bean

@@ -73,4 +73,11 @@ public class UserController {
     ResponseEntity<GenericResponseForBody<UserToLogin>> createUserFromOidcUser(@RequestBody UserToCreateAuth userToCreateAuth) {
         return ResponseUtils.buildSuccessResponse(this.userService.createUserFromOidcUser(userToCreateAuth));
     }
+
+    @PatchMapping (value = "/v1/users-app/info-mfa/{userId}")
+    ResponseEntity<GenericResponseForBody<UserToLogin>> updateSecretMultiFactorSecret(
+            @PathVariable Long userId,
+            @RequestBody String secret) {
+        return ResponseUtils.buildSuccessResponse(this.userService.updateSecretMultiFactorSecret(userId, secret));
+    }
 }

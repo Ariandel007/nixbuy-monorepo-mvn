@@ -19,6 +19,7 @@ CREATE TABLE public.user_applications (
 	lastname varchar(255) NOT NULL,
 	"password" varchar(255) NULL,
 	photo_url varchar(255) NULL,
+	two_fa_activated varchar(255) NULL,
 	username varchar(255) NULL,
 	CONSTRAINT uk_fqfle34iymi1biph58uysi8qr UNIQUE (username),
 	CONSTRAINT user_applications_pkey PRIMARY KEY (id)
@@ -61,8 +62,8 @@ INSERT INTO public.roles_applications
 VALUES(2, 'ROLE_ADMIN');
 
 INSERT INTO public.user_applications
-(account_creation_date, attemps, auth_type, birth_date, is_blocked, city, country, is_deleted, email, firstname, lastname, "password", photo_url, username)
-VALUES('2023-08-03 23:41:53.475', 0, 'email_registered', '1999-02-20 09:48:00.000', false, 'Ciudad Ejemplo', 'Ejemplolandia', false, 'ejemplo@correo.com', 'Ejemplo', 'Usuario', '$2a$10$UlQqJqg4PVb6deWkoyNBVOdKJO7WmBS7WTOLyEYLKSMFkDwIfRTF2', NULL, 'ejemplo_usuario2');
+(account_creation_date, attemps, auth_type, birth_date, is_blocked, city, country, is_deleted, email, firstname, lastname, "password", photo_url, two_fa_activated, username)
+VALUES('2023-08-03 23:41:53.475', 0, 'email_registered', '1999-02-20 09:48:00.000', false, 'Ciudad Ejemplo', 'Ejemplolandia', false, 'ejemplo@correo.com', 'Ejemplo', 'Usuario', '$2a$10$UlQqJqg4PVb6deWkoyNBVOdKJO7WmBS7WTOLyEYLKSMFkDwIfRTF2', NULL, false, 'ejemplo_usuario2');
 
 
 ------------------------------------------------------------------------------------------------------------------------

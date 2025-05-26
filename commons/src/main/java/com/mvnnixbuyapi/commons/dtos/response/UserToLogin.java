@@ -22,5 +22,13 @@ public class UserToLogin {
     private Instant birthDate;
     private Instant accountCreationDate;
     private String photoUrl;
+    private Boolean twoFAActivated;
+    private Boolean twoFaRegistered;
+    private Boolean securityQuestionEnabled;
+    private String securityQuestion;
+    private String answer;
+    private String mfaSecret;
+    private String mfaKeyId;
+
     private List<RoleApplicationLogin> roleApplicationList;
 }

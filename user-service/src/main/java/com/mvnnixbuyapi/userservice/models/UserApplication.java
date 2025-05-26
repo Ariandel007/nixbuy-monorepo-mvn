@@ -59,6 +59,27 @@ public class UserApplication implements Serializable {
     @Column(name = "photo_url", length = 255)
     private String photoUrl;
 
+    @Column(name = "two_fa_activated", length = 255)
+    private Boolean twoFAActivated = false;
+
+    @Column(name = "two_fa_registered", length = 255)
+    private Boolean twoFaRegistered = false;
+
+    @Column(name = "security_question_enabled", length = 255)
+    private Boolean securityQuestionEnabled = false;
+
+    @Column(name = "security_question", length = 255)
+    private String securityQuestion = "";
+
+    @Column(name = "answer", length = 255)
+    private String answer = "";
+
+    @Column(name = "mfa_secret", length = 255)
+    private String mfaSecret;
+
+    @Column(name = "mfa_key_id", length = 255)
+    private String mfaKeyId = "ABDCEDFGHIJKLMNOPQRSTUVWX";
+
     @OneToMany(mappedBy = "userApplicationRelated", fetch = FetchType.LAZY)
     private List<PasswordHistory> passwordHistoryList;
 

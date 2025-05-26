@@ -5,10 +5,7 @@ import com.mvnnixbuyapi.commons.dtos.response.GenericResponseForBody;
 import com.mvnnixbuyapi.commons.dtos.response.UserToLogin;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "user-service-nixbuy", url = "${users-url}")
 public interface UserApplicationFeignClient {
@@ -20,4 +17,9 @@ public interface UserApplicationFeignClient {
 
     @PostMapping(value = "/api/users/v1/users-app/oidc-user", produces = "application/json")
     ResponseEntity<GenericResponseForBody<UserToLogin>> createUserFromOidcUser(@RequestBody UserToCreateAuth userToCreateAuth);
+
+    @PatchMapping (value = "/v1/users-app/info-mfa/{userId}")
+    ResponseEntity<GenericResponseForBody<UserToLogin>> updateSecretMultiFactorSecret(
+            @PathVariable Long userId,
+            @RequestBody String secret);
 }

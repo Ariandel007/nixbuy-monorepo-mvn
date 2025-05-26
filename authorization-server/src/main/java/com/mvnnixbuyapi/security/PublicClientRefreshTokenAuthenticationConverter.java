@@ -1,4 +1,4 @@
-package com.mvnnixbuyapi.configuration;
+package com.mvnnixbuyapi.security;
 
 import org.springframework.lang.Nullable;
 import jakarta.servlet.http.HttpServletRequest;

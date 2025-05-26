@@ -12,8 +12,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.encrypt.BytesEncryptor;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,10 +25,12 @@ import java.util.stream.Collectors;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserApplicationFeignClient userApplicationFeignClient;
+    private final BytesEncryptor bytesEncryptor;
 
     @Autowired
-    public CustomUserDetailsService(UserApplicationFeignClient userApplicationFeignClient) {
+    public CustomUserDetailsService(UserApplicationFeignClient userApplicationFeignClient, BytesEncryptor bytesEncryptor) {
         this.userApplicationFeignClient = userApplicationFeignClient;
+        this.bytesEncryptor = bytesEncryptor;
     }
 
     @Override
@@ -53,7 +58,19 @@ public class CustomUserDetailsService implements UserDetailsService {
                 userFounded.getId(),
                 userFounded.getUsername(),
                 userFounded.getPassword(),
+                userFounded.getTwoFAActivated(),
+                userFounded.getTwoFaRegistered(),
+                userFounded.getSecurityQuestionEnabled(),
+                userFounded.getSecurityQuestion(),
+                userFounded.getAnswer(),
+                userFounded.getMfaSecret(),
+                userFounded.getMfaKeyId(),
                 authorities
         );
+    }
+
+    public void saveUserInfoMfaRegistered(String secret, Long id) {
+        String encryptedSecret = new String(Hex.encode(this.bytesEncryptor.encrypt(secret.getBytes(StandardCharsets.UTF_8))));
+        this.userApplicationFeignClient.updateSecretMultiFactorSecret(id, encryptedSecret);
     }
 }

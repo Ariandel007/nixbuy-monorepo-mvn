@@ -27,4 +27,6 @@ public interface UserApplicationService {
 
     UserToLogin createUserFromOidcUser(UserToCreateAuth userToCreateAuth);
 
+    UserToLogin updateSecretMultiFactorSecret(Long userId, String secret);
+
 }
