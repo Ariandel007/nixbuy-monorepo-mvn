@@ -300,7 +300,6 @@ public class UserApplicationServiceImpl implements UserApplicationService {
 
     //TODO: REFACTOR SOLUTION
     @Override
-    @Transactional(readOnly = true)
     public UserToLogin updateSecretMultiFactorSecret(Long userId, String secret) {
         Optional<UserApplication> userApplicationOptional = this.userApplicationRepository.findById(userId);
         UserApplication userApplication = userApplicationOptional.get();

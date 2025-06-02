@@ -47,7 +47,7 @@ public class LoginController {
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    private String generatedCode = "";
+//    private String generatedCode = "";
     private String base32Secret = "";
     private String keyId = "";
 
@@ -86,11 +86,11 @@ public class LoginController {
             @CurrentSecurityContext SecurityContext context) {
         base32Secret = authenticatorService.generateSecret();
         keyId = getUserDetails(context).getMfaKeyId();
-        try {
-            generatedCode = authenticatorService.getCode(base32Secret);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            generatedCode = authenticatorService.getCode(base32Secret);
+//        } catch (GeneralSecurityException e) {
+//            e.printStackTrace();
+//        }
 //        System.err.println(generatedCode);
         model.addAttribute("qrImage", authenticatorService.generateQrImageUrl(keyId, base32Secret));
         return "registration";
@@ -100,8 +100,9 @@ public class LoginController {
     public void validateRegistration(@RequestParam("code") String code,
                                      HttpServletRequest request,
                                      HttpServletResponse response,
-                                     @CurrentSecurityContext SecurityContext context) throws ServletException, IOException {
-        if (code.equals(generatedCode)) {
+                                     @CurrentSecurityContext SecurityContext context) throws ServletException, IOException, GeneralSecurityException {
+        String codeAtThatMoment = authenticatorService.getCode(base32Secret);
+        if (code.equals(codeAtThatMoment)) {
             customUserDetailsService.saveUserInfoMfaRegistered(base32Secret, getUserDetails(context).getId());
             if (!getUserDetails(context).getSecurityQuestionEnabled()) {
                 this.authenticationSuccessHandler.onAuthenticationSuccess(request, response, getAuthentication(request, response));

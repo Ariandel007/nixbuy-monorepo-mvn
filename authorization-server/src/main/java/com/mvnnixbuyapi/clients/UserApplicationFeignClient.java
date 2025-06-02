@@ -18,7 +18,7 @@ public interface UserApplicationFeignClient {
     @PostMapping(value = "/api/users/v1/users-app/oidc-user", produces = "application/json")
     ResponseEntity<GenericResponseForBody<UserToLogin>> createUserFromOidcUser(@RequestBody UserToCreateAuth userToCreateAuth);
 
-    @PatchMapping (value = "/v1/users-app/info-mfa/{userId}")
+    @PatchMapping (value = "/api/users/v1/users-app/info-mfa/{userId}")
     ResponseEntity<GenericResponseForBody<UserToLogin>> updateSecretMultiFactorSecret(
             @PathVariable Long userId,
             @RequestBody String secret);

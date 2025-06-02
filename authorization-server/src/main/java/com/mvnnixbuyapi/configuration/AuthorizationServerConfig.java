@@ -178,7 +178,7 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(@Value("${PRIVATE_KEY_BASE64}") String secret) {
+    public AuthenticationProvider authenticationProvider(@Value("${MFA_KEY}") String secret) {
         //Al final esto es lo que hara le diremos a Auth Server que verifique con las credenciales que se enviaron en su formulario
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService(secret));
@@ -192,12 +192,12 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(@Value("${PRIVATE_KEY_BASE64}") String secret) {
+    public UserDetailsService userDetailsService(@Value("${MFA_KEY}") String secret) {
         return new CustomUserDetailsService(userApplicationFeignClient, bytesEncryptor(secret));
     }
 
     @Bean
-    BytesEncryptor bytesEncryptor(@Value("${PRIVATE_KEY_BASE64}") String secret) {
+    BytesEncryptor bytesEncryptor(@Value("${MFA_KEY}") String secret) {
         SecretKey secretKey = new SecretKeySpec(Base64.getDecoder().decode(secret.trim()), "AES");
         BytesKeyGenerator ivGenerator = KeyGenerators.secureRandom(12);
         return new AesBytesEncryptor(secretKey, ivGenerator, AesBytesEncryptor.CipherAlgorithm.GCM);
