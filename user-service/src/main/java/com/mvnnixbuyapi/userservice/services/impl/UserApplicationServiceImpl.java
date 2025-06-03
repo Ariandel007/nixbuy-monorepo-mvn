@@ -69,6 +69,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         UserApplication userApplication = UserMapper.INSTANCE.mapUserRegisterDtoToUserApplication(userRegisterDto);
 
         userApplication.setBirthDate(Instant.parse(userRegisterDto.getBirthDateUtc()));
+        userApplication.setMfaKeyId("Nixbuy:"+ userApplication.getUsername());
 
         // hashing password with bcrypt
         userApplication.setPassword(this.passwordEncoder.encode(userApplication.getPassword()));
@@ -286,6 +287,7 @@ public class UserApplicationServiceImpl implements UserApplicationService {
         userApplication.setPassword(this.passwordEncoder.encode(UUID.randomUUID().toString()));//TODO: check how to randomize this better
         userApplication.setAccountCreationDate(Instant.now());
         userApplication.setAuthType("oidc_registered");
+        userApplication.setMfaKeyId("Nixbuy:"+ userApplication.getUsername());
 
         //Roles
         List<RoleApplication> roleList = new ArrayList<>();
